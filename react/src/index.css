@@ -1,1 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap');
 @import "tailwindcss"; 
+
+button {
+    cursor: pointer;
+}
+
+* {
+    font-family: "Red Hat Display", sans-serif;
+}
+
+@theme {
+    --color-primary-gray: #5B6670;
+    --color-primary-orange: #ff9e19;
+    --font-red-hat: 'Red Hat Display', sans-serif;
+}

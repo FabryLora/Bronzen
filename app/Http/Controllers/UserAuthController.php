@@ -24,7 +24,7 @@ class UserAuthController extends Controller
 
         ]);
 
-        /** @var \App\Models\User $user */
+
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -54,16 +54,16 @@ class UserAuthController extends Controller
                 'error' => 'The provided credentials are not correct'
             ], 422);
         }
-        /**  @var \App\Models\User $user */
+
         $user = Auth::user();
 
 
-        if (!$user->autorizado) {
+        /* if (!$user->autorizado) {
             Auth::logout();
             return response([
                 'error' => 'Your account is not authorized. Please contact support.'
             ], 403);
-        }
+        } */
 
         $token = $user->createToken('main')->plainTextToken;
 
@@ -75,9 +75,7 @@ class UserAuthController extends Controller
 
     public function logout(Request $request)
     {
-        /**
-         * @var User $user
-         */
+
         $user = Auth::user();
         $user->currentAccessToken()->delete();
 

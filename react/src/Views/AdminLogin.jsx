@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import axiosClient from "../axios";
+import adminAxiosClient from "../adminAxiosClient";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function AdminLogin() {
@@ -8,22 +8,25 @@ export default function AdminLogin() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [login, setLogin] = useState(false);
-    const { adminToken, setAdminToken, setAdmin } = useStateContext();
+    const { setAdminToken, setCurrentAdmin, adminToken } = useStateContext();
 
     const onSubmit = async (ev) => {
         ev.preventDefault();
-        setLogin(true);
-        try {
-            const { data } = await axiosClient.post("/admins/login", {
+
+        adminAxiosClient
+            .post("/login", {
                 name: user,
-                password: password,
+                password,
+            })
+            .then(({ data }) => {
+                setCurrentAdmin(data.admin);
+                setAdminToken(data.token);
+
+                // Redirect to admin dashboard or other admin page
+            })
+            .catch((error) => {
+                console.error(error);
             });
-        } catch (error) {
-            console.error(error);
-            setError("Usuario o contraseña incorrectos");
-        } finally {
-            setLogin(false);
-        }
     };
 
     if (adminToken) {

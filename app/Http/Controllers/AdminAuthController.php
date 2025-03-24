@@ -1,62 +1,56 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+
 use App\Models\Admin;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Auth;
 
 class AdminAuthController extends Controller
 {
-    public function register(Request $request)
+    public function signup(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:admins',
-            'password' => 'required|string|min:8|confirmed',
+        $data = $request->validate([
+            'name' => 'required|string',
+            'password' => 'required|string|min:6',
         ]);
-
         $admin = Admin::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'name' => $data['name'],
+            'password' => bcrypt($data['password']),
+
         ]);
 
-        $token = $admin->createToken('auth_token', ['admin'])->plainTextToken;
+        $token = $admin->createToken('admin')->plainTextToken;
 
-        return response()->json([
+        return response([
             'admin' => $admin,
-            'token' => $token,
-            'token_type' => 'Bearer',
+            'token' => $token
         ]);
     }
 
     public function login(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+        $credentials = $request->validate([
+            'name' => 'required|string',
+            'password' => 'required|string',
+            'remember' => 'boolean'
         ]);
+        $remember = $credentials['remember'] ?? false;
+        unset($credentials['remember']);
 
-        $admin = Admin::where('email', $request->email)->first();
-
-        if (!$admin || !Hash::check($request->password, $admin->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['Las credenciales proporcionadas son incorrectas.'],
-            ]);
+        if (!Auth::guard('admin')->attempt($credentials, $remember)) {
+            return response([
+                'error' => 'The provided credentials are not correct'
+            ], 422);
         }
 
-        // Revocar tokens anteriores
-        $admin->tokens()->delete();
+        $admin = Auth::guard('admin')->user();
+        $token = $admin->createToken('admin')->plainTextToken;
 
-        $token = $admin->createToken('auth_token', ['admin'])->plainTextToken;
-
-        return response()->json([
+        return response([
             'admin' => $admin,
-            'token' => $token,
-            'token_type' => 'Bearer',
+            'token' => $token
         ]);
     }
 
@@ -64,11 +58,13 @@ class AdminAuthController extends Controller
     {
         $request->user()->currentAccessToken()->delete();
 
-        return response()->json(['message' => 'Sesión cerrada correctamente']);
+        return response([
+            'success' => true
+        ]);
     }
 
-    public function dashboard(Request $request)
+    public function me(Request $request)
     {
-        return response()->json(['admin' => $request->user()]);
+        return $request->user();
     }
 }

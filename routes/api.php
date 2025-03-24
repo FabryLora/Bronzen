@@ -1,31 +1,30 @@
 <?php
 
-use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\UserAuthController;
+use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SurveyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-// Rutas públicas
-Route::post('/users/register', [UserAuthController::class, 'register']);
-Route::post('/users/login', [UserAuthController::class, 'login']);
-Route::post('/admins/register', [AdminAuthController::class, 'register']);
-Route::post('/admins/login', [AdminAuthController::class, 'login']);
-
-// Rutas protegidas para usuarios regulares
-Route::middleware(['auth:sanctum', 'ability:user'])->group(function () {
-    Route::get('/users/profile', [UserAuthController::class, 'profile']);
-    Route::post('/users/logout', [UserAuthController::class, 'logout']);
-    // Otras rutas para usuarios
+// Rutas de usuarios regulares (ya existentes)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [UserAuthController::class, 'logout']);
+    Route::get('/me', [UserAuthController::class, 'me']);
 });
 
-// Rutas protegidas para administradores
-Route::middleware(['auth:sanctum', 'ability:admin'])->group(function () {
-    Route::get('/admins/dashboard', [AdminAuthController::class, 'dashboard']);
-    Route::post('/admins/logout', [AdminAuthController::class, 'logout']);
-    // Otras rutas para administradores
-});
+Route::post('/signup', [UserAuthController::class, 'signup']);
+Route::post('/login', [UserAuthController::class, 'login']);
 
-// Ruta para verificar token de usuario
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+
+// Rutas para admin
+Route::prefix('admin')->group(function () {
+    Route::post('/signup', [AdminAuthController::class, 'signup']);
+    Route::post('/login', [AdminAuthController::class, 'login']);
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/logout', [AdminAuthController::class, 'logout']);
+        Route::get('/me', [AdminAuthController::class, 'me']);
+        // Añade aquí más rutas específicas para administradores
+    });
 });

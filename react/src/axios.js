@@ -1,41 +1,24 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_URL = 'http://localhost:8000/api';
-
-const api = axios.create({
-  baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-  },
+const axiosClient = axios.create({
+  baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`,
 });
 
-// Interceptor para adjuntar el token a las solicitudes
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+axiosClient.interceptors.request.use((config) => {
+  config.headers.Authorization = `Bearer ${localStorage.getItem('TOKEN')}`
+  return config
+});
 
-// Interceptor para manejar errores de respuesta
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response && error.response.status === 401) {
-      // Token inválido o caducado, cerrar sesión
-      localStorage.removeItem('token');
-      localStorage.removeItem('userType');
-      localStorage.removeItem('user');
-      // Redireccionar a la página de inicio
-      window.location.href = '/';
-    }
-    return Promise.reject(error);
+axiosClient.interceptors.response.use(response => {
+  return response;
+}, error => {
+  if (error.response && error.response.status === 401) {
+    localStorage.removeItem('TOKEN')
+    /* window.location.reload(); */
+    // router.navigate('/login')
+    return error;
   }
-);
+  throw error;
+})
 
-export default api;
+export default axiosClient;
