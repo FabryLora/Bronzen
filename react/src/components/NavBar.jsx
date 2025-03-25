@@ -74,6 +74,9 @@ export default function NavBar() {
                             </AnimatePresence>
                         </li>
                     ))}
+                    <button className="font-bold w-[145px] h-[51px] border border-primary-orange text-primary-orange rounded-full hover:text-white hover:bg-primary-orange transition duration-300">
+                        Zona privada
+                    </button>
                 </ul>
             </nav>
         </header>

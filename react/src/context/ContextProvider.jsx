@@ -1,16 +1,22 @@
 import { createContext, useContext, useState } from "react";
+import axiosClient from "../axios";
 
 const StateContext = createContext({
     currentUser: null,
     userToken: null,
     setCurrentUser: () => {},
     setUserToken: () => {},
-
     // Admin context
     currentAdmin: null,
     adminToken: null,
     setCurrentAdmin: () => {},
     setAdminToken: () => {},
+    logos: {},
+    fetchLogos: () => {},
+    bannerInicio: {},
+    fetchBannerInicio: () => {},
+    contactInfo: {},
+    fetchContactInfo: () => {},
 });
 
 export const ContextProvider = ({ children }) => {
@@ -25,6 +31,10 @@ export const ContextProvider = ({ children }) => {
     const [adminToken, _setAdminToken] = useState(
         localStorage.getItem("ADMIN_TOKEN") || ""
     );
+
+    const [logos, setLogos] = useState({});
+    const [bannerInicio, setBannerInicio] = useState({});
+    const [contactInfo, setContactInfo] = useState({});
 
     // User token handlers
     const setUserToken = (token) => {
@@ -46,9 +56,33 @@ export const ContextProvider = ({ children }) => {
         _setAdminToken(token);
     };
 
+    const fetchLogos = () => {
+        axiosClient.get("/logos").then(({ data }) => {
+            setLogos(data.data[0]);
+        });
+    };
+
+    const fetchBannerInicio = () => {
+        axiosClient.get("/banner-inicio").then(({ data }) => {
+            setBannerInicio(data.data[0]);
+        });
+    };
+
+    const fetchContactInfo = () => {
+        axiosClient.get("/contact-info").then(({ data }) => {
+            setContactInfo(data.data[0]);
+        });
+    };
+
     return (
         <StateContext.Provider
             value={{
+                contactInfo,
+                fetchContactInfo,
+                bannerInicio,
+                fetchBannerInicio,
+                logos,
+                fetchLogos,
                 currentUser,
                 setCurrentUser,
                 userToken,

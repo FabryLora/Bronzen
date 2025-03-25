@@ -65,10 +65,7 @@ export default function Administrator() {
             title: "Inicio",
             icon: faHouse,
             href: "#",
-            subHref: [
-                { title: "Slider", href: "/dashboard/slider" },
-                { title: "Contenido", href: "/dashboard/contenido" },
-            ],
+            subHref: [{ title: "Contenido", href: "/dashboard/contenido" }],
         },
         {
             id: "novedades",
@@ -234,6 +231,7 @@ export default function Administrator() {
                                                         <FontAwesomeIcon
                                                             size="sm"
                                                             icon={drop.icon}
+                                                            color="#ff9e19"
                                                         />
                                                     </button>
 
