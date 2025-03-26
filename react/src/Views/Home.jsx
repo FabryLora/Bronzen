@@ -1,7 +1,13 @@
+import BannerInicio from "../Components/BannerInicio";
+import NovedadesInicio from "../Components/NovedadesInicio";
+import NuestrosProductos from "../Components/NuestrosProductos";
+
 export default function Home() {
     return (
-        <div>
-            <p className="bg-gray-200">s</p>
-        </div>
+        <>
+            <BannerInicio />
+            <NovedadesInicio />
+            <NuestrosProductos />
+        </>
     );
 }

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Admin;
+use App\Models\bannerInicio;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -24,6 +25,13 @@ class DatabaseSeeder extends Seeder
         Admin::factory()->create([
             'name' => 'pablo',
             'password' => bcrypt('pablopablo'),
+        ]);
+
+        bannerInicio::factory()->create([
+            'titulo' => 'Visite nuestro Showroom',
+            'subtitulo' => 'Contacte a su vendedor.',
+            'imagen' => 'imagen',
+            'video' => 'https://www.youtube.com/watch?v=uFNKNTMbHlQ',
         ]);
     }
 }

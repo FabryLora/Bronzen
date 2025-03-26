@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import axiosClient from "../axios";
 
 const StateContext = createContext({
@@ -73,6 +73,12 @@ export const ContextProvider = ({ children }) => {
             setContactInfo(data.data[0]);
         });
     };
+
+    useEffect(() => {
+        fetchLogos();
+        fetchBannerInicio();
+        fetchContactInfo();
+    }, []);
 
     return (
         <StateContext.Provider

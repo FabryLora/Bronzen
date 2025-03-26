@@ -25,7 +25,7 @@ export default function NavBar() {
     ];
 
     return (
-        <header className="bg-white h-[112px] my-2 flex justify-between items-center">
+        <header className="sticky top-0 bg-white h-[112px] my-2 flex justify-between items-center z-40">
             <nav className="w-[1200px] mx-auto flex flex-row justify-between items-center font-bold text-sm text-[#333]">
                 <div>
                     <img src={bronzenLogo} alt="Bronzen Logo" />
