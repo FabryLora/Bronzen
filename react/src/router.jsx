@@ -1,10 +1,16 @@
 import { createBrowserRouter } from "react-router-dom";
 import AdminLogin from "./Views/AdminLogin";
 import Administrator from "./Views/Administrator";
+import CatalogoAdmin from "./Views/CatalogoAdmin";
+import Contacto from "./Views/Contacto";
 import ContactoAdmin from "./Views/ContactoAdmin";
 import Contenido from "./Views/Contenido";
 import DefaultLayout from "./Views/DefaultLayout";
 import Home from "./Views/Home";
+import {
+    default as SomosBronzen,
+    default as SomosBronzenAdmin,
+} from "./Views/SomosBronzenAdmin";
 
 const router = createBrowserRouter([
     {
@@ -23,6 +29,14 @@ const router = createBrowserRouter([
                 path: "/dashboard/contacto",
                 element: <ContactoAdmin />,
             },
+            {
+                path: "/dashboard/somos-bronzen",
+                element: <SomosBronzenAdmin />,
+            },
+            {
+                path: "/dashboard/catalogo",
+                element: <CatalogoAdmin />,
+            },
         ],
     },
     {
@@ -32,6 +46,10 @@ const router = createBrowserRouter([
             {
                 path: "/",
                 element: <Home />,
+            },
+            {
+                path: "/contacto",
+                element: <Contacto />,
             },
         ],
     },

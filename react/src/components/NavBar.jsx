@@ -14,22 +14,22 @@ export default function NavBar() {
             title: "Nuestros Productos",
             path: "/dashboard/categorias",
             subHref: [
-                { title: "Categorías", path: "/dashboard/categorias" },
+                { title: "Aluminio", path: "/dashboard/categorias" },
                 { title: "Subcategoría 1", path: "/dashboard/subcategoria1" },
                 { title: "Subcategoría 2", path: "/dashboard/subcategoria2" },
             ],
         },
         { title: "Catálogo", path: "/dashboard/productos", subHref: [] },
         { title: "Somos Bronzen", path: "/dashboard/clientes", subHref: [] },
-        { title: "Contacto", path: "/dashboard/administradores", subHref: [] },
+        { title: "Contacto", path: "/contacto", subHref: [] },
     ];
 
     return (
         <header className="sticky top-0 bg-white h-[112px] my-2 flex justify-between items-center z-40">
             <nav className="w-[1200px] mx-auto flex flex-row justify-between items-center font-bold text-sm text-[#333]">
-                <div>
+                <Link to={"/"}>
                     <img src={bronzenLogo} alt="Bronzen Logo" />
-                </div>
+                </Link>
                 <ul className="flex flex-row gap-8">
                     {links.map((link, index) => (
                         <li
@@ -55,13 +55,13 @@ export default function NavBar() {
                                             animate={{ opacity: 1 }}
                                             exit={{ opacity: 0 }}
                                             transition={{ duration: 0.2 }}
-                                            className="absolute top-9 border flex flex-col gap-2 bg-white shadow-md p-5 w-max"
+                                            className="absolute min-w-[215px] top-9 flex flex-col gap-2 bg-white shadow-md p-6 w-max"
                                         >
                                             {link.subHref.map(
                                                 (subLink, subIndex) => (
                                                     <li
                                                         key={subIndex}
-                                                        className="text-[#999] text-[13px] hover:text-[#333] transition duration-300"
+                                                        className="text-[#999] text-[13px] font-normal hover:text-[#333] transition duration-300"
                                                     >
                                                         <Link to={subLink.path}>
                                                             {subLink.title}

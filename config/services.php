@@ -13,6 +13,10 @@ return [
     | a conventional file to locate the various service credentials.
     |
     */
+    'cliengo' => [
+        'script_url' => env('CLIENGO_SCRIPT_URL', 'https://s.cliengo.com/weboptimizer/620babf8fce1e6002a464f63/620babfafce1e6002a464f68.js?platform=view_installation_code'),
+        'website_id' => env('CLIENGO_WEBSITE_ID', 'your-website-id'),
+    ],
 
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),

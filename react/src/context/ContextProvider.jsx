@@ -17,6 +17,10 @@ const StateContext = createContext({
     fetchBannerInicio: () => {},
     contactInfo: {},
     fetchContactInfo: () => {},
+    somosBronzenInicio: {},
+    fetchSomosBronzenInicio: () => {},
+    catalogo: {},
+    fetchCatalogo: () => {},
 });
 
 export const ContextProvider = ({ children }) => {
@@ -35,6 +39,8 @@ export const ContextProvider = ({ children }) => {
     const [logos, setLogos] = useState({});
     const [bannerInicio, setBannerInicio] = useState({});
     const [contactInfo, setContactInfo] = useState({});
+    const [somosBronzenInicio, setSomosBronzenInicio] = useState({});
+    const [catalogo, setCatalogo] = useState({});
 
     // User token handlers
     const setUserToken = (token) => {
@@ -74,15 +80,33 @@ export const ContextProvider = ({ children }) => {
         });
     };
 
+    const fetchSomosBronzenInicio = () => {
+        axiosClient.get("/somos-bronzen-inicio").then(({ data }) => {
+            setSomosBronzenInicio(data.data[0]);
+        });
+    };
+
+    const fetchCatalogo = () => {
+        axiosClient.get("/catalogo").then(({ data }) => {
+            setCatalogo(data.data[0]);
+        });
+    };
+
     useEffect(() => {
         fetchLogos();
         fetchBannerInicio();
         fetchContactInfo();
+        fetchSomosBronzenInicio();
+        fetchCatalogo();
     }, []);
 
     return (
         <StateContext.Provider
             value={{
+                catalogo,
+                fetchCatalogo,
+                somosBronzenInicio,
+                fetchSomosBronzenInicio,
                 contactInfo,
                 fetchContactInfo,
                 bannerInicio,
