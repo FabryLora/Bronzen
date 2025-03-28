@@ -4,12 +4,16 @@ use App\Http\Controllers\UserAuthController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\BannerInicioController;
 use App\Http\Controllers\CatalogoController;
+use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\CliengoController;
 use App\Http\Controllers\ContactInfoController;
-
+use App\Http\Controllers\ExcelUploadController;
+use App\Http\Controllers\ImportController;
 use App\Http\Controllers\LogosController;
+use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\SomosBronzenInicioController;
-
+use App\Http\Controllers\SubCategoriaController;
+use App\Http\Controllers\SubProductoController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -28,6 +32,11 @@ Route::get('/contact-info', [ContactInfoController::class, 'index']);
 Route::get("/logos", [LogosController::class, 'index']);
 Route::get("/somos-bronzen-inicio", [SomosBronzenInicioController::class, 'index']);
 Route::get("/catalogo", [CatalogoController::class, 'index']);
+Route::get("/categorias", [CategoriaController::class, 'index']);
+Route::get("/sub-categorias", [SubCategoriaController::class, 'index']);
+Route::get("/productos", [ProductoController::class, 'index']);
+Route::get("/sub-productos", [SubProductoController::class, 'index']);
+
 
 //download
 Route::get('/catalogo/download/{id}', [CatalogoController::class, 'downloadFile']);
@@ -50,5 +59,14 @@ Route::prefix('admin')->group(function () {
         Route::put('/contact-info/{id}', [ContactInfoController::class, 'update']);
         Route::put('/somos-bronzen-inicio/{id}', [SomosBronzenInicioController::class, 'update']);
         Route::put('/catalogo/{id}', [CatalogoController::class, 'update']);
+        Route::apiResource('/categorias', CategoriaController::class);
+        Route::apiResource('/sub-categorias', SubCategoriaController::class);
+        Route::apiResource('/productos', ProductoController::class);
+        Route::apiResource('/sub-productos', SubProductoController::class);
+
+
+
+        //excel
+        Route::post('/importar-excel', [ImportController::class, 'importar']);
     });
 });

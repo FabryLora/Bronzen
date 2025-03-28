@@ -14,7 +14,7 @@ class CatalogoController extends Controller
      */
     public function index()
     {
-        return CatalogoResource::collection(Catalogo::all());
+        return new CatalogoResource(Catalogo::first());
     }
 
 

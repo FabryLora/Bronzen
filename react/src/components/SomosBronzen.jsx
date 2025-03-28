@@ -11,7 +11,7 @@ export default function SomosBronzen() {
             className="h-[680px] w-full bg-no-repeat bg-cover bg-top bg-center"
         >
             <div className="w-[1200px] mx-auto h-full">
-                <div className="flex flex-row justify-between h-full py-20 px-8">
+                <div className="flex flex-row justify-between h-full py-20 ">
                     <div className="flex flex-col w-full text-white gap-12">
                         <h2 className="text-5xl font-bold">
                             {somosBronzenInicio?.title}

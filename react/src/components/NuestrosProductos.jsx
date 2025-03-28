@@ -6,7 +6,7 @@ export default function NuestrosProductos() {
 
     return (
         <div className="min-h-[1043px] bg-[#5b6771]">
-            <div className="w-[1200px] mx-auto py-20 px-3 flex flex-col gap-7">
+            <div className="w-[1200px] mx-auto py-20 flex flex-col gap-7">
                 <h2 className="text-white font-bold text-5xl">
                     NUESTRO PRODUCTOS
                 </h2>

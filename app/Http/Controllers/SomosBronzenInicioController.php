@@ -14,7 +14,7 @@ class SomosBronzenInicioController extends Controller
      */
     public function index()
     {
-        return SomosBronzenInicioResource::collection(SomosBronzenInicio::all());
+        return new SomosBronzenInicioResource(SomosBronzenInicio::first());
     }
 
 

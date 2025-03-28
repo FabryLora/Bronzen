@@ -13,7 +13,7 @@ class BannerInicioController extends Controller
      */
     public function index()
     {
-        return bannerInicioResource::collection(bannerInicio::all());
+        return new bannerInicioResource(bannerInicio::first());
     }
 
 

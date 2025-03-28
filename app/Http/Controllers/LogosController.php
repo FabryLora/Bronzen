@@ -14,7 +14,7 @@ class LogosController extends Controller
      */
     public function index()
     {
-        return LogosResource::collection(Logos::all());
+        return new LogosResource(Logos::first());
     }
 
 

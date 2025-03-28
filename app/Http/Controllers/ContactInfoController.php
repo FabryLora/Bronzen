@@ -12,7 +12,7 @@ class ContactInfoController extends Controller
     public function index()
     {
 
-        return ContactInfoResource::collection(ContactInfo::all());
+        return new ContactInfoResource(ContactInfo::first());
     }
 
 

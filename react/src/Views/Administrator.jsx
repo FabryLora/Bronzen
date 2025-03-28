@@ -79,16 +79,17 @@ export default function Administrator() {
         {
             id: "nuestros-productos",
             open: false,
-            title: "Productos",
+            title: "Nuestros Productos",
             icon: faBoxArchive,
             href: "#",
             subHref: [
                 { title: "Categorias", href: "/dashboard/categorias" },
+                { title: "Sub-categorias", href: "/dashboard/sub-categorias" },
                 {
                     title: "Productos",
                     href: "/dashboard/productos",
                 },
-                { title: "Sub Productos", href: "/dashboard/sub-productos" },
+                { title: "Sub-productos", href: "/dashboard/sub-productos" },
             ],
         },
         {
@@ -149,6 +150,14 @@ export default function Administrator() {
             title: "Metadatos",
             icon: faGear,
             href: "/dashboard/metadatos",
+            subHref: [],
+        },
+        {
+            id: "excel",
+            open: false,
+            title: "excel",
+            icon: faGear,
+            href: "/dashboard/excel",
             subHref: [],
         },
     ]);
@@ -252,7 +261,7 @@ export default function Administrator() {
                                             <AnimatePresence>
                                                 {drop.open &&
                                                     drop.subHref != false && (
-                                                        <ul className="flex flex-col gap-2 overflow-hidden py-2 h-fit border-l ml-6">
+                                                        <ul className="flex flex-col gap-2 overflow-hidden py-2 h-fit border-l border-primary-orange ml-6">
                                                             {drop.subHref.map(
                                                                 (
                                                                     sub,

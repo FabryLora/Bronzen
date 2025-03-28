@@ -21,6 +21,8 @@ const StateContext = createContext({
     fetchSomosBronzenInicio: () => {},
     catalogo: {},
     fetchCatalogo: () => {},
+    categorias: [],
+    fetchCategorias: () => {},
 });
 
 export const ContextProvider = ({ children }) => {
@@ -41,6 +43,7 @@ export const ContextProvider = ({ children }) => {
     const [contactInfo, setContactInfo] = useState({});
     const [somosBronzenInicio, setSomosBronzenInicio] = useState({});
     const [catalogo, setCatalogo] = useState({});
+    const [categorias, setCategorias] = useState([]);
 
     // User token handlers
     const setUserToken = (token) => {
@@ -64,31 +67,37 @@ export const ContextProvider = ({ children }) => {
 
     const fetchLogos = () => {
         axiosClient.get("/logos").then(({ data }) => {
-            setLogos(data.data[0]);
+            setLogos(data.data);
         });
     };
 
     const fetchBannerInicio = () => {
         axiosClient.get("/banner-inicio").then(({ data }) => {
-            setBannerInicio(data.data[0]);
+            setBannerInicio(data.data);
         });
     };
 
     const fetchContactInfo = () => {
         axiosClient.get("/contact-info").then(({ data }) => {
-            setContactInfo(data.data[0]);
+            setContactInfo(data.data);
         });
     };
 
     const fetchSomosBronzenInicio = () => {
         axiosClient.get("/somos-bronzen-inicio").then(({ data }) => {
-            setSomosBronzenInicio(data.data[0]);
+            setSomosBronzenInicio(data.data);
         });
     };
 
     const fetchCatalogo = () => {
         axiosClient.get("/catalogo").then(({ data }) => {
-            setCatalogo(data.data[0]);
+            setCatalogo(data.data);
+        });
+    };
+
+    const fetchCategorias = () => {
+        axiosClient.get("/categorias").then(({ data }) => {
+            setCategorias(data.data);
         });
     };
 
@@ -98,11 +107,14 @@ export const ContextProvider = ({ children }) => {
         fetchContactInfo();
         fetchSomosBronzenInicio();
         fetchCatalogo();
+        fetchCategorias();
     }, []);
 
     return (
         <StateContext.Provider
             value={{
+                categorias,
+                fetchCategorias,
                 catalogo,
                 fetchCatalogo,
                 somosBronzenInicio,
