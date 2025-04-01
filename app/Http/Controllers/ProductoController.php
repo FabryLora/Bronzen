@@ -40,7 +40,11 @@ class ProductoController extends Controller
         return new ProductoResource($producto);
     }
 
-
+    public function ProductoporSubCategoriaId($id)
+    {
+        $productos = Producto::where('sub_categoria_id', $id)->get();
+        return ProductoResource::collection($productos);
+    }
 
     /**
      * Update the specified resource in storage.

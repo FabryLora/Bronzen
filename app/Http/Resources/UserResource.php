@@ -18,6 +18,14 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
+            'cuit' => $this->cuit,
+            'direccion' => $this->direccion,
+            'provincia' => $this->provincia,
+            'localidad' => $this->localidad,
+            'descuento_general' => $this->descuento_general,
+            'descuento_adicional' => $this->descuento_adicional,
+            'autorizado' => $this->autorizado,
+
         ];
     }
 }

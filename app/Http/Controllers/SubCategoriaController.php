@@ -39,6 +39,12 @@ class SubCategoriaController extends Controller
         return new SubCategoriaResource($subCategoria);
     }
 
+    public function SubCategoriaporCategoriaId($id)
+    {
+        $subCategorias = SubCategoria::where('categoria_id', $id)->get();
+        return SubCategoriaResource::collection($subCategorias);
+    }
+
 
     /**
      * Update the specified resource in storage.

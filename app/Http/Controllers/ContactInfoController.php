@@ -31,6 +31,7 @@ class ContactInfoController extends Controller
             'phone' => "nullable|string",
             'second_phone' => "nullable|string",
             'wp' => "nullable|string",
+            'fb' => "nullable|string",
 
         ]);
         $contactInfo->update($data);

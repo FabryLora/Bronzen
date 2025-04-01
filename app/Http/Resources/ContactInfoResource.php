@@ -20,6 +20,7 @@ class ContactInfoResource extends JsonResource
             "phone" => $this->phone,
             "second_phone" => $this->second_phone,
             "wp" => $this->wp,
+            "fb" => $this->fb,
 
         ];
     }

@@ -21,14 +21,27 @@ class UserAuthController extends Controller
             'name' => "required|string|max:255",
             'email' => "required|string|email|max:255|unique:users,email",
             "password" => "required|confirmed|string|min:8",
-
+            'cuit' => 'required|string|max:20',
+            'direccion' => 'nullable|string|max:255',
+            'provincia' => 'nullable|string|max:255',
+            'localidad' => 'nullable|string|max:255',
+            'descuento_general' => 'nullable|integer',
+            'descuento_adicional' => 'nullable|integer',
+            'autorizado' => 'nullable|boolean'
         ]);
 
 
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => bcrypt($data['password'])
+            'password' => bcrypt($data['password']),
+            'cuit' => $data['cuit'],
+            'direccion' => $data['direccion'],
+            'provincia' => $data['provincia'],
+            'localidad' => $data['localidad'],
+            'descuento_general' => $data['descuento_general'],
+            'descuento_adicional' => $data['descuento_adicional'],
+            'autorizado' => $data['autorizado']
         ]);
         $token = $user->createToken('main')->plainTextToken;
 
@@ -103,7 +116,7 @@ class UserAuthController extends Controller
         }
 
         $data = $request->validate([
-            'nomcuit' => 'sometimes|string|max:255',
+            'name' => 'sometimes|string|max:255',
             'email' => 'nullable|email|max:255|unique:users,email,' . $id,
             'cuit' => 'nullable|string|max:20',
             'direccion' => 'nullable|string|max:255',
@@ -112,7 +125,8 @@ class UserAuthController extends Controller
             'password' => 'nullable|string|min:6|confirmed',
             'lista' => 'nullable|string|max:255',
             'autorizado' => 'nullable|boolean',
-            'descuento' => 'nullable|integer'
+            'descuento_general' => 'nullable|integer',
+            'descuento_adicional' => 'nullable|integer'
         ]);
 
         // Solo actualiza la contraseña si se proporciona

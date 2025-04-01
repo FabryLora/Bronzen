@@ -1,4 +1,7 @@
-import { faSquareWhatsapp } from "@fortawesome/free-brands-svg-icons";
+import {
+    faSquareFacebook,
+    faSquareWhatsapp,
+} from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope, faPhone } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
@@ -18,12 +21,14 @@ export default function ContactoAdmin() {
     const [phone, setPhone] = useState(contactInfo?.phone);
     const [wp, setWp] = useState(contactInfo?.wp);
     const [secondPhone, setsecondPhone] = useState(contactInfo?.second_phone);
+    const [fb, setFb] = useState(contactInfo?.fb);
 
     useState(() => {
         setMail(contactInfo?.mail);
         setPhone(contactInfo?.phone);
         setWp(contactInfo?.wp);
         setsecondPhone(contactInfo?.second_phone);
+        setFb(contactInfo?.fb);
     }, [contactInfo]);
 
     const submit = async (ev) => {
@@ -34,6 +39,7 @@ export default function ContactoAdmin() {
         formData.append("phone", phone);
         formData.append("wp", wp);
         formData.append("second_phone", secondPhone);
+        formData.append("fb", fb);
 
         const response = adminAxiosClient.post(
             "/contact-info/1?_method=PUT",
@@ -123,56 +129,88 @@ export default function ContactoAdmin() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="">
-                                <label
-                                    htmlFor="telefono"
-                                    className="flex flex-row gap-2 items-center text-sm/6 font-medium text-gray-900"
-                                >
-                                    <FontAwesomeIcon
-                                        color="#ff9e19"
-                                        icon={faPhone}
-                                        size={"lg"}
-                                    />
-                                    <p>Telefono</p>
-                                </label>
-                                <div className="mt-2">
-                                    <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-primary-orange">
-                                        <div className="shrink-0 select-none text-base text-gray-500 sm:text-sm/6"></div>
-                                        <input
-                                            value={phone}
-                                            onChange={(ev) => {
-                                                setPhone(ev.target.value);
-                                            }}
-                                            id="telefono"
-                                            name="username"
-                                            type="text"
-                                            className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
+                            <div className="flex flex-row gap-4">
+                                <div className="w-full">
+                                    <label
+                                        htmlFor="telefono"
+                                        className="flex flex-row gap-2 items-center text-sm/6 font-medium text-gray-900"
+                                    >
+                                        <FontAwesomeIcon
+                                            color="#ff9e19"
+                                            icon={faPhone}
+                                            size={"lg"}
                                         />
+                                        <p>Telefono</p>
+                                    </label>
+                                    <div className="mt-2">
+                                        <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-primary-orange">
+                                            <div className="shrink-0 select-none text-base text-gray-500 sm:text-sm/6"></div>
+                                            <input
+                                                value={phone}
+                                                onChange={(ev) => {
+                                                    setPhone(ev.target.value);
+                                                }}
+                                                id="telefono"
+                                                name="username"
+                                                type="text"
+                                                className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="w-full">
+                                    <label
+                                        htmlFor="telefono2"
+                                        className="flex flex-row gap-2 items-center text-sm/6 font-medium text-gray-900"
+                                    >
+                                        <FontAwesomeIcon
+                                            icon={faPhone}
+                                            size={"lg"}
+                                            color="#ff9e19"
+                                        />
+                                        <p>Telefono {`(2)`}</p>
+                                    </label>
+                                    <div className="mt-2">
+                                        <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-primary-orange">
+                                            <div className="shrink-0 select-none text-base text-gray-500 sm:text-sm/6"></div>
+                                            <input
+                                                value={secondPhone}
+                                                onChange={(ev) => {
+                                                    setsecondPhone(
+                                                        ev.target.value
+                                                    );
+                                                }}
+                                                id="telefono2"
+                                                name="telefono2"
+                                                type="text"
+                                                className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div className="">
                                 <label
-                                    htmlFor="telefono2"
-                                    className="flex flex-row gap-2 items-center text-sm/6 font-medium text-gray-900"
+                                    htmlFor="fb"
+                                    className="flex flex-row items-center gap-2 text-sm/6 font-medium text-gray-900"
                                 >
                                     <FontAwesomeIcon
-                                        icon={faPhone}
-                                        size={"lg"}
+                                        icon={faSquareFacebook}
+                                        size="xl"
                                         color="#ff9e19"
                                     />
-                                    <p>Telefono {`(2)`}</p>
+                                    <p>Facebook</p>
                                 </label>
                                 <div className="mt-2">
-                                    <div className="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-primary-orange">
+                                    <div className="flex items-center rounded-md bg-white pl-3 outline -outline-offset-1 outline-gray-300  focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-primary-orange">
                                         <div className="shrink-0 select-none text-base text-gray-500 sm:text-sm/6"></div>
                                         <input
-                                            value={secondPhone}
+                                            value={fb}
                                             onChange={(ev) => {
-                                                setsecondPhone(ev.target.value);
+                                                setFb(ev.target.value);
                                             }}
-                                            id="telefono2"
-                                            name="telefono2"
+                                            id="fb"
+                                            name="username"
                                             type="text"
                                             className="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6"
                                         />

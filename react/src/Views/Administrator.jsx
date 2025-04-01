@@ -1,7 +1,6 @@
 import {
     faBars,
     faBoxArchive,
-    faBuilding,
     faChevronRight,
     faEnvelope,
     faGear,
@@ -27,8 +26,19 @@ import bronzenLogo from "../assets/logos/bronzen-logo.png";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function Administrator() {
-    const { adminToken, setAdminToken, currentAdmin, setCurrentAdmin } =
-        useStateContext();
+    const {
+        adminToken,
+        setAdminToken,
+        currentAdmin,
+        setCurrentAdmin,
+        fetchProductos,
+        fetchSubProductos,
+    } = useStateContext();
+
+    useEffect(() => {
+        fetchProductos();
+        fetchSubProductos();
+    }, []);
 
     useEffect(() => {
         adminAxiosClient

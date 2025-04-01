@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string("phone")->nullable();
             $table->string("second_phone")->nullable();
             $table->string("wp")->nullable();
+            $table->string("fb")->nullable();
             $table->timestamps();
         });
     }

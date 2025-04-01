@@ -27,6 +27,8 @@ const StateContext = createContext({
     fetchSubCategorias: () => {},
     productos: [],
     fetchProductos: () => {},
+    subProductos: [],
+    fetchSubProductos: () => {},
 });
 
 export const ContextProvider = ({ children }) => {
@@ -50,6 +52,7 @@ export const ContextProvider = ({ children }) => {
     const [categorias, setCategorias] = useState([]);
     const [subCategorias, setSubCategorias] = useState([]);
     const [productos, setProductos] = useState([]);
+    const [subProductos, setSubProductos] = useState([]);
 
     // User token handlers
     const setUserToken = (token) => {
@@ -119,6 +122,12 @@ export const ContextProvider = ({ children }) => {
         });
     };
 
+    const fetchSubProductos = () => {
+        axiosClient.get("/sub-productos").then(({ data }) => {
+            setSubProductos(data.data);
+        });
+    };
+
     useEffect(() => {
         fetchSubCategorias();
         fetchLogos();
@@ -127,12 +136,13 @@ export const ContextProvider = ({ children }) => {
         fetchSomosBronzenInicio();
         fetchCatalogo();
         fetchCategorias();
-        fetchProductos();
     }, []);
 
     return (
         <StateContext.Provider
             value={{
+                subProductos,
+                fetchSubProductos,
                 productos,
                 fetchProductos,
                 subCategorias,

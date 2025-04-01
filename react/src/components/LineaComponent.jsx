@@ -20,6 +20,7 @@ export default function LineaComponent({ categoriaObject }) {
                 transition={{ ease: "linear", duration: 0.2 }}
             >
                 <Link
+                    to={`/productos/${categoriaObject?.id}`}
                     style={{
                         backgroundImage: `url(${categoriaObject?.image})`,
                     }}
