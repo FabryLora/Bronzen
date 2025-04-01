@@ -6,17 +6,20 @@ import { toast } from "react-hot-toast";
 import adminAxiosClient from "../adminAxiosClient";
 import { useStateContext } from "../context/ContextProvider";
 
-export default function CategoryAdminCard({ category }) {
-    const { fetchCategorias, categorias } = useStateContext();
+export default function SubCategoriasCard({ category }) {
+    const { fetchSubCategorias, categorias } = useStateContext();
 
     const [imagen, setImagen] = useState();
     const [nombre, setNombre] = useState(category?.name);
     const [orden, setOrden] = useState(category?.orden);
     const [edit, setEdit] = useState(false);
+    const [categoriaId, setCategoriaId] = useState(category?.categoriaId);
 
     const hanldeFileChange = (e) => {
         setImagen(e.target.files[0]);
     };
+
+    console.log(category);
 
     const update = async (e) => {
         e.preventDefault();
@@ -26,9 +29,10 @@ export default function CategoryAdminCard({ category }) {
         }
         formData.append("name", nombre ? nombre : " ");
         if (orden) formData.append("orden", orden);
+        formData.append("categoria_id", categoriaId ? categoriaId : " ");
 
         const response = adminAxiosClient.post(
-            `/categorias/${category?.id}?_method=PUT`,
+            `/sub-categorias/${category?.id}?_method=PUT`,
             formData,
             {
                 headers: {
@@ -46,7 +50,7 @@ export default function CategoryAdminCard({ category }) {
         try {
             await response;
             console.log(response);
-            fetchCategorias();
+            fetchSubCategorias(true);
             setEdit(false);
         } catch (error) {
             console.error("Error al guardar:", error);
@@ -58,7 +62,9 @@ export default function CategoryAdminCard({ category }) {
         toast(
             (t) => (
                 <div className="flex flex-col space-y-2">
-                    <p>¿Estás seguro de que deseas eliminar esta categoría?</p>
+                    <p>
+                        ¿Estás seguro de que deseas eliminar esta sub-categoría?
+                    </p>
                     <div className="flex justify-between space-x-2">
                         <button
                             onClick={() => {
@@ -86,7 +92,7 @@ export default function CategoryAdminCard({ category }) {
 
         const confirmDelete = async () => {
             const response = adminAxiosClient.delete(
-                `/categorias/${category?.id}`
+                `/sub-categorias/${category?.id}`
             );
 
             toast.promise(response, {
@@ -98,7 +104,7 @@ export default function CategoryAdminCard({ category }) {
             try {
                 await response;
 
-                fetchCategorias(true);
+                fetchSubCategorias(true);
             } catch (error) {
                 console.error("Error al eliminar:", error);
             }
@@ -109,7 +115,7 @@ export default function CategoryAdminCard({ category }) {
         <tr className={`border text-black odd:bg-gray-100 even:bg-white`}>
             <td className=" align-middle">{orden}</td>
             <td className=" align-middle pl-3">{nombre}</td>
-
+            <td className=" align-middle">{category?.categoriaName}</td>
             <td className=" w-[90px] h-[90px] px-8">
                 {category?.image ? (
                     <img
@@ -157,7 +163,7 @@ export default function CategoryAdminCard({ category }) {
                         <form onSubmit={update} className="text-black">
                             <div className="bg-white p-4 w-[500px] rounded-md">
                                 <h2 className="text-2xl font-semibold mb-4">
-                                    Editar categoria
+                                    Editar sub-categoria
                                 </h2>
                                 <div className="flex flex-col gap-4">
                                     <label htmlFor="imagen">Imagen</label>
@@ -203,6 +209,26 @@ export default function CategoryAdminCard({ category }) {
                                             setOrden(e.target.value)
                                         }
                                     />
+
+                                    <label htmlFor="categoria">Categoria</label>
+                                    <select
+                                        className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
+                                        name="categoria"
+                                        id="categoria"
+                                        value={categoriaId}
+                                        onChange={(e) =>
+                                            setCategoriaId(e.target.value)
+                                        }
+                                    >
+                                        {categorias?.map((categoria) => (
+                                            <option
+                                                key={categoria?.id}
+                                                value={categoria?.id}
+                                            >
+                                                {categoria?.name}
+                                            </option>
+                                        ))}
+                                    </select>
 
                                     <div className="flex justify-end gap-4">
                                         <button

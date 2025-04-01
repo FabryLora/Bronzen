@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 import adminAxiosClient from "../adminAxiosClient";
 import AdminButton from "../Components/AdminButton";
 
+import CustomReactQuill from "../components/CustomReactQuill";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function SomosBronzenAdmin() {
@@ -91,12 +90,7 @@ export default function SomosBronzenAdmin() {
                     </style>
                     <div className="flex flex-col gap-2">
                         <p className="text-lg">Texto</p>
-                        <ReactQuill
-                            className="bg-white"
-                            theme="snow"
-                            value={text}
-                            onChange={setText}
-                        />
+                        <CustomReactQuill value={text} onChange={setText} />
                     </div>
                     <div className="w-full col-span-2 ">
                         <label

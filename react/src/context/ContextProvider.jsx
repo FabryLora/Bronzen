@@ -23,6 +23,10 @@ const StateContext = createContext({
     fetchCatalogo: () => {},
     categorias: [],
     fetchCategorias: () => {},
+    subCategorias: [],
+    fetchSubCategorias: () => {},
+    productos: [],
+    fetchProductos: () => {},
 });
 
 export const ContextProvider = ({ children }) => {
@@ -44,6 +48,8 @@ export const ContextProvider = ({ children }) => {
     const [somosBronzenInicio, setSomosBronzenInicio] = useState({});
     const [catalogo, setCatalogo] = useState({});
     const [categorias, setCategorias] = useState([]);
+    const [subCategorias, setSubCategorias] = useState([]);
+    const [productos, setProductos] = useState([]);
 
     // User token handlers
     const setUserToken = (token) => {
@@ -101,18 +107,36 @@ export const ContextProvider = ({ children }) => {
         });
     };
 
+    const fetchSubCategorias = () => {
+        axiosClient.get("/sub-categorias").then(({ data }) => {
+            setSubCategorias(data.data);
+        });
+    };
+
+    const fetchProductos = () => {
+        axiosClient.get("/productos").then(({ data }) => {
+            setProductos(data.data);
+        });
+    };
+
     useEffect(() => {
+        fetchSubCategorias();
         fetchLogos();
         fetchBannerInicio();
         fetchContactInfo();
         fetchSomosBronzenInicio();
         fetchCatalogo();
         fetchCategorias();
+        fetchProductos();
     }, []);
 
     return (
         <StateContext.Provider
             value={{
+                productos,
+                fetchProductos,
+                subCategorias,
+                fetchSubCategorias,
                 categorias,
                 fetchCategorias,
                 catalogo,

@@ -14,7 +14,8 @@ class SubCategoriaController extends Controller
      */
     public function index()
     {
-        return SubCategoriaResource::collection(SubCategoria::all());
+        $subCategorias = SubCategoria::with('categorias')->get();
+        return SubCategoriaResource::collection($subCategorias);
     }
 
 

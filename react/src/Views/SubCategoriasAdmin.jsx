@@ -2,11 +2,12 @@ import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import adminAxiosClient from "../adminAxiosClient";
-import CategoryAdminCard from "../components/CategoryAdminCard";
+import SubCategoriasCard from "../components/SubCategoriasCard";
+
 import { useStateContext } from "../context/ContextProvider";
 
-export default function CategoriasAdmin() {
-    const { categorias, fetchCategorias } = useStateContext();
+export default function SubCategoriasAdmin() {
+    const { subCategorias, fetchSubCategorias, categorias } = useStateContext();
     const [createView, setCreateView] = useState(false);
 
     const [imagen, setImagen] = useState();
@@ -14,6 +15,7 @@ export default function CategoriasAdmin() {
     const [orden, setOrden] = useState();
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState("");
+    const [categoryId, setCategoryId] = useState();
     const itemsPerPage = 10;
 
     const handleFileChange = (e) => {
@@ -26,8 +28,9 @@ export default function CategoriasAdmin() {
         if (imagen) formData.append("image", imagen);
         if (nombre) formData.append("name", nombre);
         if (orden) formData.append("orden", orden);
+        formData.append("categoria_id", categoryId);
 
-        const reposnse = adminAxiosClient.post("/categorias", formData, {
+        const reposnse = adminAxiosClient.post("/sub-categorias", formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
@@ -41,7 +44,7 @@ export default function CategoriasAdmin() {
 
         try {
             await reposnse;
-            fetchCategorias(true);
+            fetchSubCategorias(true);
             setCreateView(false);
         } catch (error) {
             console.error("Error al guardar:", error);
@@ -49,7 +52,7 @@ export default function CategoriasAdmin() {
     };
 
     // Filtrar categorías por búsqueda
-    const filteredCategorias = categorias
+    const filteredCategorias = subCategorias
         ?.filter((category) => {
             // Si no hay término de búsqueda, mostrar todos los elementos
             if (!searchTerm) return true;
@@ -116,7 +119,7 @@ export default function CategoriasAdmin() {
                         >
                             <div className="bg-white p-4 w-[500px] rounded-md">
                                 <h2 className="text-2xl font-semibold mb-4">
-                                    Crear categoria
+                                    Sub-categorias
                                 </h2>
                                 <div className="flex flex-col gap-4">
                                     <label htmlFor="imagenn">Imagen</label>
@@ -165,6 +168,31 @@ export default function CategoriasAdmin() {
                                         }
                                     />
 
+                                    <label htmlFor="categoriass">
+                                        Categoria
+                                    </label>
+                                    <select
+                                        className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
+                                        name="categoriass"
+                                        id="categoriass"
+                                        value={categoryId}
+                                        onChange={(e) =>
+                                            setCategoryId(e.target.value)
+                                        }
+                                    >
+                                        <option value="">
+                                            Seleccione una categoría
+                                        </option>
+                                        {categorias?.map((category) => (
+                                            <option
+                                                key={category.id}
+                                                value={category.id}
+                                            >
+                                                {category.name}
+                                            </option>
+                                        ))}
+                                    </select>
+
                                     <div className="flex justify-end gap-4">
                                         <button
                                             type="button"
@@ -188,21 +216,21 @@ export default function CategoriasAdmin() {
             </AnimatePresence>
             <div className="flex flex-col w-full  mx-auto gap-3">
                 <h2 className="text-3xl border-b-2 pb-2 text-primary-orange">
-                    Categorias
+                    Sub-categorias
                 </h2>
                 <div className="w-full flex h-fit flex-row gap-5">
                     <input
                         type="text"
-                        placeholder="Buscar categoría..."
+                        placeholder="Buscar sub-categoría..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="px-3 border border-gray-300 rounded-md w-full"
                     />
                     <button
                         onClick={() => setCreateView(true)}
-                        className="bg-primary-orange hover:bg-orange-400 w-[200px] text-white font-bold py-1 px-4 rounded"
+                        className="bg-primary-orange hover:bg-orange-400 w-[300px] text-white font-bold py-1 px-4 rounded"
                     >
-                        Crear categoria
+                        Crear sub-categoria
                     </button>
                 </div>
 
@@ -213,6 +241,7 @@ export default function CategoriasAdmin() {
                                 <td className="text-center">ORDEN</td>
 
                                 <td className="text-center ">NOMBRE</td>
+                                <td className="text-center ">CATEGORIA</td>
                                 <td className="w-[400px] py-2 px-3 text-center">
                                     IMAGEN
                                 </td>
@@ -221,7 +250,7 @@ export default function CategoriasAdmin() {
                         </thead>
                         <tbody className="text-center">
                             {currentItems?.map((category) => (
-                                <CategoryAdminCard
+                                <SubCategoriasCard
                                     key={category.id}
                                     category={category}
                                 />

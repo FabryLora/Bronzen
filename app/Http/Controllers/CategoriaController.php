@@ -18,7 +18,7 @@ class CategoriaController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => 'required|string',
+            'name' => 'sometimes',
             'image' => 'sometimes|file',
             'orden' => 'sometimes|string',
         ]);
@@ -42,7 +42,7 @@ class CategoriaController extends Controller
         $categoria = Categoria::findOrFail($id);
 
         $data = $request->validate([
-            'name' => 'required|string',
+            'name' => 'sometimes',
             'image' => 'sometimes|file',
             'orden' => 'sometimes|string',
         ]);

@@ -1,13 +1,19 @@
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope, faPhone } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useState } from "react";
 import { Links } from "react-router-dom";
+import contactoImage from "../assets/contacto/contacto.png";
 import background from "../assets/inicio/bg-somos-bronzen.jpg";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function Contacto() {
     const { contactInfo } = useStateContext();
+    const [nombre, setNombre] = useState();
+    const [apellido, setApellido] = useState();
+    const [email, setEmail] = useState();
+    const [area, setArea] = useState();
+    const [consulta, setConsulta] = useState();
 
     const links = [
         {
@@ -28,7 +34,7 @@ export default function Contacto() {
         {
             icon: faWhatsapp,
             href: `https://wa.me/${contactInfo?.wp}`,
-            title: contactInfo?.wp,
+            title: "Whatsapp",
         },
     ];
 
@@ -73,9 +79,67 @@ export default function Contacto() {
                                 contacto a la brevedad.
                             </p>
                         </div>
+                        <form
+                            className="grid grid-cols-2 gap-x-6 gap-y-5 w-full max-w-[574px] text-sm text-[#62707b]"
+                            method="POST"
+                        >
+                            <input
+                                value={nombre}
+                                onChange={(e) => setNombre(e.target.value)}
+                                type="text"
+                                className="placeholder:text-gray-500 rounded-[10px]  px-[20px]  bg-white w-[277px] h-[30px] focus:outline-1 focus:outline-primary-orange transition duration-300"
+                                placeholder="Nombre *"
+                            />
+                            <input
+                                value={apellido}
+                                onChange={(e) => setApellido(e.target.value)}
+                                type="text"
+                                className="placeholder:text-gray-500 rounded-[10px] py-[8.5px] px-[20px] bg-white w-[277px] h-[30px] focus:outline-1 focus:outline-primary-orange transition duration-300"
+                                placeholder="Apellido *"
+                            />
+                            <input
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                type="email"
+                                className="placeholder:text-gray-500 rounded-[10px]  px-[20px] bg-white w-[277px] h-[30px] focus:outline-1 focus:outline-primary-orange transition duration-300"
+                                placeholder="Email *"
+                            />
+                            <select
+                                value={area}
+                                onChange={(e) => setArea(e.target.value)}
+                                className="placeholder:text-gray-500 rounded-[10px]  px-[20px] bg-white w-[277px] h-[30px] focus:outline-1 focus:outline-primary-orange transition duration-300"
+                            >
+                                <option value="area de interes">
+                                    Area de Interés
+                                </option>
+                                <option value="venras">Ventas</option>
+                                <option value="informacion">Información</option>
+                                <option value="pagos">Pagos</option>
+                                <option value="pedidos">Pedidos</option>
+                            </select>
+                            <textarea
+                                value={consulta}
+                                onChange={(e) => setConsulta(e.target.value)}
+                                className="placeholder:text-gray-500 col-span-2  rounded-[10px] py-[8.5px] px-[20px] bg-white w-full h-[120px] focus:outline-1 focus:outline-primary-orange transition duration-300"
+                                placeholder="Ingresa aquí tu consulta *"
+                            ></textarea>
+                            <div className="col-span-2 flex justify-center mt-2">
+                                <button
+                                    type="submit"
+                                    className="bg-primary-orange text-white rounded-[30px] h-[30px] px-[30px] w-[100px] font-medium flex justify-center items-center"
+                                >
+                                    ENVIAR
+                                </button>
+                            </div>
+                        </form>
                     </div>
-
-                    <div className="w-full"></div>
+                    <div className="w-full h-full flex items-center">
+                        <img
+                            src={contactoImage}
+                            className="w-[500px] h-[500px]"
+                            alt=""
+                        />
+                    </div>
                 </div>
             </div>
         </div>

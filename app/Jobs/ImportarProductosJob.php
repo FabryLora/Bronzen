@@ -77,10 +77,16 @@ class ImportarProductosJob implements ShouldQueue
                 $categoria = Categoria::firstOrCreate(['name' => $categoriaNombre]);
 
                 // Buscar o crear la SubCategoría
-                $subCategoria = SubCategoria::firstOrCreate([
-                    'name' => $subCategoriaNombre,
-                    'categoria_id' => $categoria->id
-                ]);
+                $subCategoria = SubCategoria::where('name', $subCategoriaNombre)
+                    ->where('categoria_id', $categoria->id)
+                    ->first();
+
+                if (!$subCategoria) {
+                    $subCategoria = SubCategoria::create([
+                        'name' => $subCategoriaNombre,
+                        'categoria_id' => $categoria->id
+                    ]);
+                }
 
                 // Buscar o crear el Producto
                 if (!isset($productosCache[$codigoBase])) {
@@ -107,7 +113,7 @@ class ImportarProductosJob implements ShouldQueue
                     ]
                 );
             } catch (\Exception $e) {
-                \Log::error("Error en la fila {$index}: " . $e->getMessage());
+                Log::error("Error en la fila {$index}: " . $e->getMessage());
                 continue; // Ignorar filas con errores
             }
         }

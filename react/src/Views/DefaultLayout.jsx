@@ -5,13 +5,16 @@ import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import CliengoChat from "../Components/CliengoChat";
 import Footer from "../Components/Footer";
+import wpIcon from "../assets/icons/wp-icon.png";
 import axiosClient from "../axios";
 import NavBar from "../components/NavBar";
+import { useStateContext } from "../context/ContextProvider";
 
 export default function DefaultLayout() {
     /* if (userToken) {
         return <Navigate to={"/privado"} />;
     } */
+    const { contactInfo } = useStateContext();
     const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
@@ -51,6 +54,14 @@ export default function DefaultLayout() {
         fetchCliengoConfig();
     }, []);
 
+    const soloDejarNumeros = (number) => {
+        if (number) {
+            const cleanedNumber = number.replace(/\D/g, "");
+            return `https://wa.me/${cleanedNumber}`;
+        }
+        return "";
+    };
+
     return (
         <>
             <NavBar />
@@ -77,6 +88,14 @@ export default function DefaultLayout() {
                     </motion.button>
                 )}
             </AnimatePresence>
+            <a
+                target="_blank"
+                rel="noopener noreferrer"
+                className="fixed bottom-0 left-0"
+                href={soloDejarNumeros(contactInfo?.wp)}
+            >
+                <img src={wpIcon} alt="" />
+            </a>
         </>
     );
 }

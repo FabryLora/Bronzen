@@ -19,7 +19,8 @@ class SubCategoriaResource extends JsonResource
             'name' => $this->name,
             'orden' => $this->orden,
             'image' => $this->image ? url("storage/{$this->image}") : null,
-            'categoria' => $this->categorias->name,
+            'categoriaName' => $this->categorias?->name,
+            'categoriaId' => $this->categorias?->id,
         ];
     }
 }

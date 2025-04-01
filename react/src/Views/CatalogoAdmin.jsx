@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 import adminAxiosClient from "../adminAxiosClient";
 import AdminButton from "../Components/AdminButton";
 
 import axiosClient from "../axios";
+import CustomReactQuill from "../components/CustomReactQuill";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function CatalogoAdmin() {
@@ -100,12 +99,7 @@ export default function CatalogoAdmin() {
                     </style>
                     <div className="flex flex-col gap-2">
                         <p className="text-lg">Titulo</p>
-                        <ReactQuill
-                            className="bg-white"
-                            theme="snow"
-                            value={title}
-                            onChange={setTitle}
-                        />
+                        <CustomReactQuill value={title} onChange={setTitle} />
                     </div>
 
                     <div className="flex flex-row gap-2">

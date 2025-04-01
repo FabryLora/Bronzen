@@ -9,10 +9,13 @@ import Contenido from "./Views/Contenido";
 import DefaultLayout from "./Views/DefaultLayout";
 import ExcelUploader from "./Views/ExcelUploader";
 import Home from "./Views/Home";
+import Novedades from "./Views/Novedades";
+import ProductosAdmin from "./Views/ProductosAdmin";
 import {
     default as SomosBronzen,
     default as SomosBronzenAdmin,
 } from "./Views/SomosBronzenAdmin";
+import SubCategoriasAdmin from "./Views/SubCategoriasAdmin";
 import SubirProductos from "./Views/SubirProductos";
 
 const router = createBrowserRouter([
@@ -48,6 +51,14 @@ const router = createBrowserRouter([
                 path: "/dashboard/categorias",
                 element: <CategoriasAdmin />,
             },
+            {
+                path: "/dashboard/sub-categorias",
+                element: <SubCategoriasAdmin />,
+            },
+            {
+                path: "/dashboard/productos",
+                element: <ProductosAdmin />,
+            },
         ],
     },
     {
@@ -61,6 +72,10 @@ const router = createBrowserRouter([
             {
                 path: "/contacto",
                 element: <Contacto />,
+            },
+            {
+                path: "/novedades",
+                element: <Novedades />,
             },
         ],
     },

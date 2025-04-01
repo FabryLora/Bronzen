@@ -1,18 +1,21 @@
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import adminAxiosClient from "../adminAxiosClient";
 import { useStateContext } from "../context/ContextProvider";
+import Switch from "./Switch";
 
-export default function CategoryAdminCard({ category }) {
-    const { fetchCategorias, categorias } = useStateContext();
+export default function ProductosCardAdmin({ category }) {
+    const { fetchProductos, productos } = useStateContext();
 
     const [imagen, setImagen] = useState();
     const [nombre, setNombre] = useState(category?.name);
     const [orden, setOrden] = useState(category?.orden);
     const [edit, setEdit] = useState(false);
+    const [featured, setFeatured] = useState(false);
 
     const hanldeFileChange = (e) => {
         setImagen(e.target.files[0]);
@@ -28,7 +31,7 @@ export default function CategoryAdminCard({ category }) {
         if (orden) formData.append("orden", orden);
 
         const response = adminAxiosClient.post(
-            `/categorias/${category?.id}?_method=PUT`,
+            `/productos/${category?.id}?_method=PUT`,
             formData,
             {
                 headers: {
@@ -46,7 +49,7 @@ export default function CategoryAdminCard({ category }) {
         try {
             await response;
             console.log(response);
-            fetchCategorias();
+            fetchProductos();
             setEdit(false);
         } catch (error) {
             console.error("Error al guardar:", error);
@@ -58,7 +61,7 @@ export default function CategoryAdminCard({ category }) {
         toast(
             (t) => (
                 <div className="flex flex-col space-y-2">
-                    <p>¿Estás seguro de que deseas eliminar esta categoría?</p>
+                    <p>¿Estás seguro de que deseas eliminar este producto?</p>
                     <div className="flex justify-between space-x-2">
                         <button
                             onClick={() => {
@@ -86,7 +89,7 @@ export default function CategoryAdminCard({ category }) {
 
         const confirmDelete = async () => {
             const response = adminAxiosClient.delete(
-                `/categorias/${category?.id}`
+                `/productos/${category?.id}`
             );
 
             toast.promise(response, {
@@ -98,7 +101,7 @@ export default function CategoryAdminCard({ category }) {
             try {
                 await response;
 
-                fetchCategorias(true);
+                fetchProductos(true);
             } catch (error) {
                 console.error("Error al eliminar:", error);
             }
@@ -109,6 +112,8 @@ export default function CategoryAdminCard({ category }) {
         <tr className={`border text-black odd:bg-gray-100 even:bg-white`}>
             <td className=" align-middle">{orden}</td>
             <td className=" align-middle pl-3">{nombre}</td>
+            <td className=" align-middle pl-3">{category?.categoria}</td>
+            <td className=" align-middle pl-3">{category?.subCategoria}</td>
 
             <td className=" w-[90px] h-[90px] px-8">
                 {category?.image ? (
@@ -120,6 +125,15 @@ export default function CategoryAdminCard({ category }) {
                 ) : (
                     <p>Sin Imagen</p>
                 )}
+            </td>
+
+            <td className="h-[80px] flex justify-center items-center text-center align-middle">
+                <Switch
+                    id={category?.id}
+                    path={"/productos"}
+                    enabled={featured}
+                    onChange={setFeatured}
+                />
             </td>
 
             <td className="text-center w-[140px]">

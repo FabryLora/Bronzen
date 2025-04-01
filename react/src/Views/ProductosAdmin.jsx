@@ -3,15 +3,20 @@ import { useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import adminAxiosClient from "../adminAxiosClient";
 import CategoryAdminCard from "../components/CategoryAdminCard";
+import ProductosCardAdmin from "../components/ProductosCardAdmin";
 import { useStateContext } from "../context/ContextProvider";
 
-export default function CategoriasAdmin() {
-    const { categorias, fetchCategorias } = useStateContext();
+export default function ProductosAdmin() {
+    const { productos, fetchProductos, categorias, subCategorias } =
+        useStateContext();
     const [createView, setCreateView] = useState(false);
 
     const [imagen, setImagen] = useState();
     const [nombre, setNombre] = useState();
     const [orden, setOrden] = useState();
+    const [feature, setFeature] = useState(false);
+    const [categoriaId, setCategoriaId] = useState();
+    const [subCategoriaId, setSubCategoriaId] = useState();
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState("");
     const itemsPerPage = 10;
@@ -27,7 +32,7 @@ export default function CategoriasAdmin() {
         if (nombre) formData.append("name", nombre);
         if (orden) formData.append("orden", orden);
 
-        const reposnse = adminAxiosClient.post("/categorias", formData, {
+        const reposnse = adminAxiosClient.post("/productos", formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
@@ -41,7 +46,7 @@ export default function CategoriasAdmin() {
 
         try {
             await reposnse;
-            fetchCategorias(true);
+            fetchProductos(true);
             setCreateView(false);
         } catch (error) {
             console.error("Error al guardar:", error);
@@ -49,7 +54,7 @@ export default function CategoriasAdmin() {
     };
 
     // Filtrar categorías por búsqueda
-    const filteredCategorias = categorias
+    const filteredCategorias = productos
         ?.filter((category) => {
             // Si no hay término de búsqueda, mostrar todos los elementos
             if (!searchTerm) return true;
@@ -116,7 +121,7 @@ export default function CategoriasAdmin() {
                         >
                             <div className="bg-white p-4 w-[500px] rounded-md">
                                 <h2 className="text-2xl font-semibold mb-4">
-                                    Crear categoria
+                                    Crear producto
                                 </h2>
                                 <div className="flex flex-col gap-4">
                                     <label htmlFor="imagenn">Imagen</label>
@@ -165,6 +170,62 @@ export default function CategoriasAdmin() {
                                         }
                                     />
 
+                                    <label htmlFor="categoriass">
+                                        Categoria
+                                    </label>
+                                    <select
+                                        className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
+                                        name="categoriass"
+                                        id="categoriass"
+                                        value={categoriaId}
+                                        onChange={(e) =>
+                                            setCategoriaId(e.target.value)
+                                        }
+                                    >
+                                        <option disabled value="">
+                                            Seleccione categoria
+                                        </option>
+                                        {categorias?.map((category) => (
+                                            <option
+                                                key={category.id}
+                                                value={category.id}
+                                            >
+                                                {category.name}
+                                            </option>
+                                        ))}
+                                    </select>
+
+                                    <label htmlFor="sub-categoriass">
+                                        Sub-categoria
+                                    </label>
+                                    <select
+                                        className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
+                                        name="sub-categoriass"
+                                        id="sub-categoriass"
+                                        value={subCategoriaId}
+                                        onChange={(e) =>
+                                            setSubCategoriaId(e.target.value)
+                                        }
+                                    >
+                                        <option disabled value="">
+                                            Seleccione sub-categoria
+                                        </option>
+                                        {subCategorias
+                                            ?.filter(
+                                                (sub) =>
+                                                    sub?.categoriaId ==
+                                                    categoriaId
+                                            )
+                                            ?.map((category) => (
+                                                <option
+                                                    key={category.id}
+                                                    value={category.id}
+                                                >
+                                                    {category.name}
+                                                </option>
+                                            ))}
+                                    </select>
+
                                     <div className="flex justify-end gap-4">
                                         <button
                                             type="button"
@@ -188,7 +249,7 @@ export default function CategoriasAdmin() {
             </AnimatePresence>
             <div className="flex flex-col w-full  mx-auto gap-3">
                 <h2 className="text-3xl border-b-2 pb-2 text-primary-orange">
-                    Categorias
+                    Productos
                 </h2>
                 <div className="w-full flex h-fit flex-row gap-5">
                     <input
@@ -202,7 +263,7 @@ export default function CategoriasAdmin() {
                         onClick={() => setCreateView(true)}
                         className="bg-primary-orange hover:bg-orange-400 w-[200px] text-white font-bold py-1 px-4 rounded"
                     >
-                        Crear categoria
+                        Crear producto
                     </button>
                 </div>
 
@@ -211,17 +272,19 @@ export default function CategoriasAdmin() {
                         <thead className="text-sm font-medium text-black bg-gray-300 uppercase">
                             <tr>
                                 <td className="text-center">ORDEN</td>
-
                                 <td className="text-center ">NOMBRE</td>
+                                <td className="text-center ">CATEGORIA</td>
+                                <td className="text-center ">SUB-CATEGORIA</td>
                                 <td className="w-[400px] py-2 px-3 text-center">
                                     IMAGEN
                                 </td>
+                                <td className="text-center ">NOVEDAD</td>
                                 <td className="text-center">EDITAR</td>
                             </tr>
                         </thead>
                         <tbody className="text-center">
                             {currentItems?.map((category) => (
-                                <CategoryAdminCard
+                                <ProductosCardAdmin
                                     key={category.id}
                                     category={category}
                                 />

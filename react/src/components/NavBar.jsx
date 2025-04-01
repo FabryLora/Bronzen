@@ -4,20 +4,40 @@ import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import bronzenLogo from "../assets/logos/bronzen-logo.png";
+import { useStateContext } from "../context/ContextProvider";
 
 export default function NavBar() {
+    const { categorias } = useStateContext();
+
     const [activeIndex, setActiveIndex] = useState(null);
+
+    const soloPrimeraMayuscula = (string) => {
+        if (!string) return "";
+        const firstLetter = string.charAt(0).toUpperCase();
+        const restOfString = string.slice(1).toLowerCase();
+        return firstLetter + restOfString;
+    };
+
+    const categoriasSub = [...categorias]
+        ?.sort((a, b) => {
+            // Si ambos tienen orden, comparar por orden
+            if (a?.orden && b?.orden) {
+                return a.orden.localeCompare(b.orden);
+            }
+            // Si no, o si son iguales, ordenar por nombre
+            return a?.name?.localeCompare(b?.name);
+        })
+        ?.map((categoria) => ({
+            title: soloPrimeraMayuscula(categoria?.name),
+            path: `productos/${categoria?.id}`,
+        }));
 
     const links = [
         { title: "Novedades", path: "/novedades", subHref: [] },
         {
             title: "Nuestros Productos",
             path: "/dashboard/categorias",
-            subHref: [
-                { title: "Aluminio", path: "/dashboard/categorias" },
-                { title: "Subcategoría 1", path: "/dashboard/subcategoria1" },
-                { title: "Subcategoría 2", path: "/dashboard/subcategoria2" },
-            ],
+            subHref: categoriasSub,
         },
         { title: "Catálogo", path: "/dashboard/productos", subHref: [] },
         { title: "Somos Bronzen", path: "/dashboard/clientes", subHref: [] },

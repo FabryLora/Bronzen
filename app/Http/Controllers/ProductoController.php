@@ -24,10 +24,11 @@ class ProductoController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'code' => 'required|string',
-            'name' => 'required|string',
+            'code' => 'sometimes|string',
+            'name' => 'sometimes|string',
             'image' => 'sometimes|file',
             'orden' => 'sometimes|string',
+            'featured' => 'sometimes|boolean',
             'sub_categoria_id' => 'nullable|exists:sub_categorias,id',
         ]);
 
@@ -50,8 +51,9 @@ class ProductoController extends Controller
         $producto = Producto::findOrFail($id);
 
         $data = $request->validate([
-            'code' => 'required|string',
-            'name' => 'required|string',
+            'featured' => 'sometimes|boolean',
+            'code' => 'sometimes|string',
+            'name' => 'sometmies|string',
             'image' => 'sometimes|file',
             'orden' => 'sometimes|string',
             'sub_categoria_id' => 'nullable|exists:sub_categorias,id',
