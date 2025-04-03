@@ -24,6 +24,8 @@ return new class extends Migration
             $table->integer('bulto_cerrado');
             $table->decimal('precio_de_lista', 10, 2);
             $table->decimal('precio_de_oferta', 10, 2)->nullable();
+            $table->string('color')->nullable();
+            $table->string('medida')->nullable();
             $table->timestamps();
         });
     }

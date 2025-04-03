@@ -13,8 +13,6 @@ export default function ProductosLayout() {
     const categoriaId = pathname[2];
     const subCategoriaId = pathname[3];
 
-    console.log(pathname);
-
     return (
         <div className="">
             <div className="w-[1200px] mx-auto h-[93px] flex flex-col justify-between">

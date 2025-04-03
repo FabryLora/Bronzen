@@ -10,6 +10,7 @@ import DefaultLayout from "./Views/DefaultLayout";
 import ExcelUploader from "./Views/ExcelUploader";
 import Home from "./Views/Home";
 import Novedades from "./Views/Novedades";
+import PrivadaLayout from "./Views/PrivadaLayout";
 import Productos from "./Views/Productos";
 import ProductosAdmin from "./Views/ProductosAdmin";
 import ProductosHijo from "./Views/ProductosHijo";
@@ -105,6 +106,10 @@ const router = createBrowserRouter([
                 ],
             },
         ],
+    },
+    {
+        path: "/privado",
+        element: <PrivadaLayout />,
     },
 ]);
 

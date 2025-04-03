@@ -26,6 +26,8 @@ class SubProductoResource extends JsonResource
             'bulto_cerrado' => $this->bulto_cerrado,
             'precio_de_lista' => $this->precio_de_lista,
             'precio_de_oferta' => $this->precio_de_oferta,
+            'color' => $this->color,
+            'medida' => $this->medida,
         ];
     }
 }

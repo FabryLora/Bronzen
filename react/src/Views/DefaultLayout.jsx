@@ -2,7 +2,7 @@ import { faArrowUp, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import CliengoChat from "../Components/CliengoChat";
 import Footer from "../Components/Footer";
 import wpIcon from "../assets/icons/wp-icon.png";
@@ -11,10 +11,7 @@ import NavBar from "../components/NavBar";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function DefaultLayout() {
-    /* if (userToken) {
-        return <Navigate to={"/privado"} />;
-    } */
-    const { contactInfo } = useStateContext();
+    const { contactInfo, userToken } = useStateContext();
     const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
@@ -61,6 +58,10 @@ export default function DefaultLayout() {
         }
         return "";
     };
+
+    if (userToken) {
+        return <Navigate to={"/privado"} />;
+    }
 
     return (
         <>

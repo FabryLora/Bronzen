@@ -33,6 +33,8 @@ class SubProductoController extends Controller
             'precio_de_lista' => 'required|numeric',
             'precio_de_oferta' => 'nullable|numeric',
             'producto_id' => 'nullable|exists:productos,id',
+            'color' => 'nullable|string',
+            'medida' => 'nullable|string',
         ]);
 
         $imagePath = $request->file('image')->store('images', 'public');
@@ -63,6 +65,8 @@ class SubProductoController extends Controller
             'precio_de_lista' => 'required|numeric',
             'precio_de_oferta' => 'nullable|numeric',
             'producto_id' => 'nullable|exists:productos,id',
+            'color' => 'nullable|string',
+            'medida' => 'nullable|string',
         ]);
 
         if ($request->hasFile('image')) {

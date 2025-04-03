@@ -9,10 +9,11 @@ import axiosClient from "../axios";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function NavBar() {
-    const { categorias } = useStateContext();
+    const { categorias, setCurrentUser, setUserToken, currentUser, userToken } =
+        useStateContext();
 
     const [activeIndex, setActiveIndex] = useState(null);
-    const [loginView, setLoginView] = useState(true);
+    const [loginView, setLoginView] = useState(false);
     const [signupView, setSignupView] = useState(false);
     const [userInfo, setUserInfo] = useState({
         name: "",
@@ -23,10 +24,46 @@ export default function NavBar() {
         direccion: "",
         provincia: "",
         localidad: "",
-        descuento_general: "",
+        descuento_general: 0,
         descuento_adicional: 0,
         autorizado: 0,
     });
+
+    const [name, setName] = useState();
+    const [password, setPassword] = useState();
+
+    const login = async (ev) => {
+        ev.preventDefault();
+
+        axiosClient
+            .post("/login", {
+                name,
+                password,
+            })
+            .then(({ data }) => {
+                setCurrentUser(data.user);
+                setUserToken(data.token);
+
+                // Redirect to admin dashboard or other admin page
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
+
+    const logout = async (ev) => {
+        ev.preventDefault();
+        axiosClient
+            .post("/logout")
+            .then(({ data }) => {
+                setCurrentUser(null);
+                setUserToken(null);
+                // Redirect to admin dashboard or other admin page
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
 
     const onSubmitSignup = async (ev) => {
         ev.preventDefault();
@@ -81,18 +118,40 @@ export default function NavBar() {
             title: soloPrimeraMayuscula(categoria?.name),
             path: `productos/${categoria?.id}`,
         }));
+    let links = [];
 
-    const links = [
-        { title: "Novedades", path: "/novedades", subHref: [] },
-        {
-            title: "Nuestros Productos",
-            path: "/productos",
-            subHref: categoriasSub,
-        },
-        { title: "Catálogo", path: "/dashboard/productos", subHref: [] },
-        { title: "Somos Bronzen", path: "/dashboard/clientes", subHref: [] },
-        { title: "Contacto", path: "/contacto", subHref: [] },
-    ];
+    if (userToken) {
+        links = [
+            { title: "PRODUCTOS", path: "/privado/productos", subHref: [] },
+            {
+                title: "PEDIDOS/PRESUPUESTOS",
+                path: "/privado/pedidos",
+                subHref: [],
+            },
+            {
+                title: "MIS PEDIDOS",
+                path: "/dashboard/mis-pedidos",
+                subHref: [],
+            },
+            { title: "MIS FACTURAS", path: "/dashboard/facturas", subHref: [] },
+        ];
+    } else {
+        links = [
+            { title: "Novedades", path: "/novedades", subHref: [] },
+            {
+                title: "Nuestros Productos",
+                path: "/productos",
+                subHref: categoriasSub,
+            },
+            { title: "Catálogo", path: "/dashboard/productos", subHref: [] },
+            {
+                title: "Somos Bronzen",
+                path: "/dashboard/clientes",
+                subHref: [],
+            },
+            { title: "Contacto", path: "/contacto", subHref: [] },
+        ];
+    }
 
     return (
         <header className="sticky top-0 bg-white h-[112px] my-2 flex justify-between items-center z-40">
@@ -167,7 +226,9 @@ export default function NavBar() {
                             }}
                             className="font-bold w-[145px] h-[51px] border border-primary-orange text-primary-orange rounded-full hover:text-white hover:bg-primary-orange transition duration-300"
                         >
-                            Zona privada
+                            {userToken
+                                ? currentUser?.name?.toUpperCase()
+                                : "Zona privada"}
                         </button>
                         <AnimatePresence>
                             {loginView && (
@@ -175,51 +236,95 @@ export default function NavBar() {
                                     initial={{ y: -30, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
                                     exit={{ y: -30, opacity: 0 }}
-                                    className="absolute bg-white flex justify-start items-start p-5 flex-col right-0 top-20 w-[367px] h-[439px] rounded-md shadow-lg gap-7"
+                                    className={`absolute bg-white flex justify-start items-start p-5 flex-col right-0 top-20 w-[367px] h-[439px] rounded-md shadow-lg gap-7 ${
+                                        userToken ? "h-fit" : ""
+                                    }`}
                                 >
-                                    <h2 className="text-2xl">Iniciar Sesion</h2>
-                                    <div className="flex flex-col gap-2">
-                                        <label
-                                            className="text-[16px]"
-                                            htmlFor="usuario"
-                                        >
-                                            Usuario
-                                        </label>
-                                        <input
-                                            type="text"
-                                            id="usuario"
-                                            className="w-[327px] h-[45px] pl-3  rounded-full outline-1 outline-[#DDDDE0] focus:outline focus:outline-primary-orange transition duration-300"
-                                        />
-                                    </div>
-                                    <div className="flex flex-col gap-2">
-                                        <label
-                                            className="text-[16px]"
-                                            htmlFor="password"
-                                        >
-                                            Contraseña
-                                        </label>
-                                        <input
-                                            type="password"
-                                            id="password"
-                                            className="w-[327px] h-[45px] pl-3  rounded-full outline-1 outline-[#DDDDE0] focus:outline focus:outline-primary-orange transition duration-300"
-                                        />
-                                    </div>
-                                    <button className="w-[327px] h-[51px] bg-primary-orange text-white rounded-full">
-                                        Iniciar sesion
-                                    </button>
-                                    <div className="bg-[#DDDDE0] h-[1px] w-full"></div>
-                                    <div className="flex flex-row justify-center gap-3 w-full">
-                                        <p>No estas registrado?</p>
+                                    {userToken ? (
+                                        <div className="flex flex-col gap-2">
+                                            <h2 className="text-2xl">
+                                                Bienvenido, {currentUser?.name}{" "}
+                                                !
+                                            </h2>
+                                            <p className="text-[16px]">
+                                                {currentUser?.email}
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <h2 className="text-2xl">
+                                                Iniciar Sesion
+                                            </h2>
+                                            <div className="flex flex-col gap-2">
+                                                <label
+                                                    className="text-[16px]"
+                                                    htmlFor="usuario"
+                                                >
+                                                    Usuario
+                                                </label>
+                                                <input
+                                                    value={name}
+                                                    onChange={(ev) =>
+                                                        setName(ev.target.value)
+                                                    }
+                                                    type="text"
+                                                    id="usuario"
+                                                    className="w-[327px] h-[45px] pl-3  rounded-full outline-1 outline-[#DDDDE0] focus:outline focus:outline-primary-orange transition duration-300"
+                                                />
+                                            </div>
+                                            <div className="flex flex-col gap-2">
+                                                <label
+                                                    className="text-[16px]"
+                                                    htmlFor="password"
+                                                >
+                                                    Contraseña
+                                                </label>
+                                                <input
+                                                    value={password}
+                                                    onChange={(ev) =>
+                                                        setPassword(
+                                                            ev.target.value
+                                                        )
+                                                    }
+                                                    type="password"
+                                                    id="password"
+                                                    className="w-[327px] h-[45px] pl-3  rounded-full outline-1 outline-[#DDDDE0] focus:outline focus:outline-primary-orange transition duration-300"
+                                                />
+                                            </div>
+                                            <button
+                                                onClick={login}
+                                                className="w-[327px] h-[51px] bg-primary-orange text-white rounded-full"
+                                            >
+                                                Iniciar sesion
+                                            </button>
+                                        </>
+                                    )}
+
+                                    {userToken && (
                                         <button
-                                            onClick={() => {
-                                                setLoginView(false);
-                                                setSignupView(true);
-                                            }}
-                                            className="text-primary-orange underline"
+                                            onClick={logout}
+                                            className="w-[327px] h-[51px] bg-red-500 text-white rounded-full"
                                         >
-                                            Regsitrate
+                                            LogOut
                                         </button>
-                                    </div>
+                                    )}
+                                    {!userToken && (
+                                        <>
+                                            <div className="bg-[#DDDDE0] h-[1px] w-full"></div>
+                                            <div className="flex flex-row justify-center gap-3 w-full">
+                                                <p>No estas registrado?</p>
+                                                <button
+                                                    onClick={() => {
+                                                        setLoginView(false);
+                                                        setSignupView(true);
+                                                    }}
+                                                    className="text-primary-orange underline"
+                                                >
+                                                    Regsitrate
+                                                </button>
+                                            </div>
+                                        </>
+                                    )}
                                 </motion.div>
                             )}
                         </AnimatePresence>
