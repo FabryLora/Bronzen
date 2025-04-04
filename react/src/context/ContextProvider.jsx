@@ -29,6 +29,10 @@ const StateContext = createContext({
     fetchProductos: () => {},
     subProductos: [],
     fetchSubProductos: () => {},
+    cart: [],
+    addToCart: () => {},
+    removeFromCart: () => {},
+    clearCart: () => {},
 });
 
 export const ContextProvider = ({ children }) => {
@@ -53,6 +57,52 @@ export const ContextProvider = ({ children }) => {
     const [subCategorias, setSubCategorias] = useState([]);
     const [productos, setProductos] = useState([]);
     const [subProductos, setSubProductos] = useState([]);
+    const [cart, setCart] = useState(() => {
+        const savedCart = localStorage.getItem("cart");
+        return savedCart ? JSON.parse(savedCart) : [];
+    });
+
+    const addToCart = (product, additionalInfo) => {
+        setCart((prevCart) => {
+            const exists = prevCart.find((item) => item.id === product.id);
+
+            let updatedCart;
+
+            if (exists) {
+                updatedCart = prevCart.map((item) =>
+                    item.id === product.id
+                        ? {
+                              ...item,
+                              additionalInfo: {
+                                  cantidad: additionalInfo.cantidad,
+                                  subtotal: additionalInfo.subtotal,
+                              },
+                          }
+                        : item
+                );
+            } else {
+                updatedCart = [...prevCart, { ...product, additionalInfo }];
+            }
+
+            localStorage.setItem("cart", JSON.stringify(updatedCart));
+            return updatedCart;
+        });
+    };
+
+    const removeFromCart = (productId) => {
+        const updatedCart = cart.filter((item) => item.id !== productId);
+
+        setCart(updatedCart);
+    };
+
+    const clearCart = () => {
+        setCart([]); // Vaciar el estado del carrito
+        localStorage.removeItem("cart"); // Eliminar el carrito del localStorage
+    };
+
+    useEffect(() => {
+        localStorage.setItem("cart", JSON.stringify(cart));
+    }, [cart]);
 
     // User token handlers
     const setUserToken = (token) => {
@@ -141,6 +191,10 @@ export const ContextProvider = ({ children }) => {
     return (
         <StateContext.Provider
             value={{
+                cart,
+                addToCart,
+                removeFromCart,
+                clearCart,
                 subProductos,
                 fetchSubProductos,
                 productos,

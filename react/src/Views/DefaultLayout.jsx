@@ -60,7 +60,7 @@ export default function DefaultLayout() {
     };
 
     if (userToken) {
-        return <Navigate to={"/privado"} />;
+        return <Navigate to={"/privado/productos"} />;
     }
 
     return (

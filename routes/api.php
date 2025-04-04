@@ -41,6 +41,7 @@ Route::get("/sub-productos", [SubProductoController::class, 'index']);
 
 Route::get('/sub-categories/categories/{id}', [SubCategoriaController::class, 'SubCategoriaporCategoriaId']);
 Route::get('/productos/sub-categories/{id}', [ProductoController::class, 'ProductoporSubCategoriaId']);
+Route::get('/sub-productos/productos/{id}', [SubProductoController::class, 'mostrarSubPRoductosPorProductoId']);
 
 
 //download

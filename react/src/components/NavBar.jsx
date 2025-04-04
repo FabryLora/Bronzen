@@ -154,7 +154,7 @@ export default function NavBar() {
     }
 
     return (
-        <header className="sticky top-0 bg-white h-[112px] my-2 flex justify-between items-center z-40">
+        <header className="sticky top-0 bg-white h-[112px] flex justify-between items-center z-40 shadow-sm">
             <nav className="w-[1200px] mx-auto flex flex-row justify-between items-center font-bold text-sm text-[#333]">
                 <Link to={"/"}>
                     <img src={bronzenLogo} alt="Bronzen Logo" />
@@ -224,7 +224,9 @@ export default function NavBar() {
                                     setLoginView(true);
                                 }
                             }}
-                            className="font-bold w-[145px] h-[51px] border border-primary-orange text-primary-orange rounded-full hover:text-white hover:bg-primary-orange transition duration-300"
+                            className={`font-bold w-[145px] h-[51px] border border-primary-orange text-primary-orange rounded-full hover:text-white hover:bg-primary-orange transition duration-300 ${
+                                userToken ? "bg-primary-orange text-white" : ""
+                            }`}
                         >
                             {userToken
                                 ? currentUser?.name?.toUpperCase()
@@ -305,7 +307,7 @@ export default function NavBar() {
                                             onClick={logout}
                                             className="w-[327px] h-[51px] bg-red-500 text-white rounded-full"
                                         >
-                                            LogOut
+                                            Cerrar Sesion
                                         </button>
                                     )}
                                     {!userToken && (

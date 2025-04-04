@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { PulseLoader } from "react-spinners";
 import defaultPhoto from "../assets/logos/bronzen-logo.png";
 import axiosClient from "../axios";
@@ -8,6 +8,8 @@ export default function ProductosHijo() {
     const { id } = useParams();
     const [productosHijo, setProductosHijo] = useState([]);
     const [loading, setLoading] = useState(false);
+
+    const location = useLocation();
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -36,17 +38,19 @@ export default function ProductosHijo() {
         );
     }
 
+    console.log(location.pathname);
+
     return (
         <div className="grid grid-cols-4 justify-items-center py-8">
-            {productosHijo?.map((subCategoria) => (
+            {productosHijo?.map((prod) => (
                 <Link
-                    to={`/productos/${id}/${subCategoria?.id}`}
+                    to={`${location.pathname}/${prod?.id}`}
                     className="flex flex-col h-[342px]"
-                    key={subCategoria?.id}
+                    key={prod?.id}
                 >
-                    {subCategoria?.image ? (
+                    {prod?.image ? (
                         <img
-                            src={subCategoria?.image}
+                            src={prod?.image}
                             className="w-[269px] h-[271px] border-b-[2px] border-primary-orange"
                             alt=""
                         />
@@ -58,8 +62,8 @@ export default function ProductosHijo() {
                         />
                     )}
 
-                    <h2 className="text-primary-orange font-bold text-sm pt-4">
-                        {subCategoria?.name?.replace("DE ALUMINIO", "")}
+                    <h2 className="text-primary-orange font-bold text-sm pt-4 w-[90%] break-words">
+                        {prod?.name}
                     </h2>
                 </Link>
             ))}

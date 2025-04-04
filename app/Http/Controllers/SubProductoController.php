@@ -45,6 +45,13 @@ class SubProductoController extends Controller
         return new SubProductoResource($subProducto);
     }
 
+    public function mostrarSubPRoductosPorProductoId($id)
+    {
+        $subProductos = SubProducto::where('producto_id', $id)->get();
+
+        return SubProductoResource::collection($subProductos);
+    }
+
 
     /**
      * Update the specified resource in storage.

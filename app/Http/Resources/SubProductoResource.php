@@ -21,6 +21,8 @@ class SubProductoResource extends JsonResource
             'name' => $this->name,
             'image' => $this->image ? url("storage/{$this->image}") : null,
             'producto' => $this->productos->name,
+            'categoria' => $this->productos->subCategoria->categorias->name,
+            'subCategoria' => $this->productos->subCategoria->name,
             'min' => $this->min,
             'min_oferta' => $this->min_oferta,
             'bulto_cerrado' => $this->bulto_cerrado,

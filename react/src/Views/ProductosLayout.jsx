@@ -2,6 +2,7 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { Link, Outlet, useLocation, useParams } from "react-router-dom";
+import loupe from "../assets/icons/loupe.png";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function ProductosLayout() {
@@ -17,16 +18,17 @@ export default function ProductosLayout() {
         <div className="">
             <div className="w-[1200px] mx-auto h-[93px] flex flex-col justify-between">
                 <div className="w-full flex justify-end">
-                    <div className="w-[300px] flex flex-row gap-2 items-center border-b-[2px] py-1 justify-end">
-                        <input
-                            onFocus={() => setOrangeBorder(!orangeBorder)}
-                            className="outline-none w-full"
-                            type="text"
-                        />
-                        <Link>
-                            <FontAwesomeIcon
-                                icon={faMagnifyingGlass}
-                                size="2xl"
+                    <div
+                        className={`w-[300px] flex flex-row gap-2 items-center border-b-[2px] py-1 justify-end ${
+                            orangeBorder ? "border-primary-orange" : ""
+                        }`}
+                    >
+                        <input className="outline-none w-full" type="text" />
+                        <Link className="w-fit h-fit pr-4">
+                            <img
+                                className="w-[35px] h-auto"
+                                src={loupe}
+                                alt=""
                             />
                         </Link>
                     </div>

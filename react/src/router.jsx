@@ -11,10 +11,12 @@ import ExcelUploader from "./Views/ExcelUploader";
 import Home from "./Views/Home";
 import Novedades from "./Views/Novedades";
 import PrivadaLayout from "./Views/PrivadaLayout";
+import ProductoOnly from "./Views/ProductoOnly";
 import Productos from "./Views/Productos";
 import ProductosAdmin from "./Views/ProductosAdmin";
 import ProductosHijo from "./Views/ProductosHijo";
 import ProductosLayout from "./Views/ProductosLayout";
+import ProductosPrivado from "./Views/ProductosPrivado";
 import {
     default as SomosBronzen,
     default as SomosBronzenAdmin,
@@ -103,6 +105,10 @@ const router = createBrowserRouter([
                         path: "/productos/:id/:id",
                         element: <ProductosHijo />,
                     },
+                    {
+                        path: "/productos/:id/:id/:id",
+                        element: <ProductoOnly />,
+                    },
                 ],
             },
         ],
@@ -110,6 +116,12 @@ const router = createBrowserRouter([
     {
         path: "/privado",
         element: <PrivadaLayout />,
+        children: [
+            {
+                path: "/privado/productos",
+                element: <ProductosPrivado />,
+            },
+        ],
     },
 ]);
 

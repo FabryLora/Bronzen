@@ -99,10 +99,7 @@ class UserAuthController extends Controller
 
     public function me(Request $request)
     {
-        return response()->json([
-            'id' => $request->user()->id,
-            $request->user(),
-        ]);
+        return $request->user();
     }
 
     public function update(Request $request, $id)
