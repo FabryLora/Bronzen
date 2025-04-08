@@ -41,14 +41,16 @@ export default function Contacto() {
     return (
         <div
             style={{ backgroundImage: `url(${background})` }}
-            className="h-[903px] bg-no-repeat bg-cover bg-top bg-center"
+            className="h-[903px] max-sm:h-auto max-sm:min-h-screen bg-no-repeat bg-cover bg-top bg-center"
         >
-            <div className="w-[1200px] mx-auto h-full py-20">
-                <div className="flex flex-row h-full">
-                    <div className="w-full flex flex-col text-white gap-10">
-                        <h1 className="text-5xl  font-bold">CONTACTO</h1>
-                        <div className="flex flex-col gap-5">
-                            <h2 className="text-2xl">
+            <div className="w-[1200px] max-sm:w-full max-sm:px-4 mx-auto h-full py-20 max-sm:py-10">
+                <div className="flex flex-row max-sm:flex-col h-full">
+                    <div className="w-full flex flex-col text-white gap-10 max-sm:gap-6">
+                        <h1 className="text-5xl max-sm:text-3xl font-bold">
+                            CONTACTO
+                        </h1>
+                        <div className="flex flex-col gap-5 max-sm:gap-3">
+                            <h2 className="text-2xl max-sm:text-xl">
                                 Estamos para responder tus consultas.
                             </h2>
                             <p className="text-sm">
@@ -80,34 +82,34 @@ export default function Contacto() {
                             </p>
                         </div>
                         <form
-                            className="grid grid-cols-2 gap-x-6 gap-y-5 w-full max-w-[574px] text-sm text-[#62707b]"
+                            className="grid grid-cols-2 max-sm:grid-cols-1 gap-x-6 gap-y-5 w-full max-w-[574px] max-sm:max-w-full text-sm text-[#62707b]"
                             method="POST"
                         >
                             <input
                                 value={nombre}
                                 onChange={(e) => setNombre(e.target.value)}
                                 type="text"
-                                className="placeholder:text-gray-500 rounded-[10px]  px-[20px]  bg-white w-[277px] h-[30px] focus:outline-1 focus:outline-primary-orange transition duration-300"
+                                className="placeholder:text-gray-500 rounded-[10px] px-[20px] bg-white w-[277px] max-sm:w-full h-[30px] focus:outline-1 focus:outline-primary-orange transition duration-300"
                                 placeholder="Nombre *"
                             />
                             <input
                                 value={apellido}
                                 onChange={(e) => setApellido(e.target.value)}
                                 type="text"
-                                className="placeholder:text-gray-500 rounded-[10px] py-[8.5px] px-[20px] bg-white w-[277px] h-[30px] focus:outline-1 focus:outline-primary-orange transition duration-300"
+                                className="placeholder:text-gray-500 rounded-[10px] py-[8.5px] px-[20px] bg-white w-[277px] max-sm:w-full h-[30px] focus:outline-1 focus:outline-primary-orange transition duration-300"
                                 placeholder="Apellido *"
                             />
                             <input
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 type="email"
-                                className="placeholder:text-gray-500 rounded-[10px]  px-[20px] bg-white w-[277px] h-[30px] focus:outline-1 focus:outline-primary-orange transition duration-300"
+                                className="placeholder:text-gray-500 rounded-[10px] px-[20px] bg-white w-[277px] max-sm:w-full h-[30px] focus:outline-1 focus:outline-primary-orange transition duration-300"
                                 placeholder="Email *"
                             />
                             <select
                                 value={area}
                                 onChange={(e) => setArea(e.target.value)}
-                                className="placeholder:text-gray-500 rounded-[10px]  px-[20px] bg-white w-[277px] h-[30px] focus:outline-1 focus:outline-primary-orange transition duration-300"
+                                className="placeholder:text-gray-500 rounded-[10px] px-[20px] bg-white w-[277px] max-sm:w-full h-[30px] focus:outline-1 focus:outline-primary-orange transition duration-300"
                             >
                                 <option value="area de interes">
                                     Area de Interés
@@ -120,7 +122,7 @@ export default function Contacto() {
                             <textarea
                                 value={consulta}
                                 onChange={(e) => setConsulta(e.target.value)}
-                                className="placeholder:text-gray-500 col-span-2  rounded-[10px] py-[8.5px] px-[20px] bg-white w-full h-[120px] focus:outline-1 focus:outline-primary-orange transition duration-300"
+                                className="placeholder:text-gray-500 col-span-2 rounded-[10px] py-[8.5px] px-[20px] bg-white w-full h-[120px] focus:outline-1 focus:outline-primary-orange transition duration-300"
                                 placeholder="Ingresa aquí tu consulta *"
                             ></textarea>
                             <div className="col-span-2 flex justify-center mt-2">
@@ -133,10 +135,10 @@ export default function Contacto() {
                             </div>
                         </form>
                     </div>
-                    <div className="w-full h-full flex items-center">
+                    <div className="w-full h-full flex items-center justify-center max-sm:mt-8 max-sm:mb-10">
                         <img
                             src={contactoImage}
-                            className="w-[500px] h-[500px]"
+                            className="w-[500px] h-[500px] max-sm:w-[90%] max-sm:h-auto max-sm:object-contain"
                             alt=""
                         />
                     </div>

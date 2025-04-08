@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 
 export default function LineaComponent({ categoriaObject }) {
     return (
-        <div className="relative w-[501px] h-[181px]">
+        <div className="relative w-[501px] max-sm:w-full h-[181px]">
             <motion.div
-                className="absolute w-full h-full rounded-3xl  shadow-lg"
+                className="absolute w-full h-full rounded-3xl shadow-lg"
                 initial={{
                     border: 0,
                     boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.0)",
@@ -24,13 +24,13 @@ export default function LineaComponent({ categoriaObject }) {
                     style={{
                         backgroundImage: `url(${categoriaObject?.image})`,
                     }}
-                    className="w-full h-full rounded-3xl flex  items-end justify-start p-6 hover:outline hover:outline-black bg-no-repeat bg-cover bg-center"
+                    className="w-full h-full rounded-3xl flex items-end justify-start p-6 max-sm:p-4 hover:outline hover:outline-black bg-no-repeat bg-cover bg-center"
                 >
                     <div className="flex flex-col">
-                        <p className="text-[#5b6771] font-bold text-2xl">
+                        <p className="text-[#5b6771] font-bold text-2xl max-sm:text-xl">
                             {categoriaObject?.name && "LINEA"}
                         </p>
-                        <h2 className="font-bold text-4xl">
+                        <h2 className="font-bold text-4xl max-sm:text-3xl">
                             {categoriaObject?.name}
                         </h2>
                     </div>

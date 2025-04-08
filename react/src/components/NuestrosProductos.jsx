@@ -14,16 +14,18 @@ export default function NuestrosProductos() {
     }, []);
 
     return (
-        <div className="min-h-[1043px] bg-[#5b6771]">
+        <div className="min-h-[1043px] max-sm:min-h-0 bg-[#5b6771]">
             <div
-                className={`w-[1200px] mx-auto  flex flex-col gap-7 ${
-                    location.pathname.includes("/productos") ? "pt-20" : "py-20"
+                className={`w-[1200px] max-sm:w-full max-sm:px-4 mx-auto flex flex-col gap-7 ${
+                    location.pathname.includes("/productos")
+                        ? "pt-20 max-sm:pt-10"
+                        : "py-20 max-sm:py-10"
                 }`}
             >
-                <h2 className="text-white font-bold text-5xl">
+                <h2 className="text-white font-bold text-5xl max-sm:text-3xl">
                     NUESTROS PRODUCTOS
                 </h2>
-                <div className="grid grid-cols-2 gap-y-6 gap-x-4 justify-items-center">
+                <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-y-6 gap-x-4 justify-items-center">
                     {categorias
                         ?.slice()
                         .sort((a, b) => {
@@ -43,8 +45,8 @@ export default function NuestrosProductos() {
                 </div>
             </div>
             {location.pathname.includes("/productos") && (
-                <div className="flex py-10 justify-center items-center w-full">
-                    <h2 className="text-4xl text-primary-orange font-medium">
+                <div className="flex py-10 max-sm:py-6 justify-center items-center w-full">
+                    <h2 className="text-4xl max-sm:text-2xl text-primary-orange font-medium">
                         Estamos en todo
                     </h2>
                 </div>

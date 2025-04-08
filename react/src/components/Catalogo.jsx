@@ -38,20 +38,20 @@ export default function Catalogo() {
     };
 
     return (
-        <div className="h-[515px] w-full bg-white">
-            <div className="w-[1200px] mx-auto h-full">
-                <div className="flex flex-row h-full">
-                    <div className="w-full flex justify-center items-center">
+        <div className="h-[515px] max-sm:h-auto max-sm:py-12 w-full bg-white">
+            <div className="w-[1200px] max-sm:w-full max-sm:px-4 mx-auto h-full">
+                <div className="flex flex-row max-sm:flex-col h-full">
+                    <div className="w-full flex justify-center items-center max-sm:mb-8">
                         <img
                             src={catalogo?.image}
-                            className="w-[500px] h-[355px]"
+                            className="w-[500px] h-[355px] max-sm:w-full max-sm:h-auto max-sm:object-contain"
                             alt=""
                         />
                     </div>
-                    <div className="w-full flex justify-start items-center">
-                        <div className="flex flex-col gap-11">
+                    <div className="w-full flex justify-start items-center max-sm:justify-center">
+                        <div className="flex flex-col gap-11 max-sm:gap-6 max-sm:items-center">
                             <div
-                                className="prose prose-headings:font-normal prose-strong:font-bold"
+                                className="prose prose-headings:font-normal prose-strong:font-bold max-sm:text-center"
                                 dangerouslySetInnerHTML={{
                                     __html: catalogo?.title,
                                 }}

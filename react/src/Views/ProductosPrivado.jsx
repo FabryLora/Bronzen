@@ -5,18 +5,12 @@ import { Navigate, useNavigate } from "react-router-dom";
 /* import ProductCard from "../components/ProductCard";
 import ProductRow from "../components/ProductRow"; */
 import ProductoPrivadoRow from "../Components/ProductoPrivadoRow";
+import ProductoPrivadoRowMobile from "../Components/ProductoPrivadoRowMobile";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function ProductosPrivado() {
-    const {
-        grupoDeProductos,
-        productos,
-        categorias,
-        subProductos,
-        cart,
-        subCategorias,
-        fetchSubProductos,
-    } = useStateContext();
+    const { categorias, subProductos, subCategorias, fetchSubProductos } =
+        useStateContext();
     const [categoria, setCategoria] = useState("");
     const [nombre, setNombre] = useState("");
     const [codigo, setCodigo] = useState("");
@@ -60,10 +54,10 @@ export default function ProductosPrivado() {
 
     return (
         <div className="w-full pb-20 flex flex-col gap-20 max-sm:px-0">
-            <div className="h-[473px] w-full bg-primary-blue text-black bg-primary-gray flex justify-center items-center">
-                <div className="flex flex-col gap-2 justify-center max-sm:px-6 max-sm:w-full w-[1200px] mx-auto bg-white h-[231px] rounded-xl">
-                    <div className="flex flex-col p-6 h-full justify-between">
-                        <div className="flex flex-col gap-2 text-[#6E7173] text-[16px] h-fit">
+            <div className="h-[473px] max-sm:h-auto max-sm:py-8 w-full bg-primary-blue text-black bg-primary-gray flex justify-center items-center">
+                <div className="flex flex-col gap-2 justify-center max-sm:px-6 max-sm:w-full max-w-[1200px] mx-auto  sm:bg-white h-[231px] max-sm:h-auto max-sm:py-6 rounded-xl">
+                    <div className="flex flex-col p-6 max-sm:p-3 h-full justify-between">
+                        <div className="flex flex-col gap-2 text-[#6E7173] max-sm:text-white text-[16px] h-fit">
                             <label className="font-semibold" htmlFor="avanzada">
                                 Búsqueda avanzada
                             </label>
@@ -71,11 +65,11 @@ export default function ProductosPrivado() {
                                 id="avanzada"
                                 type="text"
                                 placeholder="Código, Nombre, Categoría, Sub categoría"
-                                className="h-[42px]  outline outline-gray-200 focus:outline-primary-orange transition duration-300 rounded-xl pl-3"
+                                className="h-[42px] outline outline-gray-200 focus:outline-primary-orange transition duration-300 rounded-xl pl-3"
                             />
                         </div>
-                        <div className="flex flex-row gap-5 h-fit">
-                            <div className="flex flex-col gap-2 text-[#6E7173] text-[16px]">
+                        <div className="flex flex-row max-sm:flex-col gap-5 max-sm:gap-3 h-fit max-sm:mt-4">
+                            <div className="flex flex-col gap-2 text-[#6E7173] max-sm:text-white text-[16px] max-sm:w-full">
                                 <label
                                     className="font-semibold"
                                     htmlFor="categoria"
@@ -83,24 +77,28 @@ export default function ProductosPrivado() {
                                     Categoría
                                 </label>
                                 <select
-                                    className="h-[42px] w-[270px] outline outline-gray-200 focus:outline-primary-orange transition duration-300 rounded-xl pl-3"
+                                    className="h-[42px] w-[270px] max-sm:w-full outline outline-gray-200 focus:outline-primary-orange transition duration-300 rounded-xl pl-3"
                                     name=""
                                     id="categoria"
                                 >
                                     <option selected disabled value="">
                                         Seleccionar categoría
                                     </option>
-                                    <option value="">
+                                    <option className="max-sm:" value="">
                                         Todas las categorias
                                     </option>
                                     {categorias?.map((cat) => (
-                                        <option key={cat?.id} value={cat?.id}>
+                                        <option
+                                            className="max-sm:text-black"
+                                            key={cat?.id}
+                                            value={cat?.id}
+                                        >
                                             {cat?.name}
                                         </option>
                                     ))}
                                 </select>
                             </div>
-                            <div className="flex flex-col gap-2 text-[#6E7173] text-[16px]">
+                            <div className="flex flex-col gap-2 text-[#6E7173] max-sm:text-white text-[16px] max-sm:w-full">
                                 <label
                                     className="font-semibold"
                                     htmlFor="sub-categoria"
@@ -108,24 +106,28 @@ export default function ProductosPrivado() {
                                     Sub categoria
                                 </label>
                                 <select
-                                    className="h-[42px] w-[270px]  rounded-xl pl-3 outline outline-gray-200 focus:outline-primary-orange transition duration-300"
+                                    className="h-[42px] w-[270px] max-sm:w-full rounded-xl pl-3 outline outline-gray-200 focus:outline-primary-orange transition duration-300"
                                     name=""
                                     id="sub-categoria"
                                 >
                                     <option selected disabled value="">
                                         Seleccionar Sub categoria
                                     </option>
-                                    <option value="">
+                                    <option className="text-black" value="">
                                         Todas las Sub categorias
                                     </option>
                                     {subCategorias?.map((cat) => (
-                                        <option key={cat?.id} value={cat?.id}>
+                                        <option
+                                            className="max-sm:text-black"
+                                            key={cat?.id}
+                                            value={cat?.id}
+                                        >
                                             {cat?.name}
                                         </option>
                                     ))}
                                 </select>
                             </div>
-                            <div className="flex flex-col gap-2 text-[#6E7173] text-[16px]">
+                            <div className="flex flex-col gap-2 text-[#6E7173] max-sm:text-white text-[16px] max-sm:w-full">
                                 <label
                                     className="font-semibold"
                                     htmlFor="nombre"
@@ -136,24 +138,24 @@ export default function ProductosPrivado() {
                                     placeholder="Nombre"
                                     id="nombre"
                                     type="text"
-                                    className="h-[42px] w-[270px] outline outline-gray-200 focus:outline-primary-orange transition duration-300 rounded-xl pl-3"
+                                    className="h-[42px] w-[270px] max-sm:w-full outline outline-gray-200 focus:outline-primary-orange transition duration-300 rounded-xl pl-3"
                                 />
                             </div>
-                            <div className="flex flex-col gap-2 text-[#6E7173] text-[16px]">
+                            <div className="flex flex-col gap-2 text-[#6E7173] max-sm:text-white text-[16px] max-sm:w-full">
                                 <label
                                     className="font-semibold"
-                                    htmlFor="nombre"
+                                    htmlFor="codigo"
                                 >
                                     Código
                                 </label>
                                 <input
                                     placeholder="Código OEM"
-                                    id="nombre"
+                                    id="codigo"
                                     type="text"
-                                    className="h-[42px] outline outline-gray-200 focus:outline-primary-orange transition duration-300 rounded-xl pl-3"
+                                    className="h-[42px] max-sm:w-full outline outline-gray-200 focus:outline-primary-orange transition duration-300 rounded-xl pl-3"
                                 />
                             </div>
-                            <button className="bg-primary-orange font-bold text-white rounded-full w-[105px] h-[42px] self-end">
+                            <button className="bg-primary-orange font-bold text-white rounded-full w-[105px] h-[42px] self-end max-sm:self-center max-sm:mt-2 max-sm:w-full">
                                 Buscar
                             </button>
                         </div>
@@ -184,9 +186,9 @@ export default function ProductosPrivado() {
                 </div>
             </div>
             <div className="flex flex-col gap-3 sm:hidden px-5">
-                {/* {paginatedProducts?.map((prod, index) => (
-                    <ProductCard key={index} product={prod} />
-                ))} */}
+                {paginatedProducts?.map((prod) => (
+                    <ProductoPrivadoRowMobile key={prod?.id} product={prod} />
+                ))}
             </div>
             {totalPages > 1 && (
                 <div className="flex justify-center items-center gap-4 mt-5">

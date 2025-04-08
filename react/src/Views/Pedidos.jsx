@@ -7,19 +7,12 @@ import axiosClient from "../axios";
 /* import PedidoTemplate from "../components/PedidoTemplate";
 import ProductRow from "../components/ProductRow"; */
 import ProductoPrivadoRow from "../Components/ProductoPrivadoRow";
+import ProductoPrivadoRowMobile from "../Components/ProductoPrivadoRowMobile";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function Pedidos() {
-    const {
-        cart,
-        clearCart,
-        currentUser,
-
-        userId,
-        productos,
-
-        informacion,
-    } = useStateContext();
+    const { cart, clearCart, currentUser, userId, productos, informacion } =
+        useStateContext();
 
     const [selected, setSelected] = useState("retiro");
     const [fileName, setFileName] = useState("Seleccionar archivo");
@@ -34,6 +27,13 @@ export default function Pedidos() {
     const [succ, setSucc] = useState(false);
     const [succID, setSuccID] = useState();
     const [currencyType, setCurrencyType] = useState("pesos");
+    const [subtotalConDescuentoUsuario, setSubtotalConDescuentoUsuario] =
+        useState();
+    const [subtotalConDescuentoAdicional, setSubtotalConDescuentoAdicional] =
+        useState();
+    const [subtotalConDescuentoGeneral, setSubtotalConDescuentoGeneral] =
+        useState();
+    const [montoDescuentoRetiro, setMontoDescuentoRetiro] = useState(0);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -51,22 +51,78 @@ export default function Pedidos() {
 
     useEffect(() => {
         let subtotal = 0;
-        let iva = 0;
-        let total = 0;
-        let descuento = currentUser?.descuento > 0 ? currentUser?.descuento : 0; // Verificamos si hay descuento válido
 
+        // Calculate base subtotal from all products
         cart.forEach((prod) => {
-            subtotal += parseFloat(prod.additionalInfo.subtotal);
+            // Determine base price by checking quantity discounts
+            let precioBase;
+            if (
+                prod?.additionalInfo?.cantidad >= prod?.min_oferta &&
+                prod?.precio_de_oferta
+            ) {
+                precioBase = prod?.precio_de_oferta;
+            } else {
+                // Use list price with product discount
+                precioBase =
+                    prod?.precio_de_lista -
+                    (prod?.descuento / 100) * prod?.precio_de_lista;
+            }
+
+            // Add to subtotal
+            subtotal += parseFloat(
+                Number(prod?.additionalInfo?.cantidad) * Number(precioBase)
+            );
         });
 
-        let subtotalConDescuento = subtotal * (1 - descuento / 100); // Aplicamos el descuento si existe
-        total = subtotalConDescuento * 1.21;
-        iva = total - subtotalConDescuento;
+        // Get available discounts
+        const descuentoUsuario =
+            currentUser?.descuento > 0 ? currentUser?.descuento / 100 : 0;
+        const descuentoAdicional =
+            currentUser?.descuento_adicional > 0
+                ? currentUser?.descuento_adicional / 100
+                : 0;
+        const descuentoGeneral =
+            informacion?.descuento_general > 0
+                ? informacion?.descuento_general / 100
+                : 0;
+        const descuentoRetiro =
+            tipo_entrega === "retiro cliente" &&
+            informacion?.descuento_reparto > 0
+                ? informacion?.descuento_reparto / 100
+                : 0;
 
-        setSubtotal(subtotalConDescuento.toFixed(2));
+        // Apply customer discount (if any)
+        const montoDescuentoUsuario = subtotal * descuentoUsuario;
+        const subtotalPostUsuario = subtotal - montoDescuentoUsuario;
+
+        // Apply additional discount (if any)
+        const montoDescuentoAdicional =
+            subtotalPostUsuario * descuentoAdicional;
+        const subtotalPostAdicional =
+            subtotalPostUsuario - montoDescuentoAdicional;
+
+        // Apply general discount
+        const montoDescuentoGeneral = subtotalPostAdicional * descuentoGeneral;
+        const subtotalPostGeneral =
+            subtotalPostAdicional - montoDescuentoGeneral;
+
+        // Apply pickup discount - calculated on the amount AFTER general discount
+        const montoDescuentoRetiro = subtotalPostAdicional * descuentoRetiro;
+        const subtotalFinal = subtotalPostGeneral - montoDescuentoRetiro;
+
+        // Calculate IVA and total
+        const iva = subtotalFinal * 0.21;
+        const total = subtotalFinal + iva;
+
+        // Save all values to state
+        setSubtotal(subtotal.toFixed(2));
+        setSubtotalConDescuentoUsuario(montoDescuentoUsuario);
+        setSubtotalConDescuentoAdicional(montoDescuentoAdicional);
+        setSubtotalConDescuentoGeneral(montoDescuentoGeneral);
+        setMontoDescuentoRetiro(montoDescuentoRetiro);
         setIva(iva.toFixed(2));
         setTotalFinal(total.toFixed(2));
-    }, [cart, tipo_entrega]);
+    }, [cart, tipo_entrega, currentUser, informacion]);
 
     useEffect(() => {
         setArchivo(archivo);
@@ -169,7 +225,7 @@ export default function Pedidos() {
     }, [error]);
 
     return (
-        <div className="w-[1200px] mx-auto py-20 grid grid-cols-2 gap-10 max-sm:px-4">
+        <div className="w-[1200px] max-sm:w-full mx-auto py-20 grid grid-cols-2 gap-10 max-sm:px-4">
             <AnimatePresence>
                 {error && (
                     <motion.div
@@ -230,6 +286,11 @@ export default function Pedidos() {
                         />
                     ))}
                 </div>
+            </div>
+            <div className="h-fit sm:hidden col-span-2">
+                {cart?.map((prod) => (
+                    <ProductoPrivadoRowMobile key={prod?.id} product={prod} />
+                ))}
             </div>
             <div className="col-span-2">
                 <div className="">
@@ -367,7 +428,7 @@ export default function Pedidos() {
                 ></textarea>
             </div>
 
-            <div className="h-fit border border-gray-200 text-white  rounded-lg max-sm:col-span-2 max-sm:order-5">
+            <div className="h-fit border border-gray-200 text-white rounded-lg max-sm:col-span-2 max-sm:order-5">
                 <div className="bg-[#5A646E] rounded-t-lg">
                     <h2 className="p-3 text-xl font-bold">Pedido</h2>
                 </div>
@@ -383,21 +444,81 @@ export default function Pedidos() {
                         </p>
                     </div>
 
+                    {/* Descuento por cantidad/oferta ya está aplicado en el cálculo del precio de cada producto */}
+
                     {currentUser?.descuento > 0 && (
                         <div className="flex flex-row justify-between w-full text-green-500">
-                            <p>Descuento {currentUser?.descuento}%</p>
+                            <p>Descuento Cliente {currentUser?.descuento}%</p>
                             <p>
                                 -$
-                                {(
-                                    parseFloat(subtotal) *
-                                    (currentUser?.descuento / 100)
-                                )?.toLocaleString("es-AR", {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2,
-                                })}
+                                {subtotalConDescuentoUsuario?.toLocaleString(
+                                    "es-AR",
+                                    {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2,
+                                    }
+                                )}
                             </p>
                         </div>
                     )}
+
+                    {currentUser?.descuento_adicional > 0 && (
+                        <div className="flex flex-row justify-between w-full text-green-500">
+                            <p>
+                                Descuento Adicional{" "}
+                                {currentUser?.descuento_adicional}%
+                            </p>
+                            <p>
+                                -$
+                                {subtotalConDescuentoAdicional?.toLocaleString(
+                                    "es-AR",
+                                    {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2,
+                                    }
+                                )}
+                            </p>
+                        </div>
+                    )}
+
+                    {informacion?.descuento_general > 0 && (
+                        <div className="flex flex-row justify-between w-full text-green-500">
+                            <p>
+                                Descuento General{" "}
+                                {informacion?.descuento_general}%
+                            </p>
+                            <p>
+                                -$
+                                {subtotalConDescuentoGeneral?.toLocaleString(
+                                    "es-AR",
+                                    {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2,
+                                    }
+                                )}
+                            </p>
+                        </div>
+                    )}
+
+                    {tipo_entrega === "retiro cliente" &&
+                        informacion?.descuento_reparto > 0 && (
+                            <div className="flex flex-row justify-between w-full text-green-500">
+                                <p>
+                                    Descuento por Retiro{" "}
+                                    {informacion?.descuento_reparto}%
+                                </p>
+                                <p>
+                                    -$
+                                    {montoDescuentoRetiro?.toLocaleString(
+                                        "es-AR",
+                                        {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2,
+                                        }
+                                    )}
+                                </p>
+                            </div>
+                        )}
 
                     <div className="flex flex-row justify-between w-full">
                         <p>IVA 21%</p>

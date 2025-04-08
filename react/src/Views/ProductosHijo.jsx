@@ -34,20 +34,18 @@ export default function ProductosHijo() {
 
     if (loading) {
         return (
-            <div className="w-[1200px] mx-auto h-screen flex justify-center items-center">
+            <div className="w-[1200px] max-sm:w-full mx-auto h-screen flex justify-center items-center">
                 <PulseLoader color="#ff6600" />
             </div>
         );
     }
 
-    console.log(location.pathname);
-
     return (
-        <div className="grid grid-cols-4 justify-items-center py-8">
+        <div className="grid grid-cols-4 max-sm:grid-cols-1 max-sm:gap-8 justify-items-center py-8">
             {productosHijo?.map((prod) => (
                 <Link
                     to={`${location.pathname}/${prod?.id}`}
-                    className="flex flex-col h-[342px]"
+                    className="flex flex-col h-[342px] max-sm:h-auto max-sm:w-full max-sm:items-center"
                     key={prod?.id}
                 >
                     {subProductos?.find(
@@ -60,18 +58,18 @@ export default function ProductosHijo() {
                                         subprod?.productoId === prod?.id
                                 )?.image
                             }
-                            className="w-[269px] h-[271px] border-b-[2px] border-primary-orange"
+                            className="w-[269px] max-sm:w-[80%] h-[271px] max-sm:h-auto max-sm:aspect-square border-b-[2px] border-primary-orange object-contain"
                             alt=""
                         />
                     ) : (
                         <img
                             src={defaultPhoto}
-                            className="w-[269px] h-[271px] border-b-[2px] border-primary-orange object-contain"
+                            className="w-[269px] max-sm:w-[80%] h-[271px] max-sm:h-auto max-sm:aspect-square border-b-[2px] border-primary-orange object-contain"
                             alt=""
                         />
                     )}
 
-                    <h2 className="text-primary-orange font-bold text-sm pt-4 w-[90%] break-words">
+                    <h2 className="text-primary-orange font-bold text-sm pt-4 w-[90%] max-sm:text-center max-sm:w-full break-words">
                         {prod?.name}
                     </h2>
                 </Link>

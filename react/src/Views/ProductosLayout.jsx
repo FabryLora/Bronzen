@@ -16,10 +16,10 @@ export default function ProductosLayout() {
 
     return (
         <div className="">
-            <div className="w-[1200px] mx-auto h-[93px] flex flex-col justify-between">
-                <div className="w-full flex justify-end">
+            <div className="w-[1200px] max-sm:w-full max-sm:px-4 mx-auto h-[93px] max-sm:h-auto max-sm:py-4 flex flex-col justify-between">
+                <div className="w-full flex justify-end max-sm:justify-center">
                     <div
-                        className={`w-[300px] flex flex-row gap-2 items-center border-b-[2px] py-1 justify-end ${
+                        className={`w-[300px] max-sm:w-full flex flex-row gap-2 items-center border-b-[2px] py-1 justify-end ${
                             orangeBorder ? "border-primary-orange" : ""
                         }`}
                     >
@@ -33,8 +33,8 @@ export default function ProductosLayout() {
                         </Link>
                     </div>
                 </div>
-                <div className="w-full border-b-[3px] py-2 px-5 border-primary-orange">
-                    <Link className="font-bold text-primary-gray">
+                <div className="w-full border-b-[3px] py-2 px-5 max-sm:px-2 max-sm:mt-4 border-primary-orange">
+                    <Link className="font-bold text-primary-gray max-sm:text-sm">
                         LINEA{" "}
                         {
                             categorias?.find(
@@ -44,9 +44,11 @@ export default function ProductosLayout() {
                         }
                     </Link>
                     {subCategoriaId && (
-                        <Link className=" text-primary-gray">
+                        <Link className="text-primary-gray max-sm:text-sm">
                             {" "}
-                            <span className="font-bold mr-5">{">"}</span>
+                            <span className="font-bold mr-5 max-sm:mr-2">
+                                {">"}
+                            </span>
                             {
                                 subCategorias?.find(
                                     (categoria) =>
@@ -57,7 +59,7 @@ export default function ProductosLayout() {
                     )}
                 </div>
             </div>
-            <div className="w-[1200px] mx-auto">
+            <div className="w-[1200px] max-sm:w-full max-sm:px-4 mx-auto">
                 <Outlet />
             </div>
         </div>

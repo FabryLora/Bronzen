@@ -85,7 +85,8 @@ export const ContextProvider = ({ children }) => {
                               ...item,
                               additionalInfo: {
                                   cantidad: additionalInfo.cantidad,
-                                  subtotal: additionalInfo.subtotal,
+                                  precio_descuento:
+                                      additionalInfo.precio_descuento,
                               },
                           }
                         : item

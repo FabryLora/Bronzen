@@ -32,9 +32,12 @@ export default function ProductoPrivadoRow({ productoObject }) {
         const existsInCart = cart.find((item) => item.id === productoObject.id);
 
         if (existsInCart) {
-            addToCart(productoObject, { cantidad });
+            addToCart(productoObject, {
+                cantidad,
+                precio_descuento: precioConDescuento,
+            });
         }
-    }, [cantidad]);
+    }, [cantidad, precioConDescuento]);
 
     const [hoverCart, setHoverCart] = useState(false);
 
@@ -185,7 +188,12 @@ input[type="number"] {
                     <button
                         onMouseEnter={() => setHoverCart(true)}
                         onMouseLeave={() => setHoverCart(false)}
-                        onClick={() => addToCart(productoObject, { cantidad })}
+                        onClick={() =>
+                            addToCart(productoObject, {
+                                cantidad,
+                                precio_descuento: precioConDescuento,
+                            })
+                        }
                     >
                         {!hoverCart ? (
                             <img

@@ -34,7 +34,7 @@ export default function BannerInicio() {
                     >
                         <button
                             onClick={() => setVideoOpen(false)}
-                            className="absolute top-10 right-10"
+                            className="absolute top-10 right-10 max-sm:top-5 max-sm:right-5"
                         >
                             <FontAwesomeIcon
                                 icon={faX}
@@ -44,7 +44,7 @@ export default function BannerInicio() {
                         </button>
                         <iframe
                             ref={videoRef}
-                            className="w-full max-w-[1200px] aspect-video"
+                            className="w-full max-w-[1200px] aspect-video max-sm:h-auto max-sm:px-4"
                             src={bannerInicio?.video?.replace(
                                 "watch?v=",
                                 "embed/"
@@ -59,15 +59,15 @@ export default function BannerInicio() {
                 )}
             </AnimatePresence>
 
-            <div className="relative h-[216px] w-full flex justify-center items-center">
+            <div className="relative h-[216px] max-sm:h-[251px] w-full flex justify-center items-center">
                 <img
                     src={bannerInicio?.imagen}
                     className="absolute w-full h-full object-cover"
                     alt=""
                 />
-                <div className="absolute w-[1200px] mx-auto">
-                    <div className="flex flex-col items-end py-8 text-white gap-5">
-                        <h2 className="font-bold text-4xl">
+                <div className="absolute w-[1200px] mx-auto max-sm:w-full max-sm:px-4">
+                    <div className="flex flex-col items-end py-8 text-white gap-5 max-sm:items-center max-sm:text-center">
+                        <h2 className="font-bold text-4xl max-sm:text-3xl">
                             {bannerInicio?.titulo}
                         </h2>
                         <p className="text-sm">{bannerInicio?.subtitulo}</p>

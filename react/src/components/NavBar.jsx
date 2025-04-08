@@ -1,4 +1,4 @@
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
@@ -35,11 +35,14 @@ export default function NavBar() {
         autorizado: 0,
     });
 
+    const [mobileSideBar, setMobileSideBar] = useState(false);
+
     const [name, setName] = useState();
     const [password, setPassword] = useState();
 
     const userRef = useRef(null);
     const userSignRef = useRef(null);
+    const sidebarRef = useRef(null);
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -51,6 +54,12 @@ export default function NavBar() {
                 !userSignRef.current.contains(event.target)
             ) {
                 setSignupView(false);
+            }
+            if (
+                sidebarRef.current &&
+                !sidebarRef.current.contains(event.target)
+            ) {
+                setMobileSideBar(false);
             }
         }
 
@@ -183,12 +192,110 @@ export default function NavBar() {
     }
 
     return (
-        <header className="sticky top-0 bg-white h-[112px] flex justify-between items-center z-40">
-            <nav className="w-[1200px] mx-auto flex flex-row justify-between items-center font-bold text-sm text-[#333]">
-                <Link to={"/"}>
-                    <img src={bronzenLogo} alt="Bronzen Logo" />
+        <header className="sticky top-0 bg-white h-[112px] flex justify-between items-center z-40 max-sm:h-[84px]">
+            <nav className=" w-[1200px] max-sm:w-full max-sm:px-4 mx-auto flex flex-row justify-between max-sm:justify-start items-center font-bold text-sm text-[#333]">
+                <div className="relative flex flex-row  justify-between w-full sm:hidden">
+                    <div className="flex flex-row gap-4 items-center ">
+                        <button
+                            onClick={() => setMobileSideBar(!mobileSideBar)}
+                            className="sm:hidden"
+                        >
+                            <FontAwesomeIcon
+                                icon={faBars}
+                                size="xl"
+                                color="#666666"
+                            />
+                        </button>
+                        <Link className="" to={"/"}>
+                            <img
+                                className="w-[120px] h-[22px]"
+                                src={bronzenLogo}
+                                alt="Bronzen Logo"
+                            />
+                        </Link>
+                    </div>
+                    <button
+                        onClick={() => {
+                            if (loginView || signupView) {
+                                setLoginView(false);
+                                setSignupView(false);
+                            } else {
+                                setLoginView(true);
+                            }
+                        }}
+                        className={`font-bold w-[99px] h-[35px] border text-xs border-primary-orange text-primary-orange rounded-full hover:text-white hover:bg-primary-orange transition duration-300 ${
+                            userToken ? "bg-primary-orange text-white" : ""
+                        }`}
+                    >
+                        {userToken
+                            ? currentUser?.name?.toUpperCase()
+                            : "Zona privada"}
+                    </button>
+                    {mobileSideBar && (
+                        <div className="absolute top-[59px] -left-4 w-screen h-screen z-10 flex justify-start items-center ">
+                            <div
+                                ref={sidebarRef}
+                                className="h-screen w-[80%] bg-[#333333] text-white pt-20"
+                            >
+                                <div className="flex flex-row justify-between border-b border-primary-orange px-4 py-3">
+                                    <div className="  w-full ">
+                                        <p className="font-bold text-[14px]">
+                                            {userToken
+                                                ? currentUser?.name
+                                                : "Zona Privada"}
+                                        </p>
+                                    </div>
+                                    <button className="text-[14px] font-bold text-primary-orange">
+                                        Salir
+                                    </button>
+                                </div>
+                                <div>
+                                    {links.map((link, index) => (
+                                        <div
+                                            key={index}
+                                            className="flex flex-col gap-2 px-4 py-3 border-b border-[#434343]"
+                                        >
+                                            <Link
+                                                to={link.path}
+                                                className="text-[14px] font-bold"
+                                            >
+                                                {link.title}
+                                            </Link>
+                                            {link.subHref.length > 0 && (
+                                                <ul className="flex flex-col gap-2">
+                                                    {link.subHref.map(
+                                                        (subLink, subIndex) => (
+                                                            <li
+                                                                key={subIndex}
+                                                                className="text-[#999] text-[13px] font-normal hover:text-[#333] transition duration-300"
+                                                            >
+                                                                <Link
+                                                                    to={
+                                                                        subLink.path
+                                                                    }
+                                                                >
+                                                                    {
+                                                                        subLink.title
+                                                                    }
+                                                                </Link>
+                                                            </li>
+                                                        )
+                                                    )}
+                                                </ul>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                <Link className="max-sm:hidden" to={"/"}>
+                    <img className="" src={bronzenLogo} alt="Bronzen Logo" />
                 </Link>
-                <ul className="flex flex-row gap-8">
+
+                <ul className="flex flex-row gap-8 max-sm:hidden">
                     {links.map((link, index) => (
                         <li
                             key={index}

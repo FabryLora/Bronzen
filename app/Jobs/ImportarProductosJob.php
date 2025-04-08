@@ -28,10 +28,16 @@ class ImportarProductosJob implements ShouldQueue
 
     private function convertirPrecio($precio)
     {
-        $precio = str_replace(['$', ' '], '', $precio);
-        $precio = str_replace('.', '', $precio); // Quita separador de miles
-        $precio = str_replace(',', '.', $precio); // Reemplaza coma decimal por punto
+        // Elimina cualquier carácter que no sea número, punto o coma
+        $precio = preg_replace('/[^0-9.,]/', '', $precio);
 
+        // Quita el punto de los miles
+        $precio = str_replace('.', '', $precio);
+
+        // Reemplaza la coma decimal por punto
+        $precio = str_replace(',', '.', $precio);
+
+        // Verifica si es numérico y lo castea a float
         return is_numeric($precio) ? (float)$precio : null;
     }
 

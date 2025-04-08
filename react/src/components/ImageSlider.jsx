@@ -14,45 +14,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export default function CubierteroSlider() {
+export default function ImageSlider() {
     const { subProductos, fetchSubProductos } = useStateContext();
 
     useEffect(() => {
         fetchSubProductos();
     }, []);
-
-    const organizadores = [
-        {
-            color: "white",
-            codigo: "LC-315",
-            image: " https://picsum.photos/id/237/200/300",
-        },
-        {
-            color: "gray",
-            codigo: "LC-315",
-            image: " https://picsum.photos/id/236/200/300",
-        },
-        {
-            color: "white",
-            codigo: "LC-315",
-            image: " https://picsum.photos/id/235/200/300",
-        },
-        {
-            color: "gray",
-            codigo: "LC-315",
-            image: " https://picsum.photos/id/234/200/300",
-        },
-        {
-            color: "white",
-            codigo: "LC-315",
-            image: " https://picsum.photos/id/233/200/300",
-        },
-        {
-            color: "gray",
-            codigo: "LC-315",
-            image: " https://picsum.photos/id/232/200/300",
-        },
-    ];
 
     return (
         <div className="w-full h-full relative overflow-x-hidden">
@@ -106,8 +73,8 @@ export default function CubierteroSlider() {
                                     src={subprod?.image}
                                     className="w-full h-[90%] object-contain"
                                 />
-                                <div className="h-[10%] w-full flex flex-col items-end gap-2">
-                                    <h2 className="text-[#5b6670] text-[17px]">
+                                <div className="h-[10%] w-full flex flex-col items-end gap-2 max-sm:items-center ">
+                                    <h2 className="text-[#5b6670] text-[17px] max-sm:text-[15px]">
                                         {subprod?.name}
                                     </h2>
                                     <Link
@@ -123,7 +90,7 @@ export default function CubierteroSlider() {
 
                 {/* Flechas de navegación personalizadas con FontAwesome */}
                 <div
-                    className="swiper-button-prev flex items-center justify-center"
+                    className="swiper-button-prev flex items-center justify-center max-sm:left-2"
                     style={{
                         color: "gray",
                         position: "absolute",
@@ -139,7 +106,7 @@ export default function CubierteroSlider() {
                     <FontAwesomeIcon icon={faChevronLeft} />
                 </div>
                 <div
-                    className="swiper-button-next flex items-center justify-center"
+                    className="swiper-button-next flex items-center justify-center max-sm:right-2"
                     style={{
                         color: "gray",
                         position: "absolute",

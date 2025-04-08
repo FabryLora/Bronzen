@@ -3,15 +3,17 @@ import ImageSlider from "./ImageSlider";
 
 export default function NovedadesInicio() {
     return (
-        <div className="h-[560px]">
-            <div className="max-w-[1200px] mx-auto h-full flex flex-row">
-                <div className="w-1/2 h-full ">
+        <div className="h-[560px] max-sm:h-auto">
+            <div className="max-w-[1200px] mx-auto h-full flex flex-row max-sm:flex-col max-sm:w-full">
+                <div className="w-1/2 h-full max-sm:w-full max-sm:h-[350px]">
                     <ImageSlider />
                 </div>
-                <div className="w-1/2 h-full flex flex-col gap-10 justify-center items-end">
-                    <div className="flex flex-col gap-3 text-primary-gray">
-                        <h2 className=" text-6xl font-bold">NOVEDADES</h2>
-                        <p className="italic text-2xl font-medium text-right">
+                <div className="w-1/2 h-full flex flex-col gap-10 justify-center items-end max-sm:w-full max-sm:items-center max-sm:py-8 max-sm:gap-6">
+                    <div className="flex flex-col gap-3 text-primary-gray max-sm:items-center">
+                        <h2 className="text-6xl font-bold max-sm:text-4xl">
+                            NOVEDADES
+                        </h2>
+                        <p className="italic text-2xl font-medium text-right max-sm:text-xl max-sm:text-center">
                             MARZO 2025
                         </p>
                     </div>

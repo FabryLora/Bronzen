@@ -51,7 +51,7 @@ export default function ProductoOnly() {
 
     if (loading) {
         return (
-            <div className="w-[1200px] mx-auto h-screen flex justify-center items-center">
+            <div className="w-[1200px] max-sm:w-full mx-auto h-screen flex justify-center items-center">
                 <PulseLoader color="#ff6600" />
             </div>
         );
@@ -77,31 +77,31 @@ export default function ProductoOnly() {
     ];
 
     return (
-        <div className="flex w-full pb-40">
+        <div className="flex w-full pb-40 max-sm:pb-20">
             {/* imagen */}
-            <div className="flex flex-row w-full">
-                <div className="relative min-w-[376px] h-[378px] border-b-2 border-primary-orange ">
+            <div className="flex flex-row max-sm:flex-col w-full">
+                <div className="relative min-w-[376px] max-sm:min-w-0 max-sm:w-full h-[378px] max-sm:h-[280px] border-b-2 border-primary-orange max-sm:mb-20">
                     <img
                         src={
                             currentSubProduct?.image
                                 ? currentSubProduct?.image
                                 : defaultPhoto
                         }
-                        className="w-full h-full object-contain max-w-[376px]"
+                        className="w-full h-full object-contain max-w-[376px] max-sm:max-w-full"
                         alt=""
                         onError={(e) => {
                             e.target.onerror = null; // prevents looping
                             e.target.src = defaultPhoto;
                         }}
                     />
-                    <div className="absolute -bottom-24 flex flex-row gap-3">
+                    <div className="absolute -bottom-24 max-sm:relative max-sm:bottom-0 max-sm:mt-4 max-sm:mb-8 flex flex-row gap-3 max-sm:flex-wrap max-sm:justify-center">
                         {subProductos?.map((subProd) => (
                             <button
                                 onClick={() => {
                                     setCurrentSubProduct(subProd);
                                 }}
                                 key={subProd?.id}
-                                className={`w-[96px] h-[86px] border-primary-orange ${
+                                className={`w-[96px] max-sm:w-[70px] h-[86px] max-sm:h-[70px] border-primary-orange ${
                                     subProd?.id === currentSubProduct?.id
                                         ? "border"
                                         : ""
@@ -124,26 +124,26 @@ export default function ProductoOnly() {
                         ))}
                     </div>
                 </div>
-                <div className="w-full flex flex-col gap-10 p-4">
-                    <div className="flex flex-col">
+                <div className="w-full flex flex-col gap-10 max-sm:gap-6 p-4">
+                    <div className="flex flex-col max-sm:items-center">
                         <h2 className="text-2xl text-primary-orange font-bold">
                             {currentSubProduct?.code}
                         </h2>
-                        <h2 className="text-[22px] font-bold text-primary-gray">
+                        <h2 className="text-[22px] font-bold text-primary-gray max-sm:text-center">
                             {currentSubProduct?.producto}
                         </h2>
                     </div>
 
                     <div className="w-full flex flex-col gap-4">
-                        <p className="text-sm text-primary-gray border-primary-gray border-b">
+                        <p className="text-sm text-primary-gray border-primary-gray border-b max-sm:text-center">
                             Disponible en:
                         </p>
-                        <div className="flex flex-col px-1 py-4 gap-10">
-                            <div className="flex flex-row gap-10">
+                        <div className="flex flex-col px-1 py-4 gap-10 max-sm:gap-6">
+                            <div className="flex flex-row gap-10 max-sm:flex-wrap max-sm:justify-center max-sm:gap-4">
                                 {subProductos?.map((subProd) => (
                                     <div
                                         key={subProd?.id}
-                                        className="flex flex-col min-w-[100px] gap-1 items-center justify-center"
+                                        className="flex flex-col min-w-[100px] max-sm:min-w-[80px] gap-1 items-center justify-center"
                                     >
                                         <button
                                             onClick={() => {
@@ -162,11 +162,11 @@ export default function ProductoOnly() {
                                     </div>
                                 ))}
                             </div>
-                            <div className="flex flex-row gap-10">
+                            <div className="flex flex-row gap-10 max-sm:flex-wrap max-sm:justify-center max-sm:gap-4">
                                 {subProductos?.map((subProd) => (
                                     <div
                                         key={subProd?.id}
-                                        className="flex min-w-[100px] flex-col gap-1 items-center justify-center"
+                                        className="flex min-w-[100px] max-sm:min-w-[80px] flex-col gap-1 items-center justify-center"
                                     >
                                         <button
                                             className={`w-[15px] h-[15px] rounded-full border border-primary-orange hover:bg-primary-orange transition duration-300`}
@@ -180,7 +180,7 @@ export default function ProductoOnly() {
                         </div>
                     </div>
 
-                    <div className="flex flex-row justify-end items-center gap-2">
+                    <div className="flex flex-row justify-end max-sm:justify-center items-center gap-2">
                         <p className="text-sm text-primary-gray">Compartir:</p>
                         <div className="flex flex-row gap-2">
                             {socialLinks?.map((link, index) => (
