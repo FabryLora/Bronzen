@@ -71,12 +71,12 @@ class UserAuthController extends Controller
         $user = Auth::user();
 
 
-        /* if (!$user->autorizado) {
+        if (!$user->autorizado) {
             Auth::logout();
             return response([
                 'error' => 'Your account is not authorized. Please contact support.'
             ], 403);
-        } */
+        }
 
         $token = $user->createToken('main')->plainTextToken;
 
@@ -114,16 +114,16 @@ class UserAuthController extends Controller
 
         $data = $request->validate([
             'name' => 'sometimes|string|max:255',
-            'email' => 'nullable|email|max:255|unique:users,email,' . $id,
-            'cuit' => 'nullable|string|max:20',
-            'direccion' => 'nullable|string|max:255',
-            'provincia' => 'nullable|string|max:255',
-            'localidad' => 'nullable|string|max:255',
-            'password' => 'nullable|string|min:6|confirmed',
-            'lista' => 'nullable|string|max:255',
-            'autorizado' => 'nullable|boolean',
-            'descuento_general' => 'nullable|integer',
-            'descuento_adicional' => 'nullable|integer'
+            'email' => 'sometimes|email|max:255|unique:users,email,' . $id,
+            'cuit' => 'sometimes|string|max:20',
+            'direccion' => 'sometimes|string|max:255',
+            'provincia' => 'sometimes|string|max:255',
+            'localidad' => 'sometimes|string|max:255',
+            'password' => 'sometimes|string|min:6|confirmed',
+            'lista' => 'sometimes|string|max:255',
+            'autorizado' => 'sometimes|boolean',
+            'descuento_general' => 'sometimes|integer',
+            'descuento_adicional' => 'sometimes|integer'
         ]);
 
         // Solo actualiza la contraseña si se proporciona

@@ -3,15 +3,20 @@ import Administrator from "./Views/Administrator";
 import AdminLogin from "./Views/AdminLogin";
 import CatalogoAdmin from "./Views/CatalogoAdmin";
 import CategoriasAdmin from "./Views/CategoriasAdmin";
+import ClientesAdmin from "./Views/ClientesAdmin";
 import Contacto from "./Views/Contacto";
 import ContactoAdmin from "./Views/ContactoAdmin";
 import Contenido from "./Views/Contenido";
 import DefaultLayout from "./Views/DefaultLayout";
 import ExcelUploader from "./Views/ExcelUploader";
 import Home from "./Views/Home";
+import Informacion from "./Views/Informacion";
+import Mispedidos from "./Views/MisPedidos";
 import Novedades from "./Views/Novedades";
+import Pedidos from "./Views/Pedidos";
 import PrivadaLayout from "./Views/PrivadaLayout";
 import ProductoOnly from "./Views/ProductoOnly";
+import ProductoOnlyPrivada from "./Views/ProductoOnlyPrivada";
 import Productos from "./Views/Productos";
 import ProductosAdmin from "./Views/ProductosAdmin";
 import ProductosHijo from "./Views/ProductosHijo";
@@ -71,6 +76,14 @@ const router = createBrowserRouter([
                 path: "/dashboard/sub-productos",
                 element: <SubProductosAdmin />,
             },
+            {
+                path: "/dashboard/clientes",
+                element: <ClientesAdmin />,
+            },
+            {
+                path: "/dashboard/informacion",
+                element: <Informacion />,
+            },
         ],
     },
     {
@@ -120,6 +133,18 @@ const router = createBrowserRouter([
             {
                 path: "/privado/productos",
                 element: <ProductosPrivado />,
+            },
+            {
+                path: "/privado/pedidos",
+                element: <Pedidos />,
+            },
+            {
+                path: "/privado/mis-pedidos",
+                element: <Mispedidos />,
+            },
+            {
+                path: "/privado/productos/:id",
+                element: <ProductoOnlyPrivada />,
             },
         ],
     },

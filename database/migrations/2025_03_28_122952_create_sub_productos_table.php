@@ -21,10 +21,11 @@ return new class extends Migration
             $table->foreignIdFor(Producto::class, 'producto_id')->nullable()->constrained();
             $table->integer('min');
             $table->integer('min_oferta')->nullable();
-            $table->integer('descuento')->nullable();
+            $table->integer('descuento')->default(0);
             $table->integer('bulto_cerrado');
             $table->decimal('precio_de_lista', 10, 2);
             $table->decimal('precio_de_oferta', 10, 2)->nullable();
+            $table->boolean('stock')->default(true);
             $table->string('color')->nullable();
             $table->string('medida')->nullable();
             $table->timestamps();

@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import adminAxiosClient from "../adminAxiosClient";
 import axiosClient from "../axios";
 
 const StateContext = createContext({
@@ -33,6 +34,12 @@ const StateContext = createContext({
     addToCart: () => {},
     removeFromCart: () => {},
     clearCart: () => {},
+    clientes: [],
+    fetchClientes: () => {},
+    provincias: [],
+    fetchProvincias: () => {},
+    informacion: {},
+    fetchInformacion: () => {},
 });
 
 export const ContextProvider = ({ children }) => {
@@ -57,6 +64,9 @@ export const ContextProvider = ({ children }) => {
     const [subCategorias, setSubCategorias] = useState([]);
     const [productos, setProductos] = useState([]);
     const [subProductos, setSubProductos] = useState([]);
+    const [clientes, setClientes] = useState([]);
+    const [provincias, setProvincias] = useState([]);
+    const [informacion, setInformacion] = useState({});
     const [cart, setCart] = useState(() => {
         const savedCart = localStorage.getItem("cart");
         return savedCart ? JSON.parse(savedCart) : [];
@@ -178,7 +188,26 @@ export const ContextProvider = ({ children }) => {
         });
     };
 
+    const fetchClientes = () => {
+        adminAxiosClient.get("/clientes").then(({ data }) => {
+            setClientes(data.data);
+        });
+    };
+
+    const fetchProvincias = () => {
+        axiosClient.get("/provincias").then(({ data }) => {
+            setProvincias(data.data);
+        });
+    };
+
+    const fetchInformacion = () => {
+        axiosClient.get("/informacion").then(({ data }) => {
+            setInformacion(data.data);
+        });
+    };
+
     useEffect(() => {
+        fetchProvincias();
         fetchSubCategorias();
         fetchLogos();
         fetchBannerInicio();
@@ -191,6 +220,12 @@ export const ContextProvider = ({ children }) => {
     return (
         <StateContext.Provider
             value={{
+                informacion,
+                fetchInformacion,
+                provincias,
+                fetchProvincias,
+                clientes,
+                fetchClientes,
                 cart,
                 addToCart,
                 removeFromCart,

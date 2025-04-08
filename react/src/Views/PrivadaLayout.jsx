@@ -6,12 +6,13 @@ import NavBar from "../Components/NavBar";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function PrivadaLayout() {
-    const { userToken, setCurrentUser } = useStateContext();
+    const { userToken, setCurrentUser, fetchInformacion } = useStateContext();
 
     useEffect(() => {
         axiosClient.get("/me").then(({ data }) => {
             setCurrentUser(data);
         });
+        fetchInformacion();
     }, []);
 
     if (!userToken) {

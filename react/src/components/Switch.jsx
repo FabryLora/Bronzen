@@ -1,12 +1,22 @@
 import adminAxiosClient from "../adminAxiosClient";
 
-const Switch = ({ id, path, enabled = false, onChange, className = "" }) => {
+const Switch = ({ id, path, enabled, onChange, className = "" }) => {
     const handleToggle = async () => {
         onChange(!enabled);
         try {
-            await adminAxiosClient.put(`${path}/${id}`, {
-                featured: !enabled ? 1 : 0,
-            });
+            if (path == "/clientes") {
+                await adminAxiosClient.put(`${path}/${id}`, {
+                    autorizado: !enabled ? 1 : 0,
+                });
+            } else if (path == "/sub-productos") {
+                await adminAxiosClient.put(`${path}/${id}`, {
+                    stock: !enabled ? 1 : 0,
+                });
+            } else {
+                await adminAxiosClient.put(`${path}/${id}`, {
+                    featured: !enabled ? 1 : 0,
+                });
+            }
         } catch (error) {
             console.error("Error updating featured status", error);
         }

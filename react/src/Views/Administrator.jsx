@@ -77,14 +77,6 @@ export default function Administrator() {
             href: "#",
             subHref: [{ title: "Contenido", href: "/dashboard/contenido" }],
         },
-        {
-            id: "novedades",
-            open: false,
-            title: "Novedades",
-            icon: faNewspaper,
-            href: "/dashboard/novedades",
-            subHref: [],
-        },
 
         {
             id: "nuestros-productos",
@@ -134,13 +126,20 @@ export default function Administrator() {
             href: "#",
             subHref: [
                 { title: "Clientes", href: "/dashboard/clientes" },
-                { title: "Pedidos", href: "/dashboard/pedidos-privada" },
                 {
-                    title: "Lista de Precios",
-                    href: "/dashboard/lista-de-precios",
+                    title: "Pedidos/Presupuestos",
+                    href: "/dashboard/pedidos-privada",
                 },
                 {
-                    title: "Informacion carrito",
+                    title: "Mis Pedidos",
+                    href: "/dashboard/mis-pedidos",
+                },
+                {
+                    title: "Mis Facturas",
+                    href: "/dashboard/mis-facturas",
+                },
+                {
+                    title: "Informacion y descuento",
                     href: "/dashboard/informacion",
                 },
             ],

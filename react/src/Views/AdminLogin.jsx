@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import adminAxiosClient from "../adminAxiosClient";
+import bronzenLogo from "../assets/logos/bronzen-logo.png";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function AdminLogin() {
@@ -34,29 +35,31 @@ export default function AdminLogin() {
     }
 
     return (
-        <div className="flex flex-col gap-10 justify-center items-center w-screen h-screen bg-white bg-opacity-50 fixed top-0 left-0 z-10">
-            <Link to={"/"}>{/* <img src={rolomarLogo} alt="" /> */}</Link>
-            <div className="flex flex-col gap-2 top-10 right-10 bg-white shadow-md p-5 font-roboto-condensed w-fit h-fit z-20">
+        <div className="flex flex-col gap-10 justify-center items-center w-screen h-screen bg-black/50 bg-opacity-50 fixed top-0 left-0 z-10">
+            <div className="flex flex-col top-10 right-10 bg-white shadow-md p-5 font-roboto-condensed w-fit h-fit z-20 rounded-lg">
                 {error && (
                     <div className="bg-red-500 text-white text-center p-2 rounded-md">
                         {error}
                     </div>
                 )}
-                <h2 className="font-bold text-base py-5">
-                    Iniciar Sesion {"(ADMINISTRADOR)"}
-                </h2>
+                <Link className="self-center py-5" to={"/"}>
+                    <img src={bronzenLogo} alt="" />
+                </Link>
+
                 <form
                     onSubmit={onSubmit}
-                    className="w-fit h-full flex flex-col justify-around gap-3"
+                    className="w-fit h-full flex flex-col justify-around gap-8 "
                     action=""
                 >
                     <div className="flex flex-col gap-3">
                         <div className="flex flex-col gap-2">
-                            <label htmlFor="user">Usuario</label>
+                            <label className="font-semibold" htmlFor="user">
+                                Usuario
+                            </label>
                             <input
                                 value={user}
                                 onChange={(ev) => setUser(ev.target.value)}
-                                className="w-[328px] h-[45px] border pl-2"
+                                className="w-[328px] h-[45px]  pl-3 outline outline-gray-300 focus:outline-primary-orange transition duration-300 rounded-full"
                                 type="text"
                                 name="user"
                                 id="user"
@@ -64,11 +67,13 @@ export default function AdminLogin() {
                         </div>
 
                         <div className="flex flex-col gap-2">
-                            <label htmlFor="password">Contrasñe</label>
+                            <label className="font-semibold" htmlFor="password">
+                                Contraseña
+                            </label>
                             <input
                                 value={password}
                                 onChange={(ev) => setPassword(ev.target.value)}
-                                className="w-[328px] h-[45px] border pl-2"
+                                className="w-[328px] h-[45px]  pl-3 outline outline-gray-300 focus:outline-primary-orange transition duration-300 rounded-full"
                                 type="password"
                                 name="password"
                                 id="password"
@@ -76,8 +81,10 @@ export default function AdminLogin() {
                         </div>
                     </div>
 
+                    <div className="bg-gray-300 w-full h-[0.5px]"></div>
+
                     <button
-                        className="w-[325px] h-[47px] bg-red-500 text-white self-center my-5"
+                        className="w-[325px] h-[47px] bg-primary-orange font-bold rounded-full text-white self-center "
                         type="submit"
                     >
                         {login ? "Iniciando Sesion..." : "Iniciar Sesion"}

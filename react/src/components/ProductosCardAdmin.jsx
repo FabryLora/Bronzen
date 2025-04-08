@@ -15,7 +15,9 @@ export default function ProductosCardAdmin({ category }) {
     const [nombre, setNombre] = useState(category?.name);
     const [orden, setOrden] = useState(category?.orden);
     const [edit, setEdit] = useState(false);
-    const [featured, setFeatured] = useState(false);
+    const [featured, setFeatured] = useState(
+        category?.featured === 1 ? true : false
+    );
 
     const hanldeFileChange = (e) => {
         setImagen(e.target.files[0]);

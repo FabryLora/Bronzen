@@ -3,8 +3,10 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import { PulseLoader } from "react-spinners";
 import defaultPhoto from "../assets/logos/bronzen-logo.png";
 import axiosClient from "../axios";
+import { useStateContext } from "../context/ContextProvider";
 
 export default function ProductosHijo() {
+    const { subProductos } = useStateContext();
     const { id } = useParams();
     const [productosHijo, setProductosHijo] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -48,9 +50,16 @@ export default function ProductosHijo() {
                     className="flex flex-col h-[342px]"
                     key={prod?.id}
                 >
-                    {prod?.image ? (
+                    {subProductos?.find(
+                        (subprod) => subprod?.productoId === prod?.id
+                    )?.image ? (
                         <img
-                            src={prod?.image}
+                            src={
+                                subProductos?.find(
+                                    (subprod) =>
+                                        subprod?.productoId === prod?.id
+                                )?.image
+                            }
                             className="w-[269px] h-[271px] border-b-[2px] border-primary-orange"
                             alt=""
                         />

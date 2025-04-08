@@ -49,13 +49,13 @@ export default function ProductoOnly() {
             });
     }, [id]);
 
-    /* if (loading) {
+    if (loading) {
         return (
             <div className="w-[1200px] mx-auto h-screen flex justify-center items-center">
                 <PulseLoader color="#ff6600" />
             </div>
         );
-    } */
+    }
 
     const socialLinks = [
         {

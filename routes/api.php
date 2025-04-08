@@ -9,11 +9,14 @@ use App\Http\Controllers\CliengoController;
 use App\Http\Controllers\ContactInfoController;
 use App\Http\Controllers\ExcelUploadController;
 use App\Http\Controllers\ImportController;
+use App\Http\Controllers\InformacionController;
 use App\Http\Controllers\LogosController;
 use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\ProvinciaController;
 use App\Http\Controllers\SomosBronzenInicioController;
 use App\Http\Controllers\SubCategoriaController;
 use App\Http\Controllers\SubProductoController;
+use App\Models\Provincia;
 use Illuminate\Support\Facades\Route;
 
 
@@ -36,6 +39,9 @@ Route::get("/categorias", [CategoriaController::class, 'index']);
 Route::get("/sub-categorias", [SubCategoriaController::class, 'index']);
 Route::get("/productos", [ProductoController::class, 'index']);
 Route::get("/sub-productos", [SubProductoController::class, 'index']);
+Route::get("/provincias", [ProvinciaController::class, 'index']);
+Route::get("/informacion", [InformacionController::class, 'index']);
+
 
 //get singles
 
@@ -69,6 +75,9 @@ Route::prefix('admin')->group(function () {
         Route::apiResource('/sub-categorias', SubCategoriaController::class);
         Route::apiResource('/productos', ProductoController::class);
         Route::apiResource('/sub-productos', SubProductoController::class);
+        Route::apiResource('/clientes', UserAuthController::class);
+        Route::put('/informacion/{id}', [InformacionController::class, 'update']);
+
 
 
 

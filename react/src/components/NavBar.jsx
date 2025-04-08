@@ -1,7 +1,7 @@
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import { Link } from "react-router-dom";
 import bronzenLogo from "../assets/logos/bronzen-logo.png";
@@ -9,8 +9,14 @@ import axiosClient from "../axios";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function NavBar() {
-    const { categorias, setCurrentUser, setUserToken, currentUser, userToken } =
-        useStateContext();
+    const {
+        categorias,
+        setCurrentUser,
+        setUserToken,
+        currentUser,
+        userToken,
+        provincias,
+    } = useStateContext();
 
     const [activeIndex, setActiveIndex] = useState(null);
     const [loginView, setLoginView] = useState(false);
@@ -31,6 +37,28 @@ export default function NavBar() {
 
     const [name, setName] = useState();
     const [password, setPassword] = useState();
+
+    const userRef = useRef(null);
+    const userSignRef = useRef(null);
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (userRef.current && !userRef.current.contains(event.target)) {
+                setLoginView(false);
+            }
+            if (
+                userSignRef.current &&
+                !userSignRef.current.contains(event.target)
+            ) {
+                setSignupView(false);
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     const login = async (ev) => {
         ev.preventDefault();
@@ -93,6 +121,7 @@ export default function NavBar() {
 
         try {
             await response;
+            setSignupView(false);
         } catch (error) {
             console.log(error);
         }
@@ -130,7 +159,7 @@ export default function NavBar() {
             },
             {
                 title: "MIS PEDIDOS",
-                path: "/dashboard/mis-pedidos",
+                path: "/privado/mis-pedidos",
                 subHref: [],
             },
             { title: "MIS FACTURAS", path: "/dashboard/facturas", subHref: [] },
@@ -154,7 +183,7 @@ export default function NavBar() {
     }
 
     return (
-        <header className="sticky top-0 bg-white h-[112px] flex justify-between items-center z-40 shadow-sm">
+        <header className="sticky top-0 bg-white h-[112px] flex justify-between items-center z-40">
             <nav className="w-[1200px] mx-auto flex flex-row justify-between items-center font-bold text-sm text-[#333]">
                 <Link to={"/"}>
                     <img src={bronzenLogo} alt="Bronzen Logo" />
@@ -235,6 +264,7 @@ export default function NavBar() {
                         <AnimatePresence>
                             {loginView && (
                                 <motion.div
+                                    ref={userRef}
                                     initial={{ y: -30, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
                                     exit={{ y: -30, opacity: 0 }}
@@ -322,7 +352,7 @@ export default function NavBar() {
                                                     }}
                                                     className="text-primary-orange underline"
                                                 >
-                                                    Regsitrate
+                                                    Registrate
                                                 </button>
                                             </div>
                                         </>
@@ -333,6 +363,7 @@ export default function NavBar() {
                         <AnimatePresence>
                             {signupView && (
                                 <motion.div
+                                    ref={userSignRef}
                                     initial={{ opacity: 0, y: -30 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: -30 }}
@@ -493,24 +524,22 @@ export default function NavBar() {
                                                     name="provincia"
                                                     id="provincia"
                                                 >
-                                                    <option value="">
+                                                    <option
+                                                        disabled
+                                                        selected
+                                                        value=""
+                                                    >
                                                         Selecciona una provincia
                                                     </option>
-                                                    <option value="test">
-                                                        test
-                                                    </option>
-                                                    {/* {provincias.map(
-                                                            (pr) => (
-                                                                <option
-                                                                    key={pr.id}
-                                                                    value={
-                                                                        pr.name
-                                                                    }
-                                                                >
-                                                                    {pr.name}
-                                                                </option>
-                                                            )
-                                                        )} */}
+
+                                                    {provincias.map((pr) => (
+                                                        <option
+                                                            key={pr.id}
+                                                            value={pr.name}
+                                                        >
+                                                            {pr.name}
+                                                        </option>
+                                                    ))}
                                                 </select>
                                             </div>
                                             <div className="flex flex-col gap-2">
@@ -531,37 +560,32 @@ export default function NavBar() {
                                                     name="localidad"
                                                     id="localidad"
                                                 >
-                                                    <option value="">
+                                                    <option
+                                                        disabled
+                                                        selected
+                                                        value=""
+                                                    >
                                                         Selecciona una localidad
                                                     </option>
-                                                    <option value="test">
-                                                        test
-                                                    </option>
-                                                    {/* {provincias
-                                                            .find(
-                                                                (pr) =>
-                                                                    pr.name ===
-                                                                    userSubmitInfo.provincia
+
+                                                    {provincias
+                                                        .find(
+                                                            (pr) =>
+                                                                pr.name ===
+                                                                userInfo?.provincia
+                                                        )
+                                                        ?.localidades.map(
+                                                            (loc, index) => (
+                                                                <option
+                                                                    key={index}
+                                                                    value={
+                                                                        loc.name
+                                                                    }
+                                                                >
+                                                                    {loc.name}
+                                                                </option>
                                                             )
-                                                            ?.localidades.map(
-                                                                (
-                                                                    loc,
-                                                                    index
-                                                                ) => (
-                                                                    <option
-                                                                        key={
-                                                                            index
-                                                                        }
-                                                                        value={
-                                                                            loc.name
-                                                                        }
-                                                                    >
-                                                                        {
-                                                                            loc.name
-                                                                        }
-                                                                    </option>
-                                                                )
-                                                            )} */}
+                                                        )}
                                                 </select>
                                             </div>
                                         </div>

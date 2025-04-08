@@ -10,9 +10,18 @@ export default function SubProductosAdmin() {
     const { productos, subProductos, fetchSubProductos } = useStateContext();
     const [createView, setCreateView] = useState(false);
 
-    const [imagen, setImagen] = useState();
-    const [nombre, setNombre] = useState();
-    const [orden, setOrden] = useState();
+    const [submitInfo, setSubmitInfo] = useState({
+        orden: "",
+        code: "",
+        producto_id: "",
+        min: "",
+        precio_de_lista: "",
+        min_oferta: "",
+        precio_de_oferta: "",
+        bulto_cerrado: "",
+        image: "",
+        descuento: "",
+    });
     const [feature, setFeature] = useState(false);
     const [categoriaId, setCategoriaId] = useState();
     const [subCategoriaId, setSubCategoriaId] = useState();
@@ -21,16 +30,24 @@ export default function SubProductosAdmin() {
     const [searchTermCode, setSearchTermCode] = useState("");
     const itemsPerPage = 10;
 
-    const handleFileChange = (e) => {
-        setImagen(e.target.files[0]);
-    };
-
     const submit = async (e) => {
         e.preventDefault();
         const formData = new FormData();
-        if (imagen) formData.append("image", imagen);
-        if (nombre) formData.append("name", nombre);
-        if (orden) formData.append("orden", orden);
+        if (submitInfo?.orden) formData.append("orden", submitInfo?.orden);
+        formData.append("name", "a");
+        formData.append("code", submitInfo?.code);
+        formData.append("producto_id", submitInfo?.producto_id);
+        formData.append("min", submitInfo?.min);
+        formData.append("precio_de_lista", submitInfo?.precio_de_lista);
+        if (submitInfo?.min_oferta)
+            formData.append("min_oferta", submitInfo?.min_oferta);
+        if (submitInfo?.precio_de_oferta)
+            formData.append("precio_de_oferta", submitInfo?.precio_de_oferta);
+        formData.append("bulto_cerrado", submitInfo?.bulto_cerrado);
+        if (submitInfo?.image) formData.append("image", submitInfo?.image);
+        if (submitInfo?.descuento)
+            formData.append("descuento", submitInfo?.descuento);
+        formData.append("stock", 1);
 
         const reposnse = adminAxiosClient.post("/sub-productos", formData, {
             headers: {
@@ -131,85 +148,199 @@ export default function SubProductosAdmin() {
                         <form
                             onSubmit={submit}
                             method="POST"
-                            className="text-black"
+                            className="text-black max-h-[95vh] overflow-y-auto scrollbar-hidden"
                         >
                             <div className="bg-white p-4 w-[500px] rounded-md">
                                 <h2 className="text-2xl font-semibold mb-4">
                                     Crear producto
                                 </h2>
+
                                 <div className="flex flex-col gap-4">
-                                    <label htmlFor="imagenn">Imagen</label>
-                                    <div className="flex flex-row">
-                                        <input
-                                            type="file"
-                                            name="imagen"
-                                            id="imagenn"
-                                            onChange={handleFileChange}
-                                            className="hidden"
-                                        />
-                                        <label
-                                            className="cursor-pointer border border-primary-orange text-primary-orange py-1 px-2 hover:bg-primary-orange hover:text-white transition duration-300 rounded-md"
-                                            htmlFor="imagenn"
-                                        >
-                                            Elegir imagen
-                                        </label>
-                                        <p className="self-center px-2">
-                                            {imagen?.name}
-                                        </p>
-                                    </div>
-                                    <label htmlFor="nombree">
-                                        Nombre{" "}
+                                    <label htmlFor="Orden">Orden </label>
+                                    <input
+                                        className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
+                                        type="text"
+                                        name="Orden"
+                                        id="Orden"
+                                        value={submitInfo?.orden}
+                                        onChange={(e) =>
+                                            setSubmitInfo({
+                                                ...submitInfo,
+                                                orden: e.target.value,
+                                            })
+                                        }
+                                    />
+                                    <label htmlFor="codigo">
+                                        Codigo{" "}
                                         <span className="text-red-500">*</span>
                                     </label>
                                     <input
                                         className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
                                         type="text"
-                                        name="nombree"
-                                        id="nombree"
-                                        value={nombre}
+                                        name="codigo"
+                                        id="codigo"
+                                        value={submitInfo?.code}
                                         onChange={(e) =>
-                                            setNombre(e.target.value)
+                                            setSubmitInfo({
+                                                ...submitInfo,
+                                                code: e.target.value,
+                                            })
                                         }
                                     />
 
-                                    <label htmlFor="ordennn">Orden</label>
-                                    <input
-                                        className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
-                                        type="text"
-                                        name="ordennn"
-                                        id="ordennn"
-                                        value={orden}
-                                        onChange={(e) =>
-                                            setOrden(e.target.value)
-                                        }
-                                    />
-
-                                    <label htmlFor="categoriass">
-                                        Categoria
+                                    <label htmlFor="Producto">
+                                        Producto asociado{" "}
+                                        <span className="text-red-500">*</span>
                                     </label>
                                     <select
                                         className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
-                                        name="categoriass"
-                                        id="categoriass"
-                                        value={categoriaId}
+                                        type="text"
+                                        name="Producto"
+                                        id="Producto"
+                                        value={submitInfo?.producto_id}
                                         onChange={(e) =>
-                                            setCategoriaId(e.target.value)
+                                            setSubmitInfo({
+                                                ...submitInfo,
+                                                producto_id: e.target.value,
+                                            })
                                         }
                                     >
-                                        <option disabled value="">
-                                            Seleccione categoria
+                                        <option selected disabled value="">
+                                            Seleccionar producto
                                         </option>
                                         {productos?.map((category) => (
                                             <option
-                                                key={category.id}
-                                                value={category.id}
+                                                key={category?.id}
+                                                value={category?.id}
                                             >
-                                                {category.name}
+                                                {category?.name}
                                             </option>
                                         ))}
                                     </select>
 
-                                    <div className="flex justify-end gap-4">
+                                    <label htmlFor="Minimo de venta">
+                                        Minimo de venta{" "}
+                                        <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
+                                        type="text"
+                                        name="Minimo de venta"
+                                        id="Minimo de venta"
+                                        value={submitInfo?.min}
+                                        onChange={(e) =>
+                                            setSubmitInfo({
+                                                ...submitInfo,
+                                                min: e.target.value,
+                                            })
+                                        }
+                                    />
+
+                                    <label htmlFor="Precio de lista">
+                                        Precio de lista{" "}
+                                        <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
+                                        type="text"
+                                        name="Precio de lista"
+                                        id="Precio de lista"
+                                        value={submitInfo?.precio_de_lista}
+                                        onChange={(e) =>
+                                            setSubmitInfo({
+                                                ...submitInfo,
+                                                precio_de_lista: e.target.value,
+                                            })
+                                        }
+                                    />
+
+                                    <label htmlFor="Minimo de venta (oferta)">
+                                        Minimo de venta {"(oferta)"}{" "}
+                                    </label>
+                                    <input
+                                        className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
+                                        type="text"
+                                        name="Minimo de venta (oferta)"
+                                        id="Minimo de venta (oferta)"
+                                        value={submitInfo?.min_oferta}
+                                        onChange={(e) =>
+                                            setSubmitInfo({
+                                                ...submitInfo,
+                                                min_oferta: e.target.value,
+                                            })
+                                        }
+                                    />
+
+                                    <label htmlFor="Precio de oferta">
+                                        Precio de oferta{" "}
+                                    </label>
+                                    <input
+                                        className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
+                                        type="text"
+                                        name="Precio de oferta"
+                                        id="Precio de oferta"
+                                        value={submitInfo?.precio_de_oferta}
+                                        onChange={(e) =>
+                                            setSubmitInfo({
+                                                ...submitInfo,
+                                                precio_de_oferta:
+                                                    e.target.value,
+                                            })
+                                        }
+                                    />
+
+                                    <label htmlFor="Bulto cerrado">
+                                        Bulto cerrado{" "}
+                                    </label>
+                                    <input
+                                        className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
+                                        type="text"
+                                        name="Bulto cerrado"
+                                        id="Bulto cerrado"
+                                        value={submitInfo?.bulto_cerrado}
+                                        onChange={(e) =>
+                                            setSubmitInfo({
+                                                ...submitInfo,
+                                                bulto_cerrado: e.target.value,
+                                            })
+                                        }
+                                    />
+
+                                    <label htmlFor="Imagen">
+                                        Imagen{" "}
+                                        <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        className="outline file:rounded-full file:bg-primary-orange file:text-white file:font-bold file:p-2 file:cursor-pointer outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
+                                        type="file"
+                                        name="Imagen"
+                                        id="Imagen"
+                                        onChange={(e) =>
+                                            setSubmitInfo({
+                                                ...submitInfo,
+                                                image: e.target.files[0],
+                                            })
+                                        }
+                                    />
+
+                                    <label htmlFor="Descuento">
+                                        Descuento{" "}
+                                    </label>
+                                    <input
+                                        className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
+                                        type="text"
+                                        name="Descuento"
+                                        id="Descuento"
+                                        value={submitInfo?.descuento}
+                                        onChange={(e) =>
+                                            setSubmitInfo({
+                                                ...submitInfo,
+                                                descuento: e.target.value,
+                                            })
+                                        }
+                                    />
+
+                                    <div className="sticky bottom-0 py-4 bg-white flex justify-end gap-4">
                                         <button
                                             type="button"
                                             onClick={() => setCreateView(false)}
@@ -282,7 +413,8 @@ export default function SubProductosAdmin() {
                                 <td className="py-2 px-3 text-center">
                                     IMAGEN
                                 </td>
-
+                                <td className="text-center ">DESCUENTO</td>
+                                <td className="text-center ">STOCK</td>
                                 <td className="text-center">EDITAR</td>
                             </tr>
                         </thead>

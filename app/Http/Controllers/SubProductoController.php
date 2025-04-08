@@ -24,7 +24,7 @@ class SubProductoController extends Controller
     {
         $data = $request->validate([
             'code' => 'required|string',
-            'name' => 'required|string',
+            'name' => 'sometimes|string',
             'orden' => 'sometimes|string',
             'image' => 'sometimes|file',
             'min' => 'required|numeric',
@@ -33,13 +33,15 @@ class SubProductoController extends Controller
             'precio_de_lista' => 'required|numeric',
             'precio_de_oferta' => 'nullable|numeric',
             'producto_id' => 'nullable|exists:productos,id',
+            'descuento' => 'sometimes|numeric',
+            'stock' => 'sometimes|boolean',
             'color' => 'nullable|string',
             'medida' => 'nullable|string',
         ]);
-
-        $imagePath = $request->file('image')->store('images', 'public');
-        $data["image"] = $imagePath;
-
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('images', 'public');
+            $data["image"] = $imagePath;
+        }
         $subProducto = SubProducto::create($data);
 
         return new SubProductoResource($subProducto);
@@ -62,16 +64,18 @@ class SubProductoController extends Controller
         $subProducto = SubProducto::findOrFail($id);
 
         $data = $request->validate([
-            'code' => 'required|string',
-            'name' => 'required|string',
+            'code' => 'sometimes|string',
+            'name' => 'sometimes|string',
             'orden' => 'sometimes|string',
             'image' => 'sometimes|file',
-            'min' => 'required|numeric',
+            'min' => 'sometimes|numeric',
             'min_oferta' => 'nullable|numeric',
-            'bulto_cerrado' => 'required|numeric',
-            'precio_de_lista' => 'required|numeric',
+            'bulto_cerrado' => 'sometimes|numeric',
+            'precio_de_lista' => 'sometimes|numeric',
             'precio_de_oferta' => 'nullable|numeric',
             'producto_id' => 'nullable|exists:productos,id',
+            'descuento' => 'sometimes|numeric',
+            'stock' => 'sometimes|boolean',
             'color' => 'nullable|string',
             'medida' => 'nullable|string',
         ]);

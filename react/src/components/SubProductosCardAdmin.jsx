@@ -2,36 +2,61 @@ import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "react-hot-toast";
 import adminAxiosClient from "../adminAxiosClient";
 import { useStateContext } from "../context/ContextProvider";
 import Switch from "./Switch";
 
 export default function SubProductosCardAdmin({ category }) {
-    const { fetchProductos, productos } = useStateContext();
+    const { fetchProductos, productos, fetchSubProductos } = useStateContext();
 
     const [imagen, setImagen] = useState();
     const [nombre, setNombre] = useState(category?.name);
     const [orden, setOrden] = useState(category?.orden);
     const [edit, setEdit] = useState(false);
     const [featured, setFeatured] = useState(false);
+    const [stock, setStock] = useState(category?.stock == 1 ? true : false);
+
+    const [submitInfo, setSubmitInfo] = useState({
+        orden: category?.orden,
+        code: category?.code,
+        producto_id: category?.productoId,
+        min: category?.min,
+        precio_de_lista: category?.precio_de_lista,
+        min_oferta: category?.min_oferta,
+        precio_de_oferta: category?.precio_de_oferta,
+        bulto_cerrado: category?.bulto_cerrado,
+
+        image: "",
+        descuento: category?.descuento,
+    });
 
     const hanldeFileChange = (e) => {
         setImagen(e.target.files[0]);
     };
 
-    const update = async (e) => {
+    const submit = async (e) => {
         e.preventDefault();
         const formData = new FormData();
-        if (imagen) {
-            formData.append("image", imagen);
-        }
-        formData.append("name", nombre ? nombre : " ");
-        if (orden) formData.append("orden", orden);
+        if (submitInfo?.orden) formData.append("orden", submitInfo?.orden);
+        formData.append("name", "a");
+        formData.append("code", submitInfo?.code);
+        formData.append("producto_id", submitInfo?.producto_id);
+        formData.append("min", submitInfo?.min);
+        formData.append("precio_de_lista", submitInfo?.precio_de_lista);
+        if (submitInfo?.min_oferta)
+            formData.append("min_oferta", submitInfo?.min_oferta);
+        if (submitInfo?.precio_de_oferta)
+            formData.append("precio_de_oferta", submitInfo?.precio_de_oferta);
+        formData.append("bulto_cerrado", submitInfo?.bulto_cerrado);
+        if (submitInfo?.image) formData.append("image", submitInfo?.image);
+        if (submitInfo?.descuento)
+            formData.append("descuento", submitInfo?.descuento);
+        formData.append("stock", 1);
 
-        const response = adminAxiosClient.post(
-            `/productos/${category?.id}?_method=PUT`,
+        const reposnse = adminAxiosClient.post(
+            `/sub-productos/${category?.id}?_method=PUT`,
             formData,
             {
                 headers: {
@@ -40,16 +65,15 @@ export default function SubProductosCardAdmin({ category }) {
             }
         );
 
-        toast.promise(response, {
-            loading: "Actualizando...",
-            success: "Actualizado correctamente",
-            error: "Error al actualizar",
+        toast.promise(reposnse, {
+            loading: "Guardando...",
+            success: "Guardado correctamente",
+            error: "Error al guardar",
         });
 
         try {
-            await response;
-            console.log(response);
-            fetchProductos();
+            await reposnse;
+            fetchSubProductos(true);
             setEdit(false);
         } catch (error) {
             console.error("Error al guardar:", error);
@@ -136,6 +160,23 @@ export default function SubProductosCardAdmin({ category }) {
                     <p>Sin Imagen</p>
                 )}
             </td>
+            <td
+                className={
+                    Number(category?.descuento > 0)
+                        ? "text-green-500"
+                        : "text-gray-500"
+                }
+            >
+                {category?.descuento}%
+            </td>
+            <td>
+                <Switch
+                    id={category?.id}
+                    path={"/sub-productos"}
+                    enabled={stock}
+                    onChange={setStock}
+                />
+            </td>
 
             {/* <td className="h-[80px] flex justify-center items-center text-center align-middle">
                 <Switch
@@ -178,57 +219,202 @@ export default function SubProductosCardAdmin({ category }) {
                         exit={{ opacity: 0 }}
                         className="fixed top-0 left-0 w-full h-full bg-black/50 flex items-center justify-center z-50 text-left"
                     >
-                        <form onSubmit={update} className="text-black">
+                        <form
+                            onSubmit={submit}
+                            method="POST"
+                            className="text-black max-h-[95vh] overflow-y-auto scrollbar-hidden"
+                        >
                             <div className="bg-white p-4 w-[500px] rounded-md">
                                 <h2 className="text-2xl font-semibold mb-4">
-                                    Editar categoria
+                                    Actualizar producto
                                 </h2>
+
                                 <div className="flex flex-col gap-4">
-                                    <label htmlFor="imagen">Imagen</label>
-                                    <div className="flex flex-row">
-                                        <input
-                                            type="file"
-                                            name="imagen"
-                                            id="imagenedit"
-                                            onChange={hanldeFileChange}
-                                            className="hidden"
-                                        />
-                                        <label
-                                            className="cursor-pointer border border-primary-orange rounded-md text-primary-orange hover:bg-primary-orange hover:text-white transition duration-300 py-1 px-2"
-                                            htmlFor="imagenedit"
-                                        >
-                                            Elegir imagen
-                                        </label>
-                                        <p>{imagen?.name}</p>
-                                    </div>
-                                    <label htmlFor="nombre">
-                                        Nombre{" "}
+                                    <label htmlFor="Orden">Orden </label>
+                                    <input
+                                        className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
+                                        type="text"
+                                        name="Orden"
+                                        id="Orden"
+                                        value={submitInfo?.orden}
+                                        onChange={(e) =>
+                                            setSubmitInfo({
+                                                ...submitInfo,
+                                                orden: e.target.value,
+                                            })
+                                        }
+                                    />
+                                    <label htmlFor="codigo">
+                                        Codigo{" "}
                                         <span className="text-red-500">*</span>
                                     </label>
                                     <input
                                         className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
                                         type="text"
-                                        name="nombre"
-                                        id="nombre"
-                                        value={nombre}
+                                        name="codigo"
+                                        id="codigo"
+                                        value={submitInfo?.code}
                                         onChange={(e) =>
-                                            setNombre(e.target.value)
+                                            setSubmitInfo({
+                                                ...submitInfo,
+                                                code: e.target.value,
+                                            })
                                         }
                                     />
 
-                                    <label htmlFor="ordenn">Orden</label>
+                                    <label htmlFor="Producto">
+                                        Producto asociado{" "}
+                                        <span className="text-red-500">*</span>
+                                    </label>
+                                    <select
+                                        className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
+                                        type="text"
+                                        name="Producto"
+                                        id="Producto"
+                                        value={submitInfo?.producto_id}
+                                        onChange={(e) =>
+                                            setSubmitInfo({
+                                                ...submitInfo,
+                                                producto_id: e.target.value,
+                                            })
+                                        }
+                                    >
+                                        <option disabled value="">
+                                            Seleccionar producto
+                                        </option>
+                                        {productos?.map((category) => (
+                                            <option
+                                                key={category?.id}
+                                                value={category?.id}
+                                            >
+                                                {category?.name}
+                                            </option>
+                                        ))}
+                                    </select>
+
+                                    <label htmlFor="Minimo de venta">
+                                        Minimo de venta{" "}
+                                        <span className="text-red-500">*</span>
+                                    </label>
                                     <input
                                         className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
                                         type="text"
-                                        name="ordenn"
-                                        id="ordenn"
-                                        value={orden}
+                                        name="Minimo de venta"
+                                        id="Minimo de venta"
+                                        value={submitInfo?.min}
                                         onChange={(e) =>
-                                            setOrden(e.target.value)
+                                            setSubmitInfo({
+                                                ...submitInfo,
+                                                min: e.target.value,
+                                            })
                                         }
                                     />
 
-                                    <div className="flex justify-end gap-4">
+                                    <label htmlFor="Precio de lista">
+                                        Precio de lista{" "}
+                                        <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
+                                        type="text"
+                                        name="Precio de lista"
+                                        id="Precio de lista"
+                                        value={submitInfo?.precio_de_lista}
+                                        onChange={(e) =>
+                                            setSubmitInfo({
+                                                ...submitInfo,
+                                                precio_de_lista: e.target.value,
+                                            })
+                                        }
+                                    />
+
+                                    <label htmlFor="Minimo de venta (oferta)">
+                                        Minimo de venta {"(oferta)"}{" "}
+                                    </label>
+                                    <input
+                                        className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
+                                        type="text"
+                                        name="Minimo de venta (oferta)"
+                                        id="Minimo de venta (oferta)"
+                                        value={submitInfo?.min_oferta}
+                                        onChange={(e) =>
+                                            setSubmitInfo({
+                                                ...submitInfo,
+                                                min_oferta: e.target.value,
+                                            })
+                                        }
+                                    />
+
+                                    <label htmlFor="Precio de oferta">
+                                        Precio de oferta{" "}
+                                    </label>
+                                    <input
+                                        className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
+                                        type="text"
+                                        name="Precio de oferta"
+                                        id="Precio de oferta"
+                                        value={submitInfo?.precio_de_oferta}
+                                        onChange={(e) =>
+                                            setSubmitInfo({
+                                                ...submitInfo,
+                                                precio_de_oferta:
+                                                    e.target.value,
+                                            })
+                                        }
+                                    />
+
+                                    <label htmlFor="Bulto cerrado">
+                                        Bulto cerrado{" "}
+                                    </label>
+                                    <input
+                                        className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
+                                        type="text"
+                                        name="Bulto cerrado"
+                                        id="Bulto cerrado"
+                                        value={submitInfo?.bulto_cerrado}
+                                        onChange={(e) =>
+                                            setSubmitInfo({
+                                                ...submitInfo,
+                                                bulto_cerrado: e.target.value,
+                                            })
+                                        }
+                                    />
+
+                                    <label htmlFor="Imagen">
+                                        Imagen{" "}
+                                        <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        className="outline file:rounded-full file:bg-primary-orange file:text-white file:font-bold file:p-2 file:cursor-pointer outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
+                                        type="file"
+                                        name="Imagen"
+                                        id="Imagen"
+                                        onChange={(e) =>
+                                            setSubmitInfo({
+                                                ...submitInfo,
+                                                image: e.target.files[0],
+                                            })
+                                        }
+                                    />
+
+                                    <label htmlFor="Descuento">
+                                        Descuento{" "}
+                                    </label>
+                                    <input
+                                        className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
+                                        type="text"
+                                        name="Descuento"
+                                        id="Descuento"
+                                        value={submitInfo?.descuento}
+                                        onChange={(e) =>
+                                            setSubmitInfo({
+                                                ...submitInfo,
+                                                descuento: e.target.value,
+                                            })
+                                        }
+                                    />
+
+                                    <div className="sticky bottom-0 py-4 bg-white flex justify-end gap-4">
                                         <button
                                             type="button"
                                             onClick={() => setEdit(false)}

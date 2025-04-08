@@ -77,7 +77,7 @@ export default function CubierteroSlider() {
                 }}
                 loop={true}
                 autoplay={{
-                    delay: 3000,
+                    delay: 9000,
                     disableOnInteraction: false,
                 }}
                 style={{
@@ -111,7 +111,7 @@ export default function CubierteroSlider() {
                                         {subprod?.name}
                                     </h2>
                                     <Link
-                                        to={"#"}
+                                        to={`/productos/${subprod?.categoriaId}/${subprod?.subCategoriaId}/${subprod?.productoId}`}
                                         className="text-primary-orange text-sm"
                                     >
                                         {subprod?.code}

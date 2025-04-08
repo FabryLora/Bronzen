@@ -19,8 +19,6 @@ export default function SubCategoriasCard({ category }) {
         setImagen(e.target.files[0]);
     };
 
-    console.log(category);
-
     const update = async (e) => {
         e.preventDefault();
         const formData = new FormData();

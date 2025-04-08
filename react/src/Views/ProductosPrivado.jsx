@@ -43,11 +43,6 @@ export default function ProductosPrivado() {
                 : true)
         );
     });
-    useEffect(() => {
-        if (cart.length > 0) {
-            setCarrito(true);
-        }
-    }, [cart]);
 
     const totalPages = Math.ceil(
         (filteredProducts?.length || 0) / itemsPerPage
@@ -65,39 +60,6 @@ export default function ProductosPrivado() {
 
     return (
         <div className="w-full pb-20 flex flex-col gap-20 max-sm:px-0">
-            <AnimatePresence mode="popLayout">
-                {carrito && (
-                    <motion.div
-                        onClick={() => navigate("/privado/carrito")}
-                        key="cart-container" // Mantener un key estable
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0.8, opacity: 0 }}
-                        transition={{
-                            type: "spring",
-                            stiffness: 300,
-                            damping: 10,
-                        }}
-                        className="fixed flex justify-center items-center w-14 h-14 border border-primary-red rounded-full bottom-5 right-5 bg-white shadow-lg z-50 cursor-pointer"
-                    >
-                        <motion.div
-                            key={`badge-${cart.length}`} // Clave diferente para animar el número
-                            initial={{ scale: 0.8 }}
-                            animate={{ scale: 1.2 }}
-                            transition={{
-                                type: "spring",
-                                stiffness: 300,
-                                damping: 15,
-                            }}
-                            className="absolute flex justify-center items-center rounded-full text-white bg-primary-red top-0 text-xs left-0 w-5 h-5"
-                        >
-                            {cart?.length}
-                        </motion.div>
-                        {/* <img src={soloCart} alt="" /> */}
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
             <div className="h-[473px] w-full bg-primary-blue text-black bg-primary-gray flex justify-center items-center">
                 <div className="flex flex-col gap-2 justify-center max-sm:px-6 max-sm:w-full w-[1200px] mx-auto bg-white h-[231px] rounded-xl">
                     <div className="flex flex-col p-6 h-full justify-between">

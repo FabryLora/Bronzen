@@ -3,8 +3,10 @@ import { Link, useParams } from "react-router-dom";
 import { PulseLoader } from "react-spinners";
 import defaultPhoto from "../assets/logos/bronzen-logo.png";
 import axiosClient from "../axios";
+import { useStateContext } from "../context/ContextProvider";
 
 export default function SubCategorias() {
+    const { subProductos } = useStateContext();
     const { id } = useParams();
     const [subCategorias, setSubCategorias] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -44,9 +46,18 @@ export default function SubCategorias() {
                     className="flex flex-col h-[342px]"
                     key={subCategoria?.id}
                 >
-                    {subCategoria?.image ? (
+                    {subProductos?.find(
+                        (subprod) =>
+                            subprod?.subCategoriaId === subCategoria?.id
+                    )?.image ? (
                         <img
-                            src={subCategoria?.image}
+                            src={
+                                subProductos?.find(
+                                    (subprod) =>
+                                        subprod?.subCategoriaId ===
+                                        subCategoria?.id
+                                )?.image
+                            }
                             className="w-[269px] h-[271px] border-b-[2px] border-primary-orange"
                             alt=""
                         />
