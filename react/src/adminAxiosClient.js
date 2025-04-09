@@ -2,6 +2,9 @@ import axios from "axios";
 
 const adminAxiosClient = axios.create({
   baseURL: `${import.meta.env.VITE_API_BASE_URL}/api/admin`,
+  headers: {
+    'Accept-Language': 'es' // Añadimos esta línea
+  }
 });
 
 adminAxiosClient.interceptors.request.use((config) => {

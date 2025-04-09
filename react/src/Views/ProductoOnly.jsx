@@ -40,6 +40,10 @@ export default function ProductoOnly() {
             .then(({ data }) => {
                 setSubProductos(data.data);
                 setCurrentSubProduct(data.data[0]);
+                // Inicializar currentMedida con la medida del primer subproducto (si existe)
+                if (data.data[0]?.medida) {
+                    setCurrentMedida(data.data[0].medida);
+                }
             })
             .catch((error) => {
                 console.log(error);
@@ -77,7 +81,7 @@ export default function ProductoOnly() {
     ];
 
     return (
-        <div className="flex w-full pb-40 max-sm:pb-20">
+        <div className="flex w-full h-fit pb-40 max-sm:pb-20">
             {/* imagen */}
             <div className="flex flex-row max-sm:flex-col w-full">
                 <div className="relative min-w-[376px] max-sm:min-w-0 max-sm:w-full h-[378px] max-sm:h-[280px] border-b-2 border-primary-orange max-sm:mb-20">
@@ -94,7 +98,7 @@ export default function ProductoOnly() {
                             e.target.src = defaultPhoto;
                         }}
                     />
-                    <div className="absolute -bottom-24 max-sm:relative max-sm:bottom-0 max-sm:mt-4 max-sm:mb-8 flex flex-row gap-3 max-sm:flex-wrap max-sm:justify-center">
+                    <div className="grid grid-cols-3 max-sm:relative max-sm:bottom-0 max-sm:mt-4 max-sm:mb-8 gap-3 max-sm:flex-wrap max-sm:justify-center">
                         {subProductos?.map((subProd) => (
                             <button
                                 onClick={() => {
@@ -139,11 +143,11 @@ export default function ProductoOnly() {
                             Disponible en:
                         </p>
                         <div className="flex flex-col px-1 py-4 gap-10 max-sm:gap-6">
-                            <div className="flex flex-row gap-10 max-sm:flex-wrap max-sm:justify-center max-sm:gap-4">
+                            <div className="grid grid-cols-6 gap-x-2 gap-y-5 w-fit max-sm:flex-wrap max-sm:justify-center max-sm:gap-4">
                                 {subProductos?.map((subProd) => (
                                     <div
                                         key={subProd?.id}
-                                        className="flex flex-col min-w-[100px] max-sm:min-w-[80px] gap-1 items-center justify-center"
+                                        className="flex flex-col min-w-[124px] max-sm:min-w-[80px] gap-1 items-center justify-center"
                                     >
                                         <button
                                             onClick={() => {
@@ -156,23 +160,53 @@ export default function ProductoOnly() {
                                                     : ""
                                             }`}
                                         ></button>
-                                        <p className="text-xs text-primary-gray">
+                                        <p className="text-xs text-center text-primary-gray">
                                             {subProd?.color}
                                         </p>
                                     </div>
                                 ))}
                             </div>
+                            {/* Reemplaza el div actual de medidas con este código */}
                             <div className="flex flex-row gap-10 max-sm:flex-wrap max-sm:justify-center max-sm:gap-4">
-                                {subProductos?.map((subProd) => (
+                                {/* Filtramos solo los que tienen medida y eliminamos duplicados */}
+                                {Array.from(
+                                    new Set(
+                                        subProductos
+                                            .filter(
+                                                (subProd) =>
+                                                    subProd?.medida &&
+                                                    subProd.medida.trim() !== ""
+                                            )
+                                            .map((subProd) => subProd.medida)
+                                    )
+                                ).map((medida, index) => (
                                     <div
-                                        key={subProd?.id}
-                                        className="flex min-w-[100px] max-sm:min-w-[80px] flex-col gap-1 items-center justify-center"
+                                        key={index}
+                                        className="flex min-w-[124px] max-sm:min-w-[80px] flex-col gap-1 items-center justify-center"
                                     >
                                         <button
-                                            className={`w-[15px] h-[15px] rounded-full border border-primary-orange hover:bg-primary-orange transition duration-300`}
+                                            onClick={() => {
+                                                setCurrentMedida(medida);
+                                                // Opcionalmente, seleccionar el primer subproducto con esta medida
+                                                const subProdWithMedida =
+                                                    subProductos.find(
+                                                        (sp) =>
+                                                            sp.medida === medida
+                                                    );
+                                                if (subProdWithMedida) {
+                                                    setCurrentSubProduct(
+                                                        subProdWithMedida
+                                                    );
+                                                }
+                                            }}
+                                            className={`w-[15px] h-[15px] rounded-full border border-primary-orange hover:bg-primary-orange transition duration-300 ${
+                                                currentMedida === medida
+                                                    ? "bg-primary-orange border-gray"
+                                                    : ""
+                                            }`}
                                         ></button>
                                         <p className="text-xs text-primary-gray">
-                                            {subProd?.medida}
+                                            {medida}
                                         </p>
                                     </div>
                                 ))}

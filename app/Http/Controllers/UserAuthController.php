@@ -64,7 +64,7 @@ class UserAuthController extends Controller
 
         if (!Auth::attempt($credentials, $remember)) {
             return response([
-                'error' => 'The provided credentials are not correct'
+                'error' => 'Las credenciales no son correctas'
             ], 422);
         }
 
@@ -74,7 +74,7 @@ class UserAuthController extends Controller
         if (!$user->autorizado) {
             Auth::logout();
             return response([
-                'error' => 'Your account is not authorized. Please contact support.'
+                'error' => 'Tu cuenta no esta autorizada'
             ], 403);
         }
 
