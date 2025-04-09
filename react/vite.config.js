@@ -8,36 +8,39 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   plugins: [react(),tailwindcss(),
     VitePWA({
-      registerType: 'autoUpdate',
+      // Configurar opciones PWA
       manifest: {
-        name: 'Mi App PWA',
-        short_name: 'MiApp',
-        description: 'Una aplicación PWA con React y Laravel',
+        name: 'Bronzen App',
+        short_name: 'Bronzen App',
         theme_color: '#ffffff',
+        display: "standalone",
         icons: [
           {
-            src: '/icon-192x192.png',
+            src: './icon-192x192.png', // Usa rutas relativas
             sizes: '192x192',
-            type: 'image/png',
+            type: 'image/png'
           },
           {
-            src: '/icon-512x512.png',
+            src: './icon-512x512.png', // Usa rutas relativas
             sizes: '512x512',
-            type: 'image/png',
-          },
-        ],
+            type: 'image/png'
+          }
+        ]
       },
+      // Configuración importante: asegura que los activos estén correctamente ubicados
+      includeAssets: ['*.ico', '*.png', '*.svg'],
+      injectRegister: 'auto',
       workbox: {
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/mi-api\.com\/.*/,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'api-cache',
-            },
-          },
-        ],
-      },
-    }),
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+      }
+    })
   ],
+
+  base: './',
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    // Asegura que los recursos estáticos no sean procesados por el router
+    assetsInlineLimit: 0
+  }
 })
