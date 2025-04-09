@@ -82,7 +82,7 @@ input[type="number"] {
             </p>
             <p className="self-center">{productoObject?.categoria}</p>
             <p className="self-center pr-3">{productoObject?.subCategoria}</p>
-            <p className="self-center">{productoObject?.name}</p>
+            <p className="self-center">{productoObject?.producto}</p>
             <p className="self-center text-center">
                 ${" "}
                 {Number(productoObject?.precio_de_lista)?.toLocaleString(

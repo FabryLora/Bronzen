@@ -4,7 +4,7 @@ import MiPedidoRow from "../components/MiPedidoRow";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function Mispedidos() {
-    const { pedidos, userInfo /* fetchPedidos */ } = useStateContext();
+    const { pedidos, currentUser /* fetchPedidos */ } = useStateContext();
 
     useEffect(() => {
         window.scrollTo(0, 0);

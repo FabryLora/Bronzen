@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Autoplay, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -6,19 +6,21 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Link } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/navigation";
-import { useStateContext } from "../context/ContextProvider";
 // Importar FontAwesome (asegúrate de tenerlo instalado)
 import {
     faChevronLeft,
     faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axiosClient from "../axios";
 
 export default function ImageSlider() {
-    const { subProductos, fetchSubProductos } = useStateContext();
+    const [featuredProducts, setFeaturedProducts] = useState([]);
 
     useEffect(() => {
-        fetchSubProductos();
+        axiosClient.get("/featured-products").then(({ data }) => {
+            setFeaturedProducts(data.data);
+        });
     }, []);
 
     return (
@@ -53,7 +55,7 @@ export default function ImageSlider() {
                     padding: "20px 0px",
                 }}
             >
-                {subProductos
+                {featuredProducts
                     ?.filter((prod) => prod?.image != null)
                     ?.slice(0, 4)
                     ?.map((subprod, index) => (

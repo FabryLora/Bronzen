@@ -40,6 +40,10 @@ const StateContext = createContext({
     fetchProvincias: () => {},
     informacion: {},
     fetchInformacion: () => {},
+    pedidos: [],
+    fetchPedidos: () => {},
+    pedidoProductos: [],
+    fetchPedidoProductos: () => {},
 });
 
 export const ContextProvider = ({ children }) => {
@@ -67,6 +71,8 @@ export const ContextProvider = ({ children }) => {
     const [clientes, setClientes] = useState([]);
     const [provincias, setProvincias] = useState([]);
     const [informacion, setInformacion] = useState({});
+    const [pedidos, setPedidos] = useState([]);
+    const [pedidoProductos, setPedidoProductos] = useState([]);
     const [cart, setCart] = useState(() => {
         const savedCart = localStorage.getItem("cart");
         return savedCart ? JSON.parse(savedCart) : [];
@@ -207,6 +213,18 @@ export const ContextProvider = ({ children }) => {
         });
     };
 
+    const fetchPedidos = () => {
+        axiosClient.get("/pedidos").then(({ data }) => {
+            setPedidos(data.data);
+        });
+    };
+
+    const fetchPedidoProductos = () => {
+        axiosClient.get("/pedido-productos").then(({ data }) => {
+            setPedidoProductos(data.data);
+        });
+    };
+
     useEffect(() => {
         fetchProvincias();
         fetchSubCategorias();
@@ -221,6 +239,10 @@ export const ContextProvider = ({ children }) => {
     return (
         <StateContext.Provider
             value={{
+                pedidoProductos,
+                fetchPedidoProductos,
+                pedidos,
+                fetchPedidos,
                 informacion,
                 fetchInformacion,
                 provincias,

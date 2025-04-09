@@ -77,7 +77,7 @@ input[type="number"] {
 
                 {/* Product Name */}
                 <h3 className="text-[15px] font-medium text-gray-800 mb-3">
-                    {product?.name}
+                    {product?.producto}
                 </h3>
 
                 {/* Pricing Section */}

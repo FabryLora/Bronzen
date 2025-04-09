@@ -11,8 +11,12 @@ use App\Http\Controllers\ExcelUploadController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\InformacionController;
 use App\Http\Controllers\LogosController;
+use App\Http\Controllers\PedidoController;
+use App\Http\Controllers\PedidoProductoController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ProvinciaController;
+use App\Http\Controllers\SendContactInfoController;
+use App\Http\Controllers\SendPedidoController;
 use App\Http\Controllers\SomosBronzenInicioController;
 use App\Http\Controllers\SubCategoriaController;
 use App\Http\Controllers\SubProductoController;
@@ -25,6 +29,12 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [UserAuthController::class, 'logout']);
     Route::get('/me', [UserAuthController::class, 'me']);
+    Route::post('/sendcontact', [SendContactInfoController::class, 'sendReactEmail']);
+    Route::post('/sendpedido', [SendPedidoController::class, 'sendReactEmail']);
+
+    //Pedidos
+    Route::apiResource('/pedidos', PedidoController::class);
+    Route::apiResource('/pedido-productos', PedidoProductoController::class);
 });
 
 Route::post('/signup', [UserAuthController::class, 'signup']);
@@ -48,6 +58,9 @@ Route::get("/informacion", [InformacionController::class, 'index']);
 Route::get('/sub-categories/categories/{id}', [SubCategoriaController::class, 'SubCategoriaporCategoriaId']);
 Route::get('/productos/sub-categories/{id}', [ProductoController::class, 'ProductoporSubCategoriaId']);
 Route::get('/sub-productos/productos/{id}', [SubProductoController::class, 'mostrarSubPRoductosPorProductoId']);
+Route::get('/featured-products', [ProductoController::class, 'FeaturedProductos']);
+Route::get('/pedidos-usuarios', [PedidoController::class, 'showByUserId']);
+
 
 
 //download

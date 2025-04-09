@@ -2,9 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Models\Categoria;
-use App\Models\SubCategoria;
-use App\Models\Producto;
 use App\Models\SubProducto;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Bus\Queueable;
@@ -28,216 +25,97 @@ class ImportarProductosJob implements ShouldQueue
 
     private function convertirPrecio($precio)
     {
+        // Si el precio es numérico (como el valor 11188.2076988439)
+        if (is_numeric($precio)) {
+            // Redondear a 2 decimales y devolver directamente
+            return round((float)$precio, 2);
+        }
+
+        // Si no es numérico, es probable que sea una cadena con formato (como "$ 11.188,21")
         // Elimina cualquier carácter que no sea número, punto o coma
         $precio = preg_replace('/[^0-9.,]/', '', $precio);
 
-        // Quita el punto de los miles
-        $precio = str_replace('.', '', $precio);
+        // Determinar si usa formato europeo (11.188,21) o americano (11,188.21)
+        $tieneComaPuntoDecimal = preg_match('/^\d{1,3}(.\d{3})+(,\d+)$/', $precio);
 
-        // Reemplaza la coma decimal por punto
-        $precio = str_replace(',', '.', $precio);
+        if ($tieneComaPuntoDecimal) {
+            // Formato europeo: 11.188,21
+            // Quita el punto de los miles
+            $precio = str_replace('.', '', $precio);
+            // Reemplaza la coma decimal por punto
+            $precio = str_replace(',', '.', $precio);
+        } else {
+            // Formato americano: 11,188.21
+            // Quita la coma de los miles
+            $precio = str_replace(',', '', $precio);
+        }
 
         // Verifica si es numérico y lo castea a float
-        return is_numeric($precio) ? (float)$precio : null;
-    }
-
-    /**
-     * Busca una imagen correspondiente al código de producto
-     * 
-     * @param string $codigo Código del producto
-     * @return string|null Ruta de la imagen o null si no se encuentra
-     */
-    private function buscarImagen($codigo)
-    {
-        // Verificar diferentes rutas posibles
-        $posiblesRutas = [
-            'images',
-            'public/images',
-            '/images',
-            'app/public/images'
-        ];
-
-        $imagenes = [];
-        $rutaUtilizada = '';
-
-        // Intentar con diferentes rutas
-        foreach ($posiblesRutas as $ruta) {
-            $imgs = Storage::files($ruta);
-            Log::info("Verificando ruta: " . $ruta . " - Archivos encontrados: " . count($imgs));
-
-            if (!empty($imgs)) {
-                $imagenes = $imgs;
-                $rutaUtilizada = $ruta;
-                break;
-            }
-        }
-
-        // Si no encontramos nada, verificar disco público directamente
-        if (empty($imagenes)) {
-            $publicPath = public_path('storage/images');
-            Log::info("Verificando ruta física: " . $publicPath);
-
-            if (is_dir($publicPath)) {
-                $files = scandir($publicPath);
-                $files = array_diff($files, ['.', '..']);
-
-                foreach ($files as $file) {
-                    $imagenes[] = 'images/' . $file;
-                }
-
-                Log::info("Archivos encontrados en ruta física: " . count($imagenes));
-                $rutaUtilizada = 'public/storage/images (físico)';
-            }
-        }
-
-        if (empty($imagenes)) {
-            Log::info("No se encontraron imágenes en ninguna ruta");
-            return null;
-        }
-
-        Log::info("Ruta utilizada: " . $rutaUtilizada);
-        Log::info("Buscando imagen para código: " . $codigo);
-        Log::info("Total de imágenes encontradas: " . count($imagenes));
-
-        // Buscar una imagen que coincida con el código
-        foreach ($imagenes as $imagen) {
-            // Obtener solo el nombre del archivo sin la ruta
-            $nombreArchivo = basename($imagen);
-
-            // Obtener la extensión del archivo
-            $extension = pathinfo($nombreArchivo, PATHINFO_EXTENSION);
-
-            // Eliminar la extensión para la comparación
-            $nombreSinExtension = pathinfo($nombreArchivo, PATHINFO_FILENAME);
-
-            Log::info("Comparando: " . $codigo . " con archivo: " . $nombreArchivo);
-
-            // Verificar si el nombre del archivo comienza con el código
-            if (preg_match('/^' . preg_quote($codigo, '/') . '\b/i', $nombreSinExtension)) {
-                Log::info("Coincidencia encontrada: " . $imagen);
-                // Devolver la ruta en el formato requerido
-                return $imagen;
-            }
-        }
-
-        Log::info("No se encontró imagen para: " . $codigo);
-        return null;
+        return is_numeric($precio) ? round((float)$precio, 2) : null;
     }
 
     public function handle()
     {
-        $filePath = Storage::path($this->archivoPath);
-        $spreadsheet = IOFactory::load($filePath);
+        try {
+            $filePath = Storage::path($this->archivoPath);
+            $spreadsheet = IOFactory::load($filePath);
 
-        // --- 1. Obtener datos de la segunda hoja como referencia ---
-        $sheet2 = $spreadsheet->getSheet(1); // Obtener la segunda hoja (índice 1)
-        $rowsSheet2 = $sheet2->toArray(null, true, true, true);
+            // Obtener la primera hoja del Excel
+            $sheet = $spreadsheet->getSheet(0);
+            $rows = $sheet->toArray(null, true, true, true);
 
-        $subProductoInfo = []; // Aquí almacenaremos los datos de la hoja 2
+            // Contador para estadísticas
+            $contadorActualizados = 0;
+            $contadorNoEncontrados = 0;
 
-        foreach ($rowsSheet2 as $index => $row) {
-            if ($index === 1) continue; // Saltar encabezado
+            // Iterar sobre cada fila del Excel
+            foreach ($rows as $index => $row) {
+                // Saltar la fila de encabezados
+                if ($index === 1) continue;
 
-            $codigoSubProducto = isset($row['A']) ? trim($row['A']) : null;
-            $nombreProducto = isset($row['C']) ? trim($row['C']) : null;
-            $medida = isset($row['D']) ? trim($row['D']) : null;
-            $color = isset($row['E']) ? trim($row['E']) : null;
-
-            if (!empty($codigoSubProducto) && !empty($nombreProducto)) {
-                $subProductoInfo[$codigoSubProducto] = [
-                    'producto' => $nombreProducto,
-                    'medida' => $medida,
-                    'color' => $color
-                ];
-            }
-        }
-
-        Log::info("Datos de la hoja 2 cargados correctamente: " . count($subProductoInfo));
-
-        // --- 2. Procesar la primera hoja ---
-        $sheet1 = $spreadsheet->getSheet(0); // Obtener la primera hoja (índice 0)
-        $rowsSheet1 = $sheet1->toArray(null, true, true, true);
-
-        $productosCache = []; // Cache para evitar consultas repetitivas
-
-        foreach ($rowsSheet1 as $index => $row) {
-            if ($index === 1) continue; // Saltar encabezado
-
-            try {
+                // Extraer datos de la fila
                 $codigo = isset($row['A']) ? trim($row['A']) : null;
-                $descripcion = isset($row['B']) ? trim($row['B']) : null;
-                $categoriaNombre = isset($row['C']) ? trim($row['C']) : null;
-                $subCategoriaNombre = isset($row['D']) ? trim($row['D']) : null;
+                $minimo = isset($row['E']) ? (int) $row['E'] : null;
                 $precioLista = isset($row['G']) ? $this->convertirPrecio($row['G']) : null;
                 $precioOferta = isset($row['I']) ? $this->convertirPrecio($row['I']) : null;
-                $minimo = isset($row['E']) ? (int) $row['E'] : null;
-                $bultoCerrado = isset($row['F']) ? (int) $row['F'] : null;
                 $minimoOferta = isset($row['J']) ? (int) $row['J'] : null;
 
-                if (empty($codigo) || empty($descripcion)) {
-                    continue; // Ignorar filas sin código o descripción
+                // Validar que tengamos al menos el código y algún otro dato
+                if (empty($codigo) || (!$minimo && !$precioLista && !$precioOferta && !$minimoOferta)) {
+                    continue;
                 }
 
-                // --- Buscar información en la hoja 2 ---
-                $productoNombre = isset($subProductoInfo[$codigo]) ? $subProductoInfo[$codigo]['producto'] : null;
-                $medida = isset($subProductoInfo[$codigo]) ? $subProductoInfo[$codigo]['medida'] : null;
-                $color = isset($subProductoInfo[$codigo]) ? $subProductoInfo[$codigo]['color'] : null;
+                // Buscar el SubProducto por su código
+                $subProducto = SubProducto::where('code', $codigo)->first();
 
-                // Si no hay información en la hoja 2, usar la lógica anterior para el Producto
-                if (!$productoNombre) {
-                    $codigoBase = explode('-', $codigo)[0];
-                    $productoNombre = explode('-', $descripcion)[0];
-                }
+                if ($subProducto) {
+                    // Preparar los datos para actualizar
+                    $datos = [];
 
-                // --- Buscar o crear la Categoría ---
-                $categoria = Categoria::firstOrCreate(['name' => $categoriaNombre]);
+                    if (!is_null($minimo)) $datos['min'] = $minimo;
+                    if (!is_null($minimoOferta)) $datos['min_oferta'] = $minimoOferta;
+                    if (!is_null($precioLista)) $datos['precio_de_lista'] = $precioLista;
+                    if (!is_null($precioOferta)) $datos['precio_de_oferta'] = $precioOferta;
 
-                // --- Buscar o crear la SubCategoría ---
-                $subCategoria = SubCategoria::where('name', $subCategoriaNombre)
-                    ->where('categoria_id', $categoria->id)
-                    ->first();
+                    // Actualizar solo si hay datos para actualizar
+                    if (!empty($datos)) {
+                        $subProducto->update($datos);
+                        $contadorActualizados++;
 
-                if (!$subCategoria) {
-                    $subCategoria = SubCategoria::create([
-                        'name' => $subCategoriaNombre,
-                        'categoria_id' => $categoria->id
-                    ]);
-                }
-
-                // --- Buscar o crear el Producto ---
-                if (!isset($productosCache[$productoNombre])) {
-                    $producto = Producto::firstOrCreate(
-                        ['name' => $productoNombre],
-                        ['sub_categoria_id' => $subCategoria->id]
-                    );
-                    $productosCache[$productoNombre] = $producto;
+                        // Loguear información del producto actualizado
+                        Log::info("SubProducto actualizado: {$codigo} - Precio Lista: {$precioLista} - Precio Oferta: {$precioOferta}");
+                    }
                 } else {
-                    $producto = $productosCache[$productoNombre];
+                    $contadorNoEncontrados++;
+                    Log::warning("SubProducto no encontrado con código: {$codigo}");
                 }
-
-                // --- Buscar la imagen del producto ---
-                $imagePath = $this->buscarImagen($codigo);
-
-                // --- Buscar o crear el SubProducto ---
-                SubProducto::updateOrCreate(
-                    ['code' => $codigo],
-                    [
-                        'name' => $descripcion,
-                        'producto_id' => $producto->id,
-                        'min' => $minimo,
-                        'bulto_cerrado' => $bultoCerrado,
-                        'min_oferta' => $minimoOferta,
-                        'precio_de_lista' => $precioLista,
-                        'precio_de_oferta' => $precioOferta,
-                        'image' => $imagePath,
-                        'medida' => $medida, // Nuevo campo medida
-                        'color' => $color // Nuevo campo color
-                    ]
-                );
-            } catch (\Exception $e) {
-                Log::error("Error en la hoja 1, fila {$index}: " . $e->getMessage());
-                continue; // Ignorar filas con errores
             }
+
+            // Loguear estadísticas finales
+            Log::info("Actualización de precios finalizada: {$contadorActualizados} productos actualizados, {$contadorNoEncontrados} no encontrados");
+        } catch (\Exception $e) {
+            Log::error("Error en ActualizarPreciosSubProductosJob: " . $e->getMessage());
+            throw $e; // Re-lanzar la excepción para que el sistema de colas maneje el error
         }
     }
 }

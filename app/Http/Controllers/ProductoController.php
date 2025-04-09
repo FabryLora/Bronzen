@@ -17,6 +17,11 @@ class ProductoController extends Controller
         return ProductoResource::collection(Producto::all());
     }
 
+    public function FeaturedProductos()
+    {
+        return ProductoResource::collection(Producto::where('featured', true)->get());
+    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -27,13 +32,25 @@ class ProductoController extends Controller
             'code' => 'sometimes|string',
             'name' => 'sometimes|string',
             'image' => 'sometimes|file',
+            'plano' => 'sometimes|file',
             'orden' => 'sometimes|string',
             'featured' => 'sometimes|boolean',
             'sub_categoria_id' => 'nullable|exists:sub_categorias,id',
         ]);
 
-        $imagePath = $request->file('image')->store('images', 'public');
-        $data["image"] = $imagePath;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('images', 'public');
+            $data["image"] = $imagePath;
+        }
+
+        if ($request->hasFile('plano')) {
+            $imagePath = $request->file('plano')->store('images', 'public');
+            $data["plano"] = $imagePath;
+        }
+
+
+
+
 
         $producto = Producto::create($data);
 
@@ -57,8 +74,9 @@ class ProductoController extends Controller
         $data = $request->validate([
             'featured' => 'sometimes|boolean',
             'code' => 'sometimes|string',
-            'name' => 'sometmies|string',
+            'name' => 'sometimes|string',
             'image' => 'sometimes|file',
+            'plano' => 'sometimes|file',
             'orden' => 'sometimes|string',
             'sub_categoria_id' => 'nullable|exists:sub_categorias,id',
         ]);
@@ -77,6 +95,21 @@ class ProductoController extends Controller
             $data["image"] = $imagePath;
         }
 
+        if ($request->hasFile('plano')) {
+            // Eliminar la imagen existente del sistema de archivos
+            if ($producto->plano) {
+                $absolutePath = public_path('storage/' . $producto->plano);
+                if (File::exists($absolutePath)) {
+                    File::delete($absolutePath);
+                }
+            }
+
+            // Guardar la nueva imagen
+            $imagePath = $request->file('plano')->store('images', 'public');
+            $data["plano"] = $imagePath;
+        }
+
+
         $producto->update($data);
     }
 
@@ -89,6 +122,13 @@ class ProductoController extends Controller
 
         if ($producto->image) {
             $absolutePath = public_path('storage/' . $producto->image);
+            if (File::exists($absolutePath)) {
+                File::delete($absolutePath);
+            }
+        }
+
+        if ($producto->plano) {
+            $absolutePath = public_path('storage/' . $producto->plano);
             if (File::exists($absolutePath)) {
                 File::delete($absolutePath);
             }

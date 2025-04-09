@@ -34,7 +34,7 @@ export default function SubProductosAdmin() {
         e.preventDefault();
         const formData = new FormData();
         if (submitInfo?.orden) formData.append("orden", submitInfo?.orden);
-        formData.append("name", "a");
+        formData.append("name", submitInfo?.name);
         formData.append("code", submitInfo?.code);
         formData.append("producto_id", submitInfo?.producto_id);
         formData.append("min", submitInfo?.min);
@@ -167,6 +167,20 @@ export default function SubProductosAdmin() {
                                             setSubmitInfo({
                                                 ...submitInfo,
                                                 orden: e.target.value,
+                                            })
+                                        }
+                                    />
+                                    <label htmlFor="name">Nombre </label>
+                                    <input
+                                        className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
+                                        type="text"
+                                        name="name"
+                                        id="name"
+                                        value={submitInfo?.name}
+                                        onChange={(e) =>
+                                            setSubmitInfo({
+                                                ...submitInfo,
+                                                name: e.target.value,
                                             })
                                         }
                                     />

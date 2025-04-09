@@ -21,6 +21,7 @@ class ProductoResource extends JsonResource
             'name' => $this->name,
             'featured' => $this->featured,
             'image' => $this->image ? url("storage/{$this->image}") : null,
+            'plano' => $this->plano ? url("storage/{$this->plano}") : null,
             'subCategoria' => $this->subCategoria->name,
             'categoria' => $this->subCategoria->categorias->name,
         ];

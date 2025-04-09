@@ -19,6 +19,7 @@ export default function ProductosAdmin() {
     const [subCategoriaId, setSubCategoriaId] = useState();
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState("");
+    const [plano, setPlano] = useState();
     const itemsPerPage = 10;
 
     const handleFileChange = (e) => {
@@ -31,6 +32,7 @@ export default function ProductosAdmin() {
         if (imagen) formData.append("image", imagen);
         if (nombre) formData.append("name", nombre);
         if (orden) formData.append("orden", orden);
+        if (plano) formData.append("plano", plano);
 
         const reposnse = adminAxiosClient.post("/productos", formData, {
             headers: {
@@ -141,6 +143,29 @@ export default function ProductosAdmin() {
                                         </label>
                                         <p className="self-center px-2">
                                             {imagen?.name}
+                                        </p>
+                                    </div>
+                                    <label htmlFor="planoo">
+                                        DETALLE TÉCNICO
+                                    </label>
+                                    <div className="flex flex-row">
+                                        <input
+                                            type="file"
+                                            name="imagen"
+                                            id="planoo"
+                                            onChange={(e) =>
+                                                setPlano(e.target.files[0])
+                                            }
+                                            className="hidden"
+                                        />
+                                        <label
+                                            className="cursor-pointer border border-primary-orange text-primary-orange py-1 px-2 hover:bg-primary-orange hover:text-white transition duration-300 rounded-md"
+                                            htmlFor="planoo"
+                                        >
+                                            Elegir imagen
+                                        </label>
+                                        <p className="self-center px-2">
+                                            {plano?.name}
                                         </p>
                                     </div>
                                     <label htmlFor="nombree">
@@ -277,6 +302,9 @@ export default function ProductosAdmin() {
                                 <td className="text-center ">SUB-CATEGORIA</td>
                                 <td className="w-[400px] py-2 px-3 text-center">
                                     IMAGEN
+                                </td>
+                                <td className="w-[400px] py-2 px-3 text-center">
+                                    DETALLE TÉCNICO
                                 </td>
                                 <td className="text-center ">NOVEDAD</td>
                                 <td className="text-center">EDITAR</td>

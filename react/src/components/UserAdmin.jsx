@@ -14,7 +14,6 @@ export default function UserAdmin({ user }) {
     const [succ, setSucc] = useState(false);
     const [submiting, setSubmiting] = useState(false);
     const [updateView, setUpdateView] = useState(false);
-    const [autorizado, setAutorizado] = useState(user?.autorizado);
 
     const [userInfo, setUserInfo] = useState({
         name: user?.name,
@@ -101,8 +100,7 @@ export default function UserAdmin({ user }) {
                 <Switch
                     id={user?.id}
                     path={"/clientes"}
-                    enabled={autorizado}
-                    onChange={setAutorizado}
+                    initialEnabled={user?.autorizado === 1 ? true : false}
                 />
             </td>
             <td>

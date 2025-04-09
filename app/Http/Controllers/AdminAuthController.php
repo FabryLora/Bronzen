@@ -18,7 +18,6 @@ class AdminAuthController extends Controller
         $admin = Admin::create([
             'name' => $data['name'],
             'password' => bcrypt($data['password']),
-
         ]);
 
         $token = $admin->createToken('admin')->plainTextToken;

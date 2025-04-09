@@ -77,14 +77,19 @@ export default function Pedidos() {
         // Get available discounts
         const descuentoUsuario =
             currentUser?.descuento > 0 ? currentUser?.descuento / 100 : 0;
-        const descuentoAdicional =
-            currentUser?.descuento_adicional > 0
-                ? currentUser?.descuento_adicional / 100
-                : 0;
+
+        // Combinamos el descuento general con el descuento adicional
         const descuentoGeneral =
-            informacion?.descuento_general > 0
-                ? informacion?.descuento_general / 100
+            informacion?.descuento_general > 0 ||
+            currentUser?.descuento_adicional > 0
+                ? (informacion?.descuento_general || 0) +
+                  (currentUser?.descuento_adicional || 0)
                 : 0;
+
+        // Convertimos a porcentaje solo una vez después de sumar
+        const descuentoGeneralPorcentaje =
+            descuentoGeneral > 0 ? descuentoGeneral / 100 : 0;
+
         const descuentoRetiro =
             tipo_entrega === "retiro cliente" &&
             informacion?.descuento_reparto > 0
@@ -95,19 +100,13 @@ export default function Pedidos() {
         const montoDescuentoUsuario = subtotal * descuentoUsuario;
         const subtotalPostUsuario = subtotal - montoDescuentoUsuario;
 
-        // Apply additional discount (if any)
-        const montoDescuentoAdicional =
-            subtotalPostUsuario * descuentoAdicional;
-        const subtotalPostAdicional =
-            subtotalPostUsuario - montoDescuentoAdicional;
-
-        // Apply general discount
-        const montoDescuentoGeneral = subtotalPostAdicional * descuentoGeneral;
-        const subtotalPostGeneral =
-            subtotalPostAdicional - montoDescuentoGeneral;
+        // Apply general discount (now includes additional discount)
+        const montoDescuentoGeneral =
+            subtotalPostUsuario * descuentoGeneralPorcentaje;
+        const subtotalPostGeneral = subtotalPostUsuario - montoDescuentoGeneral;
 
         // Apply pickup discount - calculated on the amount AFTER general discount
-        const montoDescuentoRetiro = subtotalPostAdicional * descuentoRetiro;
+        const montoDescuentoRetiro = subtotalPostGeneral * descuentoRetiro;
         const subtotalFinal = subtotalPostGeneral - montoDescuentoRetiro;
 
         // Calculate IVA and total
@@ -116,10 +115,10 @@ export default function Pedidos() {
 
         // Save all values to state
         setSubtotal(subtotal.toFixed(2));
-        setSubtotalConDescuentoUsuario(montoDescuentoUsuario);
-        setSubtotalConDescuentoAdicional(montoDescuentoAdicional);
-        setSubtotalConDescuentoGeneral(montoDescuentoGeneral);
-        setMontoDescuentoRetiro(montoDescuentoRetiro);
+        setSubtotalConDescuentoUsuario(montoDescuentoUsuario.toFixed(2));
+        // Ya no guardamos el descuento adicional por separado
+        setSubtotalConDescuentoGeneral(montoDescuentoGeneral.toFixed(2));
+        setMontoDescuentoRetiro(montoDescuentoRetiro.toFixed(2));
         setIva(iva.toFixed(2));
         setTotalFinal(total.toFixed(2));
     }, [cart, tipo_entrega, currentUser, informacion]);
@@ -142,9 +141,10 @@ export default function Pedidos() {
         }
         formData.append("tipo_entrega", tipo_entrega);
         formData.append("subtotal", subtotal ? subtotal : 0);
+        formData.append("descuento", 0);
         formData.append("iva", iva ? iva : 0);
         formData.append("entregado", 0);
-        formData.append("user_id", userId);
+        formData.append("user_id", currentUser?.id);
         if (totalFinal !== "0.00") {
             formData.append("total", totalFinal);
         }
@@ -164,9 +164,9 @@ export default function Pedidos() {
                 const formProds = new FormData();
 
                 formProds.append("pedido_id", pedidoId);
-                formProds.append("producto_id", prod.id);
+                formProds.append("subproducto_id", prod.id);
                 formProds.append("cantidad", prod.additionalInfo.cantidad);
-                formProds.append("subtotal_prod", prod.additionalInfo.subtotal);
+                formProds.append("subtotal_prod", 0);
 
                 axiosClient.post(`/pedido-productos`, formProds, {
                     headers: {
@@ -447,7 +447,7 @@ export default function Pedidos() {
                     {/* Descuento por cantidad/oferta ya está aplicado en el cálculo del precio de cada producto */}
 
                     {currentUser?.descuento > 0 && (
-                        <div className="flex flex-row justify-between w-full text-green-500">
+                        <div className="flex flex-row justify-between w-full text-[#308C05]">
                             <p>Descuento Cliente {currentUser?.descuento}%</p>
                             <p>
                                 -$
@@ -462,30 +462,13 @@ export default function Pedidos() {
                         </div>
                     )}
 
-                    {currentUser?.descuento_adicional > 0 && (
-                        <div className="flex flex-row justify-between w-full text-green-500">
-                            <p>
-                                Descuento Adicional{" "}
-                                {currentUser?.descuento_adicional}%
-                            </p>
-                            <p>
-                                -$
-                                {subtotalConDescuentoAdicional?.toLocaleString(
-                                    "es-AR",
-                                    {
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2,
-                                    }
-                                )}
-                            </p>
-                        </div>
-                    )}
-
                     {informacion?.descuento_general > 0 && (
-                        <div className="flex flex-row justify-between w-full text-green-500">
+                        <div className="flex flex-row justify-between w-full text-[#308C05]">
                             <p>
-                                Descuento General{" "}
-                                {informacion?.descuento_general}%
+                                Descuento Cliente{" "}
+                                {informacion?.descuento_general +
+                                    currentUser?.descuento_adicional}
+                                %
                             </p>
                             <p>
                                 -$
@@ -502,7 +485,7 @@ export default function Pedidos() {
 
                     {tipo_entrega === "retiro cliente" &&
                         informacion?.descuento_reparto > 0 && (
-                            <div className="flex flex-row justify-between w-full text-green-500">
+                            <div className="flex flex-row justify-between w-full text-[#308C05]">
                                 <p>
                                     Descuento por Retiro{" "}
                                     {informacion?.descuento_reparto}%

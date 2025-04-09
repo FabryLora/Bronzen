@@ -280,9 +280,6 @@ export default function Contenido() {
                                 </div>
                             </div>
                         </div>
-                        <h2 className="text-3xl border-b-2 pb-2 text-primary-orange">
-                            Novedades
-                        </h2>
                     </div>
                 </div>
                 <div className="w-full flex justify-end">

@@ -2,7 +2,7 @@ import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import adminAxiosClient from "../adminAxiosClient";
 import { useStateContext } from "../context/ContextProvider";
@@ -16,7 +16,6 @@ export default function SubProductosCardAdmin({ category }) {
     const [orden, setOrden] = useState(category?.orden);
     const [edit, setEdit] = useState(false);
     const [featured, setFeatured] = useState(false);
-    const [stock, setStock] = useState(category?.stock == 1 ? true : false);
 
     const [submitInfo, setSubmitInfo] = useState({
         orden: category?.orden,
@@ -27,10 +26,28 @@ export default function SubProductosCardAdmin({ category }) {
         min_oferta: category?.min_oferta,
         precio_de_oferta: category?.precio_de_oferta,
         bulto_cerrado: category?.bulto_cerrado,
-
         image: "",
         descuento: category?.descuento,
     });
+
+    useEffect(() => {
+        setSubmitInfo({
+            orden: category?.orden,
+            code: category?.code,
+            name: category?.name,
+            producto_id: category?.productoId,
+            min: category?.min,
+            precio_de_lista: category?.precio_de_lista,
+            min_oferta: category?.min_oferta,
+            precio_de_oferta: category?.precio_de_oferta,
+            bulto_cerrado: category?.bulto_cerrado,
+            image: "",
+            descuento: category?.descuento,
+        });
+
+        setNombre(category?.name);
+        setOrden(category?.orden);
+    }, [category]);
 
     const hanldeFileChange = (e) => {
         setImagen(e.target.files[0]);
@@ -40,7 +57,7 @@ export default function SubProductosCardAdmin({ category }) {
         e.preventDefault();
         const formData = new FormData();
         if (submitInfo?.orden) formData.append("orden", submitInfo?.orden);
-        formData.append("name", "a");
+        formData.append("name", submitInfo?.name);
         formData.append("code", submitInfo?.code);
         formData.append("producto_id", submitInfo?.producto_id);
         formData.append("min", submitInfo?.min);
@@ -73,7 +90,7 @@ export default function SubProductosCardAdmin({ category }) {
 
         try {
             await reposnse;
-            fetchSubProductos(true);
+            fetchSubProductos();
             setEdit(false);
         } catch (error) {
             console.error("Error al guardar:", error);
@@ -173,8 +190,7 @@ export default function SubProductosCardAdmin({ category }) {
                 <Switch
                     id={category?.id}
                     path={"/sub-productos"}
-                    enabled={stock}
-                    onChange={setStock}
+                    initialEnabled={category?.stock === 1 ? true : false}
                 />
             </td>
 
@@ -241,6 +257,20 @@ export default function SubProductosCardAdmin({ category }) {
                                             setSubmitInfo({
                                                 ...submitInfo,
                                                 orden: e.target.value,
+                                            })
+                                        }
+                                    />
+                                    <label htmlFor="name">Nombre </label>
+                                    <input
+                                        className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
+                                        type="text"
+                                        name="name"
+                                        id="name"
+                                        value={submitInfo?.name}
+                                        onChange={(e) =>
+                                            setSubmitInfo({
+                                                ...submitInfo,
+                                                name: e.target.value,
                                             })
                                         }
                                     />

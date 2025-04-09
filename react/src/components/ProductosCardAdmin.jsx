@@ -15,9 +15,8 @@ export default function ProductosCardAdmin({ category }) {
     const [nombre, setNombre] = useState(category?.name);
     const [orden, setOrden] = useState(category?.orden);
     const [edit, setEdit] = useState(false);
-    const [featured, setFeatured] = useState(
-        category?.featured === 1 ? true : false
-    );
+
+    const [plano, setPlano] = useState();
 
     const hanldeFileChange = (e) => {
         setImagen(e.target.files[0]);
@@ -31,6 +30,7 @@ export default function ProductosCardAdmin({ category }) {
         }
         formData.append("name", nombre ? nombre : " ");
         if (orden) formData.append("orden", orden);
+        if (plano) formData.append("plano", plano);
 
         const response = adminAxiosClient.post(
             `/productos/${category?.id}?_method=PUT`,
@@ -129,12 +129,23 @@ export default function ProductosCardAdmin({ category }) {
                 )}
             </td>
 
+            <td className=" w-[90px] h-[90px] px-8">
+                {category?.plano ? (
+                    <img
+                        className="w-full h-full object-contain"
+                        src={category?.plano}
+                        alt=""
+                    />
+                ) : (
+                    <p>Sin Detalle</p>
+                )}
+            </td>
+
             <td className="h-[80px] flex justify-center items-center text-center align-middle">
                 <Switch
                     id={category?.id}
                     path={"/productos"}
-                    enabled={featured}
-                    onChange={setFeatured}
+                    initialEnabled={category?.featured == 1 ? true : false}
                 />
             </td>
 
@@ -192,6 +203,29 @@ export default function ProductosCardAdmin({ category }) {
                                             Elegir imagen
                                         </label>
                                         <p>{imagen?.name}</p>
+                                    </div>
+                                    <label htmlFor="plano">
+                                        DETALLE TÉCNICO
+                                    </label>
+                                    <div className="flex flex-row">
+                                        <input
+                                            type="file"
+                                            name="imagen"
+                                            id="plano"
+                                            onChange={(e) =>
+                                                setPlano(e.target.files[0])
+                                            }
+                                            className="hidden"
+                                        />
+                                        <label
+                                            className="cursor-pointer border border-primary-orange text-primary-orange py-1 px-2 hover:bg-primary-orange hover:text-white transition duration-300 rounded-md"
+                                            htmlFor="plano"
+                                        >
+                                            Elegir imagen
+                                        </label>
+                                        <p className="self-center px-2">
+                                            {plano?.name}
+                                        </p>
                                     </div>
                                     <label htmlFor="nombre">
                                         Nombre{" "}

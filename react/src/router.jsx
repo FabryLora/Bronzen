@@ -14,6 +14,7 @@ import Informacion from "./Views/Informacion";
 import Mispedidos from "./Views/MisPedidos";
 import Novedades from "./Views/Novedades";
 import Pedidos from "./Views/Pedidos";
+import PedidosAdmin from "./Views/PedidosAdmin";
 import PrivadaLayout from "./Views/PrivadaLayout";
 import ProductoOnly from "./Views/ProductoOnly";
 import ProductoOnlyPrivada from "./Views/ProductoOnlyPrivada";
@@ -83,6 +84,10 @@ const router = createBrowserRouter([
             {
                 path: "/dashboard/informacion",
                 element: <Informacion />,
+            },
+            {
+                path: "/dashboard/mis-pedidos",
+                element: <PedidosAdmin />,
             },
         ],
     },

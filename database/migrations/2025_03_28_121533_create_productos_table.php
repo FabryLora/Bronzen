@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('orden')->nullable();
             $table->boolean('featured')->default(false);
             $table->string('image')->nullable();
+            $table->string('plano')->nullable();
+            $table->string('description')->nullable();
             $table->foreignIdFor(SubCategoria::class, 'sub_categoria_id')->nullable()->constrained();
             $table->timestamps();
         });
