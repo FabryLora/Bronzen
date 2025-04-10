@@ -48,26 +48,11 @@ export default function ProductosHijo() {
                     className="flex flex-col h-[342px] max-sm:h-auto max-sm:w-full max-sm:items-center"
                     key={prod?.id}
                 >
-                    {subProductos?.find(
-                        (subprod) => subprod?.productoId === prod?.id
-                    )?.image ? (
-                        <img
-                            src={
-                                subProductos?.find(
-                                    (subprod) =>
-                                        subprod?.productoId === prod?.id
-                                )?.image
-                            }
-                            className="w-[269px] max-sm:w-[80%] h-[271px] max-sm:h-auto max-sm:aspect-square border-b-[2px] border-primary-orange object-contain"
-                            alt=""
-                        />
-                    ) : (
-                        <img
-                            src={defaultPhoto}
-                            className="w-[269px] max-sm:w-[80%] h-[271px] max-sm:h-auto max-sm:aspect-square border-b-[2px] border-primary-orange object-contain"
-                            alt=""
-                        />
-                    )}
+                    <img
+                        src={prod?.image ? prod?.image : defaultPhoto}
+                        className="w-[269px] max-sm:w-[80%] h-[271px] max-sm:h-auto max-sm:aspect-square border-b-[2px] border-primary-orange object-contain"
+                        alt=""
+                    />
 
                     <h2 className="text-primary-orange font-bold text-sm pt-4 w-[90%] max-sm:text-center max-sm:w-full break-words">
                         {prod?.name}

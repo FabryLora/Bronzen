@@ -7,6 +7,7 @@ export default function SomosBronzen() {
 
     return (
         <div
+            id="targetSection"
             style={{ backgroundImage: `url(${background})` }}
             className="h-[680px] max-sm:h-auto max-sm:min-h-[600px] w-full bg-no-repeat bg-cover bg-top bg-center"
         >

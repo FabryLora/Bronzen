@@ -85,7 +85,7 @@ export default function ImageSlider() {
                                         {subprod?.name}
                                     </h2>
                                     <Link
-                                        to={`/productos/${subprod?.categoriaId}/${subprod?.subCategoriaId}/${subprod?.productoId}`}
+                                        to={`/productos/${subprod?.categoriaId}/${subprod?.subCategoriaId}/${subprod?.id}`}
                                         className="text-primary-orange text-sm"
                                     >
                                         {subprod?.subProductos[0]?.code}

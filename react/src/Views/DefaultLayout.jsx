@@ -2,6 +2,7 @@ import { faArrowUp, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
+import { Toaster } from "react-hot-toast";
 import { Navigate, Outlet } from "react-router-dom";
 import CliengoChat from "../Components/CliengoChat";
 import Footer from "../Components/Footer";
@@ -65,6 +66,7 @@ export default function DefaultLayout() {
 
     return (
         <>
+            <Toaster />
             <NavBar />
             <Outlet />
             <Footer />

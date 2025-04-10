@@ -1,11 +1,14 @@
 // NuestrosProductos.jsx
-import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import loupe from "../assets/icons/WhiteLoupe.png";
 import { useStateContext } from "../context/ContextProvider";
 import LineaComponent from "./LineaComponent";
 
 export default function NuestrosProductos() {
     const { categorias } = useStateContext();
+
+    const [orangeBorder, setOrangeBorder] = useState(false);
 
     const location = useLocation();
 
@@ -22,9 +25,32 @@ export default function NuestrosProductos() {
                         : "py-20 max-sm:py-10"
                 }`}
             >
-                <h2 className="text-white font-bold text-5xl max-sm:text-3xl">
-                    NUESTROS PRODUCTOS
-                </h2>
+                <div className="flex flex-row w-full">
+                    <h2 className="text-white font-bold text-5xl max-sm:text-3xl w-2/3">
+                        NUESTROS PRODUCTOS
+                    </h2>
+                    <div className="w-1/3 flex justify-end max-sm:justify-center">
+                        <div
+                            className={`w-[300px] max-sm:w-full flex flex-row gap-2 items-center border-white border-b-[2px]  justify-end ${
+                                orangeBorder ? "border-primary-orange" : ""
+                            }`}
+                        >
+                            <input
+                                className="outline-none w-full text-white"
+                                type="text"
+                                placeholder="Busca por código o descripción"
+                            />
+                            <Link className="w-fit h-fit pr-4">
+                                <img
+                                    className="w-[35px] h-auto"
+                                    src={loupe}
+                                    alt=""
+                                />
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+
                 <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-y-6 gap-x-4 justify-items-center">
                     {categorias
                         ?.slice()

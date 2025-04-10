@@ -1,7 +1,7 @@
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import cartButton from "../assets/icons/cartButton.svg";
 import trashButton from "../assets/icons/hoverTrashButton.png";
 import defaultPhoto from "../assets/logos/bronzen-logo.png";
@@ -59,12 +59,15 @@ input[type="number"] {
 `}
             </style>
             {/* Product Image */}
-            <div className="max-w-[121px] max-h-[121px] border border-[#EAEAEA]  rounded-lg flex items-center justify-center p-2 mr-4">
+            <Link
+                to={`${location?.pathname}/${product?.id}`}
+                className="max-w-[121px] max-h-[121px] border border-[#EAEAEA]  rounded-lg flex items-center justify-center p-2 mr-4"
+            >
                 <img
                     src={product?.image ? product?.image : defaultPhoto}
                     className="w-full h-full object-contain rounded-lg"
                 />
-            </div>
+            </Link>
 
             {/* Product Details */}
             <div className="flex flex-col w-full">

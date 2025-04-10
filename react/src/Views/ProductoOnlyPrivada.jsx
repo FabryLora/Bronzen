@@ -1,12 +1,7 @@
-import {
-    faFacebook,
-    faFacebookF,
-    faWhatsapp,
-} from "@fortawesome/free-brands-svg-icons";
-import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { PulseLoader } from "react-spinners";
 import defaultPhoto from "../assets/logos/bronzen-logo.png";
 import axiosClient from "../axios";
@@ -19,10 +14,7 @@ export default function ProductoOnlyPrivada() {
     const [loading, setLoading] = useState(false);
     const [currentSubProduct, setCurrentSubProduct] = useState();
     const [currentMedida, setCurrentMedida] = useState();
-
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
+    const [precioConDescuento, setPrecioConDescuento] = useState();
 
     useEffect(() => {
         setLoading(true);
@@ -31,6 +23,10 @@ export default function ProductoOnlyPrivada() {
             .then(({ data }) => {
                 setSubProductos(data.data);
                 setCurrentSubProduct(data.data[0]);
+                setCantidad(
+                    cart?.find((prod) => prod?.id == data.data[0]?.id)
+                        ?.additionalInfo?.cantidad || data.data[0]?.min
+                );
             })
             .catch((error) => {
                 console.log(error);
@@ -39,6 +35,43 @@ export default function ProductoOnlyPrivada() {
                 setLoading(false);
             });
     }, [id]);
+
+    useEffect(() => {
+        const precioConDescuento =
+            Number(currentSubProduct?.precio_de_lista) -
+            (Number(currentSubProduct?.precio_de_lista) *
+                Number(currentSubProduct?.descuento)) /
+                100;
+        setPrecioConDescuento(precioConDescuento);
+    }, [currentSubProduct]);
+
+    const [cantidad, setCantidad] = useState(
+        cart?.find((prod) => prod?.id == currentSubProduct?.id)?.additionalInfo
+            ?.cantidad || currentSubProduct?.min
+    );
+
+    useEffect(() => {
+        const existsInCart = cart.find(
+            (item) => item?.id === currentSubProduct?.id
+        );
+
+        if (existsInCart) {
+            addToCart(currentSubProduct, {
+                cantidad,
+                precio_descuento: precioConDescuento,
+            });
+        }
+    }, [cantidad, precioConDescuento]);
+
+    const handleChange = (value) => {
+        const unidad = Number(currentSubProduct.min);
+        let newValue = Math.round(value / unidad) * unidad; // Redondea al múltiplo más cercano
+        if (newValue >= unidad) setCantidad(newValue);
+    };
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     if (loading) {
         return (
@@ -50,6 +83,19 @@ export default function ProductoOnlyPrivada() {
 
     return (
         <div className="relative flex w-[1200px] mx-auto py-20">
+            <style>
+                {`
+                input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+`}
+            </style>
             <div className="absolute left-0 top-4 flex flex-row items-center gap-1 text-sm text-[#6E7173]">
                 <Link to={"/privado/productos"} className="font-medium">
                     Productos
@@ -126,7 +172,7 @@ export default function ProductoOnlyPrivada() {
                         <h1 className="text-[30px] font-medium text-[#222222] ">
                             {currentSubProduct?.producto}
                         </h1>
-                        <div className="flex flex-row justify-between">
+                        <div className="flex flex-row justify-between items-end">
                             <div className="flex flex-col gap-2">
                                 <p className="text-[16px]">Precio</p>
                                 <p className="font-semibold">
@@ -143,17 +189,88 @@ export default function ProductoOnlyPrivada() {
                                 <p className="font-semibold">
                                     $
                                     {Number(
-                                        currentSubProduct?.precio_de_lista
-                                    )?.toLocaleString("es-AR")}
+                                        currentSubProduct?.precio_de_lista -
+                                            currentSubProduct?.precio_de_lista *
+                                                (currentSubProduct?.descuento /
+                                                    100)
+                                    )?.toLocaleString("es-AR", {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2,
+                                    })}
                                 </p>
                             </div>
                             <div className="flex flex-col gap-2">
                                 <p className="text-[16px]">Cantidad</p>
-                                <p className="font-semibold">
-                                    {currentSubProduct?.precio_de_lista}
-                                </p>
+                                <div className="flex justify-center items-center">
+                                    <div className="relative flex items-center border rounded-full border-gray-200 h-[38px] w-[64px] px-2">
+                                        {/* Contenedor con botones */}
+                                        <div className="flex flex-row  items-center bg-transparent justify-between  overflow-hidden">
+                                            <input
+                                                value={cantidad}
+                                                onChange={(e) => {
+                                                    const value = Number(
+                                                        e.target.value
+                                                    );
+                                                    if (
+                                                        !isNaN(value) &&
+                                                        value >= 0
+                                                    ) {
+                                                        handleChange(value);
+                                                    }
+                                                }}
+                                                type="number"
+                                                className="text-base text-[#6E7173] w-full outline-none border-none bg-transparent text-left"
+                                            />
+
+                                            <div className="flex flex-col justify-center h-full">
+                                                <button
+                                                    className="flex items-center max-h-[12px]"
+                                                    onClick={() =>
+                                                        handleChange(
+                                                            Number(cantidad) +
+                                                                Number(
+                                                                    currentSubProduct?.min
+                                                                )
+                                                        )
+                                                    }
+                                                >
+                                                    <FontAwesomeIcon
+                                                        icon={faChevronUp}
+                                                        size="xs"
+                                                        color="#6E7173"
+                                                    />
+                                                </button>
+                                                <button
+                                                    className="flex items-center max-h-[12px]"
+                                                    onClick={() =>
+                                                        handleChange(
+                                                            Number(cantidad) -
+                                                                Number(
+                                                                    currentSubProduct?.min
+                                                                )
+                                                        )
+                                                    }
+                                                >
+                                                    <FontAwesomeIcon
+                                                        icon={faChevronDown}
+                                                        size="xs"
+                                                        color="#6E7173"
+                                                    />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <button className="w-[184px] h-[51px] text-white bg-primary-orange fon-bold rounded-full">
+                            <button
+                                onClick={() =>
+                                    addToCart(currentSubProduct, {
+                                        cantidad,
+                                        precio_descuento: precioConDescuento,
+                                    })
+                                }
+                                className="w-[184px] h-[51px] text-white bg-primary-orange fon-bold rounded-full"
+                            >
                                 Agregar al pedido
                             </button>
                         </div>

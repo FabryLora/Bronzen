@@ -5,9 +5,13 @@ import { Link } from "react-router-dom";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function Footer() {
-    const { contactInfo } = useStateContext();
+    const { contactInfo, categorias } = useStateContext();
 
     const contactLinks = [{ title: "s" }];
+
+    const soloPrimeraMayuscula = (str) => {
+        return str?.charAt(0)?.toUpperCase() + str?.slice(1)?.toLowerCase();
+    };
 
     const lineasLinks = [
         { title: "Aluminio" },
@@ -83,13 +87,13 @@ export default function Footer() {
                                 Lineas
                             </h2>
                             <ul className="grid grid-cols-2 grid-rows-4 max-sm:grid-cols-1 max-sm:grid-rows-none gap-y-2 w-full text-[#62707b] text-sm font-bold">
-                                {lineasLinks.map((link, index) => (
+                                {categorias.map((link, index) => (
                                     <Link
                                         className="hover:text-[#c96] transition duration-300"
                                         to={"#"}
                                         key={index}
                                     >
-                                        {link.title}
+                                        {soloPrimeraMayuscula(link?.name)}
                                     </Link>
                                 ))}
                             </ul>

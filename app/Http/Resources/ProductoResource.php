@@ -24,6 +24,8 @@ class ProductoResource extends JsonResource
             'plano' => $this->plano ? url("storage/{$this->plano}") : null,
             'subCategoria' => $this->subCategoria->name,
             'categoria' => $this->subCategoria->categorias->name,
+            'categoriaId' => $this->subCategoria->categorias->id,
+            'subCategoriaId' => $this->sub_categoria_id,
             'subProductos' => SubProductoResource::collection($this->whenLoaded("subProductos")),
         ];
     }

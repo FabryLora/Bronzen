@@ -61,7 +61,7 @@ Route::get('/sub-categories/categories/{id}', [SubCategoriaController::class, 'S
 Route::get('/productos/sub-categories/{id}', [ProductoController::class, 'ProductoporSubCategoriaId']);
 Route::get('/sub-productos/productos/{id}', [SubProductoController::class, 'mostrarSubPRoductosPorProductoId']);
 Route::get('/featured-products', [ProductoController::class, 'FeaturedProductos']);
-Route::get('/pedidos-usuarios', [PedidoController::class, 'showByUserId']);
+Route::get('/pedidos-usuarios/{id}', [PedidoController::class, 'showByUserId']);
 
 
 

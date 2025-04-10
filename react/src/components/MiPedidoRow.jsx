@@ -3,14 +3,16 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
 /* import checkIcon from "../assets/iconos/check-icon.svg";
 import pedidoIcon from "../assets/iconos/pedido-icon.svg"; */
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import pedidoIcon from "../assets/icons/pedidoIcon.png";
 import axiosClient from "../axios";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function MiPedidoRow({ pedido, productosPed }) {
     const [isOpen, setIsOpen] = useState(false);
 
-    const { userInfo, productos, addToCart, pedidoProductos, cart } =
-        useStateContext();
+    const { userInfo, productos, addToCart } = useStateContext();
 
     const menuRef = useRef(null);
 
@@ -73,10 +75,10 @@ export default function MiPedidoRow({ pedido, productosPed }) {
     };
 
     return (
-        <tr className="border-b">
+        <tr className="border-b border-gray-300">
             <td className="py-2">
                 <div className="flex items-center justify-center w-[80px] h-[80px] bg-[#F5F5F5]">
-                    {/* <img src={pedidoIcon} alt="" /> */}
+                    <img src={pedidoIcon} alt="" />
                 </div>
             </td>
             <td className="text-center"> {pedido?.id}</td>
@@ -98,20 +100,23 @@ export default function MiPedidoRow({ pedido, productosPed }) {
 
             <td className="py-2 text-center">
                 <div className="flex items-center justify-center w-[80px] h-[80px]  mx-auto">
-                    <div className="border w-[40px] h-[40px] flex justify-center items-center">
-                        {pedido?.entregado == "1" &&
-                            {
-                                /* <img src={checkIcon} alt="" /> */
-                            }}
+                    <div className="border border-gray-300 w-[40px] h-[40px] flex justify-center items-center">
+                        {pedido?.entregado == "1" && (
+                            <FontAwesomeIcon
+                                icon={faCheck}
+                                size="xl"
+                                color="#FF9E19"
+                            />
+                        )}
                     </div>
                 </div>
             </td>
 
             <td>
-                <div className="flex flex-row gap-5">
+                <div className="flex flex-row  justify-evenly">
                     <button
                         onClick={() => setIsOpen(true)}
-                        className="w-[137px] h-[41px] flex justify-center items-center border border-primary-red text-primary-red hover:scale-95 transition-transform"
+                        className="w-[114px] h-[51px] flex justify-center items-center border border-primary-orange text-primary-orange rounded-full hover:scale-95 transition-transform"
                     >
                         Ver detalles
                     </button>
@@ -124,7 +129,7 @@ export default function MiPedidoRow({ pedido, productosPed }) {
                                 position: "top-right",
                             });
                         }}
-                        className="w-[137px] h-[41px] flex justify-center items-center bg-primary-red text-white hover:scale-95 transition-transform"
+                        className="w-[114px] h-[51px] flex justify-center items-center bg-primary-orange rounded-full text-white hover:scale-95 transition-transform"
                     >
                         Recomprar
                     </button>

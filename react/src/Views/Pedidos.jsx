@@ -6,6 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 import axiosClient from "../axios";
 /* import PedidoTemplate from "../components/PedidoTemplate";
 import ProductRow from "../components/ProductRow"; */
+import PedidoTemplate from "../components/PedidoTemplate";
 import ProductoPrivadoRow from "../Components/ProductoPrivadoRow";
 import ProductoPrivadoRowMobile from "../Components/ProductoPrivadoRowMobile";
 import { useStateContext } from "../context/ContextProvider";
@@ -241,7 +242,7 @@ export default function Pedidos() {
                 {succ && (
                     <div>
                         <div className="fixed w-screen h-screen bg-black opacity-50 top-0 left-0"></div>
-                        <div className="fixed transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 w-[642px] h-[343px] bg-white text-black shadow-lg flex flex-col items-center justify-evenly">
+                        <div className="fixed transform rounded-lg -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 w-[642px] h-[343px] bg-white text-black shadow-lg flex flex-col items-center justify-evenly">
                             <h1 className="font-bold text-[32px]">
                                 Pedido confirmado
                             </h1>
@@ -254,7 +255,7 @@ export default function Pedidos() {
                                 </p>
                                 <Link
                                     to={"/privado/productos"}
-                                    className="bg-primary-red text-white flex items-center justify-center h-[47px] w-[253px]"
+                                    className="bg-primary-orange rounded-full font-bold text-white flex items-center justify-center h-[47px] w-[253px]"
                                 >
                                     VOLVER A PRODUCTOS
                                 </Link>
@@ -420,7 +421,7 @@ export default function Pedidos() {
                     onChange={(e) => {
                         setMensaje(e.target.value);
                     }}
-                    className="border border-gray-200 rounded-lg h-[222px] w-full p-3"
+                    className="outline outline-gray-200 focus:outline-primary-orange transition duration-300 rounded-lg h-[222px] w-full p-3"
                     name=""
                     id=""
                     rows={10}

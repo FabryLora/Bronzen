@@ -1,14 +1,24 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
+import axiosClient from "../axios";
 import MiPedidoRow from "../components/MiPedidoRow";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function Mispedidos() {
-    const { pedidos, currentUser /* fetchPedidos */ } = useStateContext();
+    const { currentUser } = useStateContext();
+
+    const [pedidos, setPedidos] = useState([]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        /* fetchPedidos(); */
+        axiosClient
+            .get(`/pedidos-usuarios/${currentUser?.id}`)
+            .then(({ data }) => {
+                setPedidos(data.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }, []);
 
     return (
@@ -27,15 +37,13 @@ export default function Mispedidos() {
                     </tr>
                 </thead>
                 <tbody>
-                    {pedidos
-                        ?.filter((pedido) => pedido?.user_id === userInfo?.id)
-                        ?.map((pedido, index) => (
-                            <MiPedidoRow
-                                key={index}
-                                pedido={pedido}
-                                productosPed={pedido.productos}
-                            />
-                        ))}
+                    {pedidos?.map((pedido, index) => (
+                        <MiPedidoRow
+                            key={index}
+                            pedido={pedido}
+                            productosPed={pedido?.productos}
+                        />
+                    ))}
                 </tbody>
             </table>
         </div>

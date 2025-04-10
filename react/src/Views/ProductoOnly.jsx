@@ -98,7 +98,7 @@ export default function ProductoOnly() {
                             e.target.src = defaultPhoto;
                         }}
                     />
-                    <div className="grid grid-cols-3 max-sm:relative max-sm:bottom-0 max-sm:mt-4 max-sm:mb-8 gap-3 max-sm:flex-wrap max-sm:justify-center">
+                    <div className="grid grid-cols-3 max-sm:relative max-sm:bottom-0 max-sm:mt-4 max-sm:mb-8 gap-3 max-sm:flex-wrap max-sm:justify-center mt-3">
                         {subProductos?.map((subProd) => (
                             <button
                                 onClick={() => {
