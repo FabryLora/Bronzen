@@ -24,6 +24,10 @@ const Switch = ({ id, path, initialEnabled, className = "" }) => {
                 await adminAxiosClient.put(`${path}/${id}`, {
                     stock: newState ? 1 : 0,
                 });
+            } else if (path === "/categorias") {
+                await adminAxiosClient.put(`${path}/${id}`, {
+                    show_text: newState ? 1 : 0,
+                });
             } else {
                 await adminAxiosClient.put(`${path}/${id}`, {
                     featured: newState ? 1 : 0,

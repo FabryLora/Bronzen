@@ -21,6 +21,7 @@ class CategoriaController extends Controller
             'name' => 'sometimes',
             'image' => 'sometimes|file',
             'orden' => 'sometimes|string',
+            'show_text' => 'sometimes|boolean',
         ]);
 
         if ($request->hasFile('image')) {
@@ -45,6 +46,7 @@ class CategoriaController extends Controller
             'name' => 'sometimes',
             'image' => 'sometimes|file',
             'orden' => 'sometimes|string',
+            'show_text' => 'sometimes|boolean',
         ]);
 
         if ($request->hasFile('image')) {

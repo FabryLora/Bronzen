@@ -33,9 +33,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/sendpedido', [SendPedidoController::class, 'sendReactEmail']);
 
     //Pedidos
-    Route::apiResource('/pedidos', PedidoController::class);
-    Route::apiResource('/pedido-productos', PedidoProductoController::class);
+
 });
+
+Route::apiResource('/pedidos', PedidoController::class);
+Route::apiResource('/pedido-productos', PedidoProductoController::class);
 
 Route::post('/signup', [UserAuthController::class, 'signup']);
 Route::post('/login', [UserAuthController::class, 'login']);

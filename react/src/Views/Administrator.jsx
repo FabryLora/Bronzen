@@ -77,6 +77,14 @@ export default function Administrator() {
             href: "#",
             subHref: [{ title: "Contenido", href: "/dashboard/contenido" }],
         },
+        {
+            id: "Novedades",
+            open: false,
+            title: "Novedades",
+            icon: faNewspaper,
+            href: "/dashboard/novedades",
+            subHref: [],
+        },
 
         {
             id: "nuestros-productos",

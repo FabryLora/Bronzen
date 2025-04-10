@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Autoplay, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import defaultPhoto from "../assets/logos/bronzen-logo.png";
 
 // Importar estilos de Swiper
 import { Link } from "react-router-dom";
@@ -72,7 +73,11 @@ export default function ImageSlider() {
                         >
                             <div className="flex flex-col w-full h-full">
                                 <img
-                                    src={subprod?.image}
+                                    src={
+                                        subprod?.image != null
+                                            ? subprod?.image
+                                            : defaultPhoto
+                                    }
                                     className="w-full h-[90%] object-contain"
                                 />
                                 <div className="h-[10%] w-full flex flex-col items-end gap-2 max-sm:items-center ">
@@ -83,7 +88,7 @@ export default function ImageSlider() {
                                         to={`/productos/${subprod?.categoriaId}/${subprod?.subCategoriaId}/${subprod?.productoId}`}
                                         className="text-primary-orange text-sm"
                                     >
-                                        {subprod?.code}
+                                        {subprod?.subProductos[0]?.code}
                                     </Link>
                                 </div>
                             </div>

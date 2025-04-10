@@ -19,7 +19,9 @@ class ProductoController extends Controller
 
     public function FeaturedProductos()
     {
-        return ProductoResource::collection(Producto::where('featured', true)->get());
+        // Cargar explícitamente la relación subProductos
+        $productos = Producto::where('featured', true)->with('subProductos')->get();
+        return ProductoResource::collection($productos);
     }
 
 

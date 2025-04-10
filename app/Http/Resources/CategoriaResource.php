@@ -18,6 +18,7 @@ class CategoriaResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'orden' => $this->orden,
+            'show_text' => $this->show_text,
             'image' => $this->image ? url("storage/{$this->image}") : null,
 
         ];

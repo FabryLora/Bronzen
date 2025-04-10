@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import adminAxiosClient from "../adminAxiosClient";
+import Switch from "../components/Switch";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function CategoryAdminCard({ category }) {
@@ -120,6 +121,14 @@ export default function CategoryAdminCard({ category }) {
                 ) : (
                     <p>Sin Imagen</p>
                 )}
+            </td>
+
+            <td className="flex justify-center items-center h-[90px]">
+                <Switch
+                    path={"/categorias"}
+                    id={category?.id}
+                    initialEnabled={category?.show_text == 1 ? true : false}
+                />
             </td>
 
             <td className="text-center w-[140px]">

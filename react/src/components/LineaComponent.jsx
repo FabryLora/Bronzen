@@ -26,14 +26,16 @@ export default function LineaComponent({ categoriaObject }) {
                     }}
                     className="w-full h-full rounded-3xl flex items-end justify-start p-6 max-sm:p-4 hover:outline hover:outline-black bg-no-repeat bg-cover bg-center"
                 >
-                    <div className="flex flex-col">
-                        <p className="text-[#5b6771] font-bold text-2xl max-sm:text-xl">
-                            {categoriaObject?.name && "LINEA"}
-                        </p>
-                        <h2 className="font-bold text-4xl max-sm:text-3xl">
-                            {categoriaObject?.name}
-                        </h2>
-                    </div>
+                    {categoriaObject?.show_text == 1 && (
+                        <div className="flex flex-col">
+                            <p className="text-[#5b6771] font-bold text-2xl max-sm:text-xl">
+                                {categoriaObject?.name && "LINEA"}
+                            </p>
+                            <h2 className="font-bold text-4xl max-sm:text-3xl">
+                                {categoriaObject?.name}
+                            </h2>
+                        </div>
+                    )}
                 </Link>
             </motion.div>
         </div>

@@ -12,4 +12,9 @@ class Producto extends Model
     {
         return $this->belongsTo(SubCategoria::class);
     }
+
+    public function subProductos()
+    {
+        return $this->hasMany(SubProducto::class);
+    }
 }

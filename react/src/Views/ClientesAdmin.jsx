@@ -22,6 +22,7 @@ export default function ClientesAdmin() {
     const [descuentoGeneral, setDescuentoGeneral] = useState(
         informacion?.descuento_general
     );
+    const [loading, setLoading] = useState();
     const [userInfo, setUserInfo] = useState({
         name: "",
         password: "",
@@ -110,6 +111,14 @@ export default function ClientesAdmin() {
             console.log(error);
         }
     };
+
+    if (loading) {
+        return (
+            <div className="w-[1200px] max-sm:w-full mx-auto h-screen flex justify-center items-center">
+                <PulseLoader color="#ff6600" />
+            </div>
+        );
+    }
 
     return (
         <div className="h-screen px-6 py-10">

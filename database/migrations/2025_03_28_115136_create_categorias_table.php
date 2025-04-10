@@ -16,6 +16,7 @@ return new class extends Migration
             $table->longText('name')->nullable();
             $table->string('orden')->nullable();
             $table->string('image')->nullable();
+            $table->boolean('show_text')->default(0);
             $table->timestamps();
         });
     }
