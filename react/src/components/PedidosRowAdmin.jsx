@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
+import adminAxiosClient from "../adminAxiosClient";
 import axiosClient from "../axios";
 import { useStateContext } from "../context/ContextProvider";
 
@@ -18,12 +19,11 @@ export default function PedidosRowAdmin({ pedidoObject }) {
         e.preventDefault();
         const formData = new FormData();
         formData.append("factura", factura);
-        formData.append("num_pedido", numPedido);
         formData.append("num_factura", numFactura);
         formData.append("importe", importe);
         formData.append("pedido_id", pedidoObject?.id);
 
-        const response = axiosClient.post("/guardar-factura", formData, {
+        const response = adminAxiosClient.post("/guardar-factura", formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
@@ -612,18 +612,6 @@ export default function PedidosRowAdmin({ pedidoObject }) {
                                             {factura?.name}
                                         </p>
                                     </div>
-                                    <label htmlFor="nombree">
-                                        Numero de pedido
-                                    </label>
-                                    <input
-                                        className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
-                                        type="text"
-                                        name="nombree"
-                                        id="nombree"
-                                        onChange={(e) =>
-                                            setNumPedido(e.target.value)
-                                        }
-                                    />
 
                                     <label htmlFor="ordennn">
                                         Numero de factura
