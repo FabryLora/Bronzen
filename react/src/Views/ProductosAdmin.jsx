@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import adminAxiosClient from "../adminAxiosClient";
 import CategoryAdminCard from "../components/CategoryAdminCard";
@@ -21,6 +21,10 @@ export default function ProductosAdmin() {
     const [searchTerm, setSearchTerm] = useState("");
     const [plano, setPlano] = useState();
     const itemsPerPage = 10;
+
+    useEffect(() => {
+        fetchProductos();
+    }, []);
 
     const handleFileChange = (e) => {
         setImagen(e.target.files[0]);

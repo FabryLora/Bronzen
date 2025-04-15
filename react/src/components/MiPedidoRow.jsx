@@ -12,7 +12,7 @@ import { useStateContext } from "../context/ContextProvider";
 export default function MiPedidoRow({ pedido, productosPed }) {
     const [isOpen, setIsOpen] = useState(false);
 
-    const { userInfo, productos, addToCart } = useStateContext();
+    const { subProductos, addToCart } = useStateContext();
 
     const menuRef = useRef(null);
 
@@ -63,8 +63,8 @@ export default function MiPedidoRow({ pedido, productosPed }) {
 
     const addSeveralProductsToCart = () => {
         productosPed.forEach((producto) => {
-            let prod = productos?.find(
-                (prod) => prod?.id == producto?.producto_id
+            let prod = subProductos?.find(
+                (prod) => prod?.id == producto?.subproducto_id
             );
 
             addToCart(prod, {
@@ -104,7 +104,7 @@ export default function MiPedidoRow({ pedido, productosPed }) {
                         {pedido?.entregado == "1" && (
                             <FontAwesomeIcon
                                 icon={faCheck}
-                                size="xl"
+                                size="2xl"
                                 color="#FF9E19"
                             />
                         )}
@@ -142,7 +142,7 @@ export default function MiPedidoRow({ pedido, productosPed }) {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.2 }}
-                        className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex items-center justify-center z-50"
+                        className="fixed top-0 left-0 w-full h-full bg-black/50 flex items-center justify-center z-50"
                     >
                         <div
                             ref={menuRef}
@@ -209,7 +209,7 @@ export default function MiPedidoRow({ pedido, productosPed }) {
                                                     border: "1px solid #ddd",
                                                 }}
                                             >
-                                                Descripcion
+                                                Sub Rubro
                                             </th>
                                             <th
                                                 style={{
@@ -217,7 +217,7 @@ export default function MiPedidoRow({ pedido, productosPed }) {
                                                     border: "1px solid #ddd",
                                                 }}
                                             >
-                                                Precio Unitario
+                                                Nombre
                                             </th>
                                             <th
                                                 style={{
@@ -225,7 +225,31 @@ export default function MiPedidoRow({ pedido, productosPed }) {
                                                     border: "1px solid #ddd",
                                                 }}
                                             >
-                                                Unidad de venta
+                                                Precio
+                                            </th>
+                                            <th
+                                                style={{
+                                                    padding: "10px",
+                                                    border: "1px solid #ddd",
+                                                }}
+                                            >
+                                                Descuento
+                                            </th>
+                                            <th
+                                                style={{
+                                                    padding: "10px",
+                                                    border: "1px solid #ddd",
+                                                }}
+                                            >
+                                                Precio con descuento
+                                            </th>
+                                            <th
+                                                style={{
+                                                    padding: "10px",
+                                                    border: "1px solid #ddd",
+                                                }}
+                                            >
+                                                Stock
                                             </th>
                                             <th
                                                 style={{
@@ -235,18 +259,10 @@ export default function MiPedidoRow({ pedido, productosPed }) {
                                             >
                                                 Cantidad
                                             </th>
-                                            <th
-                                                style={{
-                                                    padding: "10px",
-                                                    border: "1px solid #ddd",
-                                                }}
-                                            >
-                                                Subtotal
-                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {pedido.productos.map((item, index) => (
+                                        {productosPed?.map((item, index) => (
                                             <tr
                                                 key={index}
                                                 style={{
@@ -263,11 +279,11 @@ export default function MiPedidoRow({ pedido, productosPed }) {
                                                     }}
                                                 >
                                                     {
-                                                        productos.find(
+                                                        subProductos.find(
                                                             (prod) =>
                                                                 prod?.id ===
-                                                                item?.producto_id
-                                                        )?.codigo
+                                                                item?.subproducto_id
+                                                        )?.code
                                                     }
                                                 </td>
                                                 <td
@@ -277,11 +293,11 @@ export default function MiPedidoRow({ pedido, productosPed }) {
                                                     }}
                                                 >
                                                     {
-                                                        productos.find(
+                                                        subProductos.find(
                                                             (prod) =>
                                                                 prod.id ===
-                                                                item.producto_id
-                                                        )?.categoria?.nombre
+                                                                item.subproducto_id
+                                                        )?.categoria
                                                     }
                                                 </td>
                                                 <td
@@ -291,11 +307,25 @@ export default function MiPedidoRow({ pedido, productosPed }) {
                                                     }}
                                                 >
                                                     {
-                                                        productos.find(
+                                                        subProductos.find(
                                                             (prod) =>
                                                                 prod?.id ===
-                                                                item?.producto_id
-                                                        )?.nombre
+                                                                item?.subproducto_id
+                                                        )?.subCategoria
+                                                    }
+                                                </td>
+                                                <td
+                                                    style={{
+                                                        padding: "10px",
+                                                        border: "1px solid #ddd",
+                                                    }}
+                                                >
+                                                    {
+                                                        subProductos.find(
+                                                            (prod) =>
+                                                                prod?.id ==
+                                                                item?.subproducto_id
+                                                        )?.producto
                                                     }
                                                 </td>
                                                 <td
@@ -305,30 +335,12 @@ export default function MiPedidoRow({ pedido, productosPed }) {
                                                     }}
                                                 >
                                                     $
-                                                    {userInfo?.lista == "1"
-                                                        ? productos?.find(
-                                                              (prod) =>
-                                                                  prod?.id ==
-                                                                  item?.producto_id
-                                                          )?.precio_minorista
-                                                        : productos.find(
-                                                              (prod) =>
-                                                                  prod?.id ==
-                                                                  item?.producto_id
-                                                          )?.precio_mayorista}
-                                                </td>
-                                                <td
-                                                    style={{
-                                                        padding: "10px",
-                                                        border: "1px solid #ddd",
-                                                    }}
-                                                >
                                                     {
-                                                        productos.find(
+                                                        subProductos.find(
                                                             (prod) =>
                                                                 prod?.id ===
-                                                                item?.producto_id
-                                                        )?.unidad_venta
+                                                                item?.subproducto_id
+                                                        )?.precio_de_lista
                                                     }
                                                 </td>
                                                 <td
@@ -337,7 +349,14 @@ export default function MiPedidoRow({ pedido, productosPed }) {
                                                         border: "1px solid #ddd",
                                                     }}
                                                 >
-                                                    {item?.cantidad}
+                                                    {
+                                                        subProductos.find(
+                                                            (prod) =>
+                                                                prod?.id ===
+                                                                item?.subproducto_id
+                                                        )?.descuento
+                                                    }
+                                                    %
                                                 </td>
 
                                                 <td
@@ -346,7 +365,47 @@ export default function MiPedidoRow({ pedido, productosPed }) {
                                                         border: "1px solid #ddd",
                                                     }}
                                                 >
-                                                    ${item?.subtotal_prod}
+                                                    $
+                                                    {subProductos.find(
+                                                        (prod) =>
+                                                            prod?.id ===
+                                                            item?.subproducto_id
+                                                    )?.precio_de_lista -
+                                                        (subProductos.find(
+                                                            (prod) =>
+                                                                prod?.id ===
+                                                                item?.subproducto_id
+                                                        )?.precio_de_lista *
+                                                            subProductos.find(
+                                                                (prod) =>
+                                                                    prod?.id ===
+                                                                    item?.subproducto_id
+                                                            )?.descuento) /
+                                                            100}
+                                                </td>
+
+                                                <td
+                                                    style={{
+                                                        padding: "10px",
+                                                        border: "1px solid #ddd",
+                                                    }}
+                                                >
+                                                    {subProductos.find(
+                                                        (prod) =>
+                                                            prod?.id ===
+                                                            item?.subproducto_id
+                                                    )?.stock === 1
+                                                        ? "Si"
+                                                        : "No"}
+                                                </td>
+
+                                                <td
+                                                    style={{
+                                                        padding: "10px",
+                                                        border: "1px solid #ddd",
+                                                    }}
+                                                >
+                                                    {item?.cantidad}
                                                 </td>
                                             </tr>
                                         ))}
@@ -383,11 +442,31 @@ export default function MiPedidoRow({ pedido, productosPed }) {
                                 >
                                     <p>
                                         <strong>Subtotal:</strong> $
-                                        {pedido?.subtotal}
+                                        {Number(
+                                            pedido?.subtotal
+                                        )?.toLocaleString("es-AR", {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2,
+                                        })}
                                     </p>
-
                                     <p>
-                                        <strong>IVA:</strong> ${pedido?.iva}
+                                        <strong>Descuento:</strong> $
+                                        {Number(
+                                            pedido?.descuento
+                                        )?.toLocaleString("es-AR", {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2,
+                                        })}
+                                    </p>
+                                    <p>
+                                        <strong>IVA:</strong> $
+                                        {Number(pedido?.iva)?.toLocaleString(
+                                            "es-AR",
+                                            {
+                                                minimumFractionDigits: 2,
+                                                maximumFractionDigits: 2,
+                                            }
+                                        )}
                                     </p>
 
                                     <p
@@ -397,7 +476,13 @@ export default function MiPedidoRow({ pedido, productosPed }) {
                                         }}
                                     >
                                         <strong>Total del pedido:</strong> $
-                                        {pedido?.total}
+                                        {Number(pedido?.total)?.toLocaleString(
+                                            "es-AR",
+                                            {
+                                                minimumFractionDigits: 2,
+                                                maximumFractionDigits: 2,
+                                            }
+                                        )}
                                     </p>
                                 </div>
                             </div>

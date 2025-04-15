@@ -8,13 +8,55 @@ export default function PedidosRowAdmin({ pedidoObject }) {
     const { clientes, subProductos, fetchPedidos } = useStateContext();
 
     const [isOpen, setIsOpen] = useState(false);
+    const [facturaView, setFacturaView] = useState(false);
+    const [numPedido, setNumPedido] = useState();
+    const [numFactura, setNumFactura] = useState();
+    const [importe, setImporte] = useState();
+    const [factura, setFactura] = useState();
+
+    const onSubmitFactura = async (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append("factura", factura);
+        formData.append("num_pedido", numPedido);
+        formData.append("num_factura", numFactura);
+        formData.append("importe", importe);
+        formData.append("pedido_id", pedidoObject?.id);
+
+        const response = axiosClient.post("/guardar-factura", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+        toast.promise(response, {
+            loading: "Subiendo...",
+            success: "Subido correctamente",
+            error: "Error al subir",
+        });
+        try {
+            await response;
+            console.log(response);
+            setFacturaView(false);
+            fetchPedidos();
+        } catch (error) {
+            console.error("Error al subir la factura:", error);
+        }
+    };
 
     const menuRef = useRef(null);
+    const facturaRef = useRef(null);
 
     useEffect(() => {
         function handleClickOutside(event) {
             if (menuRef.current && !menuRef.current.contains(event.target)) {
                 setIsOpen(false);
+                // Cierra el contenedor si se hace clic fuera
+            }
+            if (
+                facturaRef.current &&
+                !facturaRef.current.contains(event.target)
+            ) {
+                setFacturaView(false);
                 // Cierra el contenedor si se hace clic fuera
             }
         }
@@ -103,7 +145,7 @@ export default function PedidosRowAdmin({ pedidoObject }) {
     };
 
     return (
-        <div className="grid grid-cols-4 items-center justify-items-center py-2 border-b text-[#515A53]">
+        <div className="grid grid-cols-5 items-center justify-items-center py-2 border-b text-[#515A53]">
             <p>{pedidoObject?.id}</p>
             <p>{user?.name}</p>
             <div>
@@ -124,8 +166,15 @@ export default function PedidosRowAdmin({ pedidoObject }) {
                 )}
             </div>
             <button
+                type="button"
+                onClick={() => setFacturaView(true)}
+                className="border border-primary-orange px-2 py-1 rounded-full text-primary-orange hover:text-white hover:bg-primary-orange transition duration-300 "
+            >
+                Subir factura
+            </button>
+            <button
                 onClick={() => setIsOpen(true)}
-                className="text-center py-1 w-[100px] bg-blue-500 text-white rounded-md hover:scale-95 transition-transform"
+                className="text-center py-1 w-[100px] bg-primary-orange text-white rounded-full hover:scale-95 transition-transform"
             >
                 Ver
             </button>
@@ -520,6 +569,107 @@ export default function PedidosRowAdmin({ pedidoObject }) {
                                 </div>
                             </div>
                         </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+            <AnimatePresence>
+                {facturaView && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed top-0 left-0 w-full h-full bg-black/50 flex items-center justify-center z-50 text-left"
+                    >
+                        <form
+                            ref={facturaRef}
+                            onSubmit={onSubmitFactura}
+                            method="POST"
+                            className="text-black"
+                        >
+                            <div className="bg-white p-4 w-[500px] rounded-md">
+                                <h2 className="text-2xl font-semibold mb-4">
+                                    Cargar Factura
+                                </h2>
+                                <div className="flex flex-col gap-4">
+                                    <label htmlFor="imagenn">Archivo</label>
+                                    <div className="flex flex-row">
+                                        <input
+                                            type="file"
+                                            name="imagen"
+                                            id="imagenn"
+                                            onChange={(e) =>
+                                                setFactura(e.target.files[0])
+                                            }
+                                            className="hidden"
+                                        />
+                                        <label
+                                            className="cursor-pointer border border-primary-orange text-primary-orange py-1 px-2 hover:bg-primary-orange hover:text-white transition duration-300 rounded-md"
+                                            htmlFor="imagenn"
+                                        >
+                                            Elegir archivo
+                                        </label>
+                                        <p className="self-center px-2">
+                                            {factura?.name}
+                                        </p>
+                                    </div>
+                                    <label htmlFor="nombree">
+                                        Numero de pedido
+                                    </label>
+                                    <input
+                                        className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
+                                        type="text"
+                                        name="nombree"
+                                        id="nombree"
+                                        onChange={(e) =>
+                                            setNumPedido(e.target.value)
+                                        }
+                                    />
+
+                                    <label htmlFor="ordennn">
+                                        Numero de factura
+                                    </label>
+                                    <input
+                                        className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
+                                        type="text"
+                                        name="ordennn"
+                                        id="ordennn"
+                                        onChange={(e) =>
+                                            setNumFactura(e.target.value)
+                                        }
+                                    />
+
+                                    <label htmlFor="importe">Importe</label>
+                                    <input
+                                        className="outline outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
+                                        type="text"
+                                        name="importe"
+                                        id="importe"
+                                        placeholder="ej: 1240.22"
+                                        onChange={(e) =>
+                                            setImporte(e.target.value)
+                                        }
+                                    />
+
+                                    <div className="flex justify-end gap-4">
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setFacturaView(false)
+                                            }
+                                            className="border border-primary-orange text-primary-orange py-1 px-2 hover:bg-primary-orange hover:text-white transition duration-300 rounded-md"
+                                        >
+                                            Cancelar
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            className="border border-primary-orange text-primary-orange py-1 px-2 hover:bg-primary-orange hover:text-white transition duration-300 rounded-md"
+                                        >
+                                            Cargar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </motion.div>
                 )}
             </AnimatePresence>

@@ -48,10 +48,11 @@ export default function PedidosAdmin() {
                     />
                 </div>
 
-                <div className="grid grid-cols-4 items-center justify-items-center bg-[#F5F5F5] h-[52px] font-semibold">
+                <div className="grid grid-cols-5 items-center justify-items-center bg-[#F5F5F5] h-[52px] font-semibold">
                     <p>Numero de Pedido</p>
                     <p>Cliente</p>
                     <p>Estado</p>
+                    <p>Factura</p>
                     <p>Ver Pedido</p>
                 </div>
 

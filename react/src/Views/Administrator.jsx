@@ -26,19 +26,8 @@ import bronzenLogo from "../assets/logos/bronzen-logo.png";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function Administrator() {
-    const {
-        adminToken,
-        setAdminToken,
-        currentAdmin,
-        setCurrentAdmin,
-        fetchProductos,
-        fetchSubProductos,
-    } = useStateContext();
-
-    useEffect(() => {
-        fetchProductos();
-        fetchSubProductos();
-    }, []);
+    const { adminToken, setAdminToken, currentAdmin, setCurrentAdmin } =
+        useStateContext();
 
     useEffect(() => {
         adminAxiosClient
@@ -284,13 +273,8 @@ export default function Administrator() {
                                                                     sub,
                                                                     index
                                                                 ) => (
-                                                                    <MotionLink
-                                                                        className="mx-4 px-1"
-                                                                        whileHover={{
-                                                                            backgroundColor:
-                                                                                "#000",
-                                                                            color: "#fff",
-                                                                        }}
+                                                                    <Link
+                                                                        className="mx-4 px-2 py-1 rounded-full hover:bg-primary-orange hover:text-white transition duration-200"
                                                                         key={
                                                                             index
                                                                         }
@@ -301,7 +285,7 @@ export default function Administrator() {
                                                                         {
                                                                             sub.title
                                                                         }
-                                                                    </MotionLink>
+                                                                    </Link>
                                                                 )
                                                             )}
                                                         </ul>

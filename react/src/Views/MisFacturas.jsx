@@ -5,13 +5,13 @@ import axiosClient from "../axios";
 import MiPedidoRow from "../components/MiPedidoRow";
 import { useStateContext } from "../context/ContextProvider";
 
-export default function Mispedidos() {
+export default function MisFacturas() {
     const { currentUser, fetchSubProductos } = useStateContext();
 
     const [pedidos, setPedidos] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
+    /*  useEffect(() => {
         window.scrollTo(0, 0);
         setLoading(true);
         axiosClient
@@ -26,7 +26,7 @@ export default function Mispedidos() {
                 setLoading(false);
             });
         fetchSubProductos();
-    }, []);
+    }, []); */
 
     return (
         <div className="w-[1200px] mx-auto py-20 min-h-[500px]">
@@ -35,12 +35,11 @@ export default function Mispedidos() {
                 <thead className="text-white rounded-t-lg">
                     <tr className="bg-[#5A646E] font-bold">
                         <td className="h-[50px]"></td>
+                        <td className="text-center">Fecha</td>
                         <td className="text-center">N° de pedido</td>
-                        <td>Fecha de compra</td>
-                        <td>Detalle</td>
-                        <td>Fecha de entrega</td>
+                        <td className="text-center">N° de factura</td>
 
-                        <td className="text-center">Entregado</td>
+                        <td className="text-center">Importe</td>
                         <td></td>
                     </tr>
                 </thead>
@@ -58,13 +57,14 @@ export default function Mispedidos() {
                             <td></td>
                         </tr>
                     ) : (
-                        pedidos?.map((pedido, index) => (
+                        <td>a</td>
+                        /* pedidos?.map((pedido, index) => (
                             <MiPedidoRow
                                 key={index}
                                 pedido={pedido}
                                 productosPed={pedido?.productos}
                             />
-                        ))
+                        )) */
                     )}
                 </tbody>
             </table>

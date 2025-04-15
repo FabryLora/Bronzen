@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import Administrator from "./Views/Administrator";
 import AdminLogin from "./Views/AdminLogin";
+import BusquedaLayout from "./Views/BusquedaLayout";
 import CatalogoAdmin from "./Views/CatalogoAdmin";
 import CategoriasAdmin from "./Views/CategoriasAdmin";
 import ClientesAdmin from "./Views/ClientesAdmin";
@@ -11,6 +12,7 @@ import DefaultLayout from "./Views/DefaultLayout";
 import ExcelUploader from "./Views/ExcelUploader";
 import Home from "./Views/Home";
 import Informacion from "./Views/Informacion";
+import MisFacturas from "./Views/MisFacturas";
 import Mispedidos from "./Views/MisPedidos";
 import Novedades from "./Views/Novedades";
 import Pedidos from "./Views/Pedidos";
@@ -112,6 +114,10 @@ const router = createBrowserRouter([
                 element: <Productos />,
             },
             {
+                path: "/busqueda/:id",
+                element: <BusquedaLayout />,
+            },
+            {
                 path: "/productos/:id",
                 element: <ProductosLayout />,
                 children: [
@@ -146,6 +152,10 @@ const router = createBrowserRouter([
             {
                 path: "/privado/mis-pedidos",
                 element: <Mispedidos />,
+            },
+            {
+                path: "/privado/facturas",
+                element: <MisFacturas />,
             },
             {
                 path: "/privado/productos/:id",

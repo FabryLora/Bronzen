@@ -18,4 +18,9 @@ class Pedido extends Model
     {
         return $this->hasMany(PedidoProducto::class);
     }
+
+    public function factura()
+    {
+        return $this->hasOne(Factura::class);
+    }
 }

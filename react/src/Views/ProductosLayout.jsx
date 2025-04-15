@@ -8,6 +8,7 @@ import { useStateContext } from "../context/ContextProvider";
 export default function ProductosLayout() {
     const { categorias, subCategorias } = useStateContext();
     const [orangeBorder, setOrangeBorder] = useState(false);
+    const [searchValue, setsearchValue] = useState("");
     const { id } = useParams();
     const location = useLocation();
     const pathname = location?.pathname?.split("/");
@@ -23,8 +24,17 @@ export default function ProductosLayout() {
                             orangeBorder ? "border-primary-orange" : ""
                         }`}
                     >
-                        <input className="outline-none w-full" type="text" />
-                        <Link className="w-fit h-fit pr-4">
+                        <input
+                            onChange={(e) => setsearchValue(e.target.value)}
+                            className="outline-none w-full"
+                            type="text"
+                        />
+                        <Link
+                            to={`/busqueda/${
+                                searchValue ? searchValue : "%20"
+                            }`}
+                            className="w-fit h-fit pr-4"
+                        >
                             <img
                                 className="w-[35px] h-auto"
                                 src={loupe}

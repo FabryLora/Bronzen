@@ -9,6 +9,7 @@ export default function NuestrosProductos() {
     const { categorias } = useStateContext();
 
     const [orangeBorder, setOrangeBorder] = useState(false);
+    const [searchValue, setSearchValue] = useState(" ");
 
     const location = useLocation();
 
@@ -36,11 +37,15 @@ export default function NuestrosProductos() {
                             }`}
                         >
                             <input
+                                onChange={(e) => setSearchValue(e.target.value)}
                                 className="outline-none w-full text-white"
                                 type="text"
                                 placeholder="Busca por código o descripción"
                             />
-                            <Link className="w-fit h-fit pr-4">
+                            <Link
+                                to={`/busqueda/${searchValue}`}
+                                className="w-fit h-fit pr-4"
+                            >
                                 <img
                                     className="w-[35px] h-auto"
                                     src={loupe}

@@ -8,6 +8,7 @@ use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\CliengoController;
 use App\Http\Controllers\ContactInfoController;
 use App\Http\Controllers\ExcelUploadController;
+use App\Http\Controllers\FacturaController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\InformacionController;
 use App\Http\Controllers\LogosController;
@@ -53,6 +54,7 @@ Route::get("/productos", [ProductoController::class, 'index']);
 Route::get("/sub-productos", [SubProductoController::class, 'index']);
 Route::get("/provincias", [ProvinciaController::class, 'index']);
 Route::get("/informacion", [InformacionController::class, 'index']);
+Route::get("/facturas", [FacturaController::class, 'index']);
 
 
 //get singles
@@ -61,7 +63,9 @@ Route::get('/sub-categories/categories/{id}', [SubCategoriaController::class, 'S
 Route::get('/productos/sub-categories/{id}', [ProductoController::class, 'ProductoporSubCategoriaId']);
 Route::get('/sub-productos/productos/{id}', [SubProductoController::class, 'mostrarSubPRoductosPorProductoId']);
 Route::get('/featured-products', [ProductoController::class, 'FeaturedProductos']);
-Route::get('/pedidos-usuarios/{id}', [PedidoController::class, 'showByUserId']);
+Route::get('/pedidos-usuarios/{id}', action: [PedidoController::class, 'showByUserId']);
+Route::get('/busqueda/{id}', [ProductoController::class, 'ProductoPorName']);
+Route::get('/facturas/{id}', [FacturaController::class, 'FacturaByPedido']);
 
 
 
@@ -92,6 +96,7 @@ Route::prefix('admin')->group(function () {
         Route::apiResource('/sub-productos', SubProductoController::class);
         Route::apiResource('/clientes', UserAuthController::class);
         Route::put('/informacion/{id}', [InformacionController::class, 'update']);
+        Route::post('/guardar-factura', [FacturaController::class, 'store']);
 
 
 

@@ -245,7 +245,7 @@ export default function NavBar() {
                 path: "/privado/mis-pedidos",
                 subHref: [],
             },
-            { title: "MIS FACTURAS", path: "/dashboard/facturas", subHref: [] },
+            { title: "MIS FACTURAS", path: "/privado/facturas", subHref: [] },
         ];
     } else {
         links = [

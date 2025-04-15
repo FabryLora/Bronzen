@@ -65,6 +65,12 @@ class ProductoController extends Controller
         return ProductoResource::collection($productos);
     }
 
+    public function ProductoPorName($name)
+    {
+        $productos = Producto::where('name', 'like', '%' . $name . '%')->with('subProductos')->get();
+        return ProductoResource::collection($productos);
+    }
+
     /**
      * Update the specified resource in storage.
      */

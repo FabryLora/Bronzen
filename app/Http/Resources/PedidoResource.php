@@ -23,6 +23,7 @@ class PedidoResource extends JsonResource
             'iva' => $this->iva,
             'total' => $this->total,
             'entregado' => $this->entregado,
+            'facturaId' => $this->factura ? $this->factura->id : null,
             'productos' => PedidoProductoResource::collection($this->productos),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

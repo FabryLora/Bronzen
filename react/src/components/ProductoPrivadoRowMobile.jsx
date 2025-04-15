@@ -112,7 +112,7 @@ input[type="number"] {
                     ) : (
                         <span className="text-lg font-bold">
                             $
-                            {product?.precio_de_lista.toLocaleString("es-AR", {
+                            {product?.precio_de_lista?.toLocaleString("es-AR", {
                                 minimumFractionDigits: 2,
                                 maximumFractionDigits: 2,
                             })}

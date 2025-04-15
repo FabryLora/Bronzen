@@ -156,12 +156,22 @@ export default function SubProductosCardAdmin({ category }) {
             <td className=" align-middle pl-3">{category?.producto}</td>
             <td className=" align-middle pl-3">{category?.min}</td>
             <td className=" align-middle pl-3">
-                $ {category?.precio_de_lista}
+                ${" "}
+                {Number(category?.precio_de_lista)?.toLocaleString("es-AR", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                })}
             </td>
             <td className=" align-middle pl-3">{category?.min_oferta}</td>
             <td className=" align-middle pl-3">
                 {category?.precio_de_oferta
-                    ? `$ ${category?.precio_de_oferta}`
+                    ? `$ ${Number(category?.precio_de_oferta)?.toLocaleString(
+                          "es-AR",
+                          {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                          }
+                      )}`
                     : "Sin oferta"}
             </td>
             <td className=" align-middle pl-3">{category?.bulto_cerrado}</td>

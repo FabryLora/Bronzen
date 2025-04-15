@@ -11,10 +11,15 @@ import { useStateContext } from "../context/ContextProvider";
 export default function ProductosPrivado() {
     const { categorias, subProductos, subCategorias, fetchSubProductos } =
         useStateContext();
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [busquedaAvanzada, setBusquedaAvanzada] = useState("");
     const [categoria, setCategoria] = useState("");
+    const [subCategoria, setSubCategoria] = useState("");
     const [nombre, setNombre] = useState("");
     const [codigo, setCodigo] = useState("");
-    const [currentPage, setCurrentPage] = useState(1);
+    const [filteredProducts, setFilteredProducts] = useState([]);
+    const [isFiltered, setIsFiltered] = useState(false);
     const itemsPerPage = 10;
     const [carrito, setCarrito] = useState(false);
 
@@ -22,21 +27,66 @@ export default function ProductosPrivado() {
         fetchSubProductos();
     }, []);
 
-    const filteredProducts = subProductos?.filter((product) => {
-        return (
-            (nombre
-                ? product?.nombre?.toLowerCase()?.includes(nombre.toLowerCase())
-                : true) &&
-            (codigo
-                ? product?.codigo?.toLowerCase()?.includes(codigo.toLowerCase())
-                : true) &&
-            (categoria
-                ? product?.categoria?.nombre
-                      ?.toLowerCase()
-                      ?.includes(categoria?.toLowerCase())
-                : true)
-        );
-    });
+    // Set initial filtered products when subProductos changes
+    useEffect(() => {
+        if (subProductos && !isFiltered) {
+            setFilteredProducts(subProductos);
+        }
+    }, [subProductos]);
+
+    console.log(categoria);
+
+    // Handle search button click
+    const handleSearch = () => {
+        // Reset to first page when searching
+        setCurrentPage(1);
+
+        // Apply filters based on all input fields
+        const filtered = subProductos?.filter((product) => {
+            // Filter by advanced search text across multiple fields
+            const advancedSearchMatch =
+                !busquedaAvanzada ||
+                product?.code
+                    ?.toLowerCase()
+                    ?.includes(busquedaAvanzada.toLowerCase()) ||
+                product?.name
+                    ?.toLowerCase()
+                    ?.includes(busquedaAvanzada.toLowerCase()) ||
+                product?.categoriaId == busquedaAvanzada ||
+                product?.subCategoriaId == busquedaAvanzada;
+
+            // Filter by specific fields
+            const nombreMatch =
+                !nombre ||
+                product?.name?.toLowerCase()?.includes(nombre.toLowerCase());
+
+            const codigoMatch =
+                !codigo ||
+                product?.code?.toLowerCase()?.includes(codigo.toLowerCase());
+
+            const categoriaMatch =
+                !categoria ||
+                product?.categoriaId === categoria ||
+                product?.categoriaId == categoria;
+
+            const subCategoriaMatch =
+                !subCategoria ||
+                product?.subCategoriaId === subCategoria ||
+                product?.subCategoriaId == subCategoria;
+
+            // Product must match all applied filters
+            return (
+                advancedSearchMatch &&
+                nombreMatch &&
+                codigoMatch &&
+                categoriaMatch &&
+                subCategoriaMatch
+            );
+        });
+
+        setFilteredProducts(filtered || []);
+        setIsFiltered(true);
+    };
 
     const totalPages = Math.ceil(
         (filteredProducts?.length || 0) / itemsPerPage
@@ -62,6 +112,9 @@ export default function ProductosPrivado() {
                                 Búsqueda avanzada
                             </label>
                             <input
+                                onChange={(e) =>
+                                    setBusquedaAvanzada(e.target.value)
+                                }
                                 id="avanzada"
                                 type="text"
                                 placeholder="Código, Nombre, Categoría, Sub categoría"
@@ -77,6 +130,9 @@ export default function ProductosPrivado() {
                                     Categoría
                                 </label>
                                 <select
+                                    onChange={(e) =>
+                                        setCategoria(e.target.value)
+                                    }
                                     className="h-[42px] w-[270px] max-sm:w-full outline outline-gray-200 focus:outline-primary-orange transition duration-300 rounded-xl pl-3"
                                     name=""
                                     id="categoria"
@@ -106,6 +162,9 @@ export default function ProductosPrivado() {
                                     Sub categoria
                                 </label>
                                 <select
+                                    onChange={(e) =>
+                                        setSubCategoria(e.target.value)
+                                    }
                                     className="h-[42px] w-[270px] max-sm:w-full rounded-xl pl-3 outline outline-gray-200 focus:outline-primary-orange transition duration-300"
                                     name=""
                                     id="sub-categoria"
@@ -135,6 +194,7 @@ export default function ProductosPrivado() {
                                     Nombre
                                 </label>
                                 <input
+                                    onChange={(e) => setNombre(e.target.value)}
                                     placeholder="Nombre"
                                     id="nombre"
                                     type="text"
@@ -149,13 +209,17 @@ export default function ProductosPrivado() {
                                     Código
                                 </label>
                                 <input
+                                    onChange={(e) => setCodigo(e.target.value)}
                                     placeholder="Código OEM"
                                     id="codigo"
                                     type="text"
                                     className="h-[42px] max-sm:w-full outline outline-gray-200 focus:outline-primary-orange transition duration-300 rounded-xl pl-3"
                                 />
                             </div>
-                            <button className="bg-primary-orange font-bold text-white rounded-full w-[105px] h-[42px] self-end max-sm:self-center max-sm:mt-2 max-sm:w-full">
+                            <button
+                                onClick={handleSearch}
+                                className="bg-primary-orange font-bold text-white rounded-full w-[105px] h-[42px] self-end max-sm:self-center max-sm:mt-2 max-sm:w-full"
+                            >
                                 Buscar
                             </button>
                         </div>

@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import adminAxiosClient from "../adminAxiosClient";
 import ProductosCardAdmin from "../components/ProductosCardAdmin";
@@ -29,6 +29,10 @@ export default function SubProductosAdmin() {
     const [searchTerm, setSearchTerm] = useState("");
     const [searchTermCode, setSearchTermCode] = useState("");
     const itemsPerPage = 10;
+
+    useEffect(() => {
+        fetchSubProductos();
+    }, []);
 
     const submit = async (e) => {
         e.preventDefault();

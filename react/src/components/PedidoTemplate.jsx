@@ -141,7 +141,7 @@ export default function PedidoTemplate({ pedido, user, productos }) {
                         </tr>
                     </thead>
                     <tbody>
-                        {pedido?.productos?.map(
+                        {productos?.map(
                             (item, index) => (
                                 console.log(productos[0]),
                                 (

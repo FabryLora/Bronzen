@@ -27,6 +27,7 @@ export default function Pedidos() {
     const [error, setError] = useState(false);
     const [succ, setSucc] = useState(false);
     const [succID, setSuccID] = useState();
+    const [descuentosJuntos, setDescuentosJuntos] = useState();
     const [currencyType, setCurrencyType] = useState("pesos");
     const [subtotalConDescuentoUsuario, setSubtotalConDescuentoUsuario] =
         useState();
@@ -142,7 +143,10 @@ export default function Pedidos() {
         }
         formData.append("tipo_entrega", tipo_entrega);
         formData.append("subtotal", subtotal ? subtotal : 0);
-        formData.append("descuento", 0);
+        formData.append(
+            "descuento",
+            Number(subtotalConDescuentoGeneral) + Number(montoDescuentoRetiro)
+        );
         formData.append("iva", iva ? iva : 0);
         formData.append("entregado", 0);
         formData.append("user_id", currentUser?.id);
