@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
+import { PulseLoader } from "react-spinners";
 import adminAxiosClient from "../adminAxiosClient";
 import axiosClient from "../axios";
 import { useStateContext } from "../context/ContextProvider";
@@ -13,7 +14,22 @@ export default function PedidosRowAdmin({ pedidoObject }) {
     const [numPedido, setNumPedido] = useState();
     const [numFactura, setNumFactura] = useState();
     const [importe, setImporte] = useState();
+    const [verFactura, setVerFactura] = useState(false);
     const [factura, setFactura] = useState();
+    const [facturaOnly, setFacturaOnly] = useState({});
+    const [loading, setLoading] = useState(false);
+
+    const facturaById = () => {
+        setLoading(true);
+        axiosClient
+            .get(`/facturas/${pedidoObject?.id}`)
+            .then(({ data }) => {
+                setFacturaOnly(data.data);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
 
     const onSubmitFactura = async (e) => {
         e.preventDefault();
@@ -22,6 +38,7 @@ export default function PedidosRowAdmin({ pedidoObject }) {
         formData.append("num_factura", numFactura);
         formData.append("importe", importe);
         formData.append("pedido_id", pedidoObject?.id);
+        formData.append("user_id", pedidoObject?.user_id);
 
         const response = adminAxiosClient.post("/guardar-factura", formData, {
             headers: {
@@ -67,21 +84,21 @@ export default function PedidosRowAdmin({ pedidoObject }) {
         };
     }, []);
 
-    const downloadFile = async () => {
-        const filename = pedidoObject?.archivo_url.split("/").pop(); // Extraer el nombre del archivo
-
-        const response = axiosClient.get(`/downloadarchivo/${filename}`, {
-            responseType: "blob",
-        });
-
-        toast.promise(response, {
-            loading: "Descargando...",
-            success: "Descargado correctamente",
-            error: "Error al descargar",
-        });
+    const downloadFile = async (factura) => {
+        const filename = factura?.factura?.split("/").pop(); // Extraer el nombre del archivo
 
         try {
-            await response;
+            // Esperar a que se complete la solicitud
+            const response = await axiosClient.get(
+                `/descargar-archivo/${filename}`,
+                {
+                    responseType: "blob",
+                }
+            );
+
+            // Mostrar toast después de tener la respuesta
+            toast.success("Descargado correctamente");
+
             // Obtener el tipo de archivo dinámicamente desde la respuesta
             const fileType =
                 response.headers["content-type"] || "application/octet-stream";
@@ -93,10 +110,11 @@ export default function PedidosRowAdmin({ pedidoObject }) {
             a.download = filename; // Descargar con el nombre original
             document.body.appendChild(a);
             a.click();
-
+            document.body.removeChild(a); // Buena práctica: eliminar el elemento después de usarlo
             window.URL.revokeObjectURL(url);
         } catch (error) {
             console.error("Error al descargar el archivo:", error);
+            toast.error("Error al descargar");
         }
     };
 
@@ -165,13 +183,27 @@ export default function PedidosRowAdmin({ pedidoObject }) {
                     </button>
                 )}
             </div>
-            <button
-                type="button"
-                onClick={() => setFacturaView(true)}
-                className="border border-primary-orange px-2 py-1 rounded-full text-primary-orange hover:text-white hover:bg-primary-orange transition duration-300 "
-            >
-                Subir factura
-            </button>
+            {pedidoObject?.facturaId ? (
+                <button
+                    type="button"
+                    onClick={() => {
+                        setVerFactura(true);
+                        facturaById();
+                    }}
+                    className=" px-2 py-1 rounded-full text-white border border-primary-orange bg-primary-orange hover:text-primary-orange hover:bg-transparent  transition duration-300 "
+                >
+                    Ver Factura
+                </button>
+            ) : (
+                <button
+                    type="button"
+                    onClick={() => setFacturaView(true)}
+                    className="border border-primary-orange px-2 py-1 rounded-full text-primary-orange hover:text-white hover:bg-primary-orange transition duration-300 "
+                >
+                    Subir factura
+                </button>
+            )}
+
             <button
                 onClick={() => setIsOpen(true)}
                 className="text-center py-1 w-[100px] bg-primary-orange text-white rounded-full hover:scale-95 transition-transform"
@@ -658,6 +690,91 @@ export default function PedidosRowAdmin({ pedidoObject }) {
                                 </div>
                             </div>
                         </form>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+            <AnimatePresence>
+                {verFactura && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed top-0 left-0 w-full h-full bg-black/50 flex items-center justify-center z-50 text-left"
+                    >
+                        <div className="text-black">
+                            <div className="bg-white p-4 w-[500px] min-h-[316px] rounded-md">
+                                {loading ? (
+                                    <div className="w-full h-[316px] flex justify-center items-center">
+                                        <PulseLoader color="#ff6600" />
+                                    </div>
+                                ) : (
+                                    <>
+                                        <h2 className="text-2xl font-semibold mb-4">
+                                            Informacion de Factura
+                                        </h2>
+                                        <div className="grid grid-cols-2 gap-y-4">
+                                            <p className="border-b border-gray-300 py-1">
+                                                Fecha
+                                            </p>
+                                            <p className="border-b border-gray-300 py-1">
+                                                {facturaOnly?.created_at}
+                                            </p>
+                                            <p className="border-b border-gray-300 py-1">
+                                                Numero de pedido
+                                            </p>
+                                            <p className="border-b border-gray-300 py-1">
+                                                {pedidoObject?.id}
+                                            </p>
+                                            <p className="border-b border-gray-300 py-1">
+                                                Numero de factura
+                                            </p>
+                                            <p className="border-b border-gray-300 py-1">
+                                                {facturaOnly?.num_factura}
+                                            </p>
+                                            <p className="border-b border-gray-300 py-1">
+                                                Importe
+                                            </p>
+                                            <p className="border-b border-gray-300 py-1">
+                                                ${" "}
+                                                {Number(
+                                                    facturaOnly?.importe
+                                                )?.toLocaleString("es-AR", {
+                                                    maximumFractionDigits: 2,
+                                                    minimumFractionDigits: 2,
+                                                })}
+                                            </p>
+                                            <label htmlFor="imagenn">
+                                                Archivo
+                                            </label>
+                                            <div className="flex flex-row">
+                                                <button
+                                                    onClick={() =>
+                                                        downloadFile(
+                                                            facturaOnly
+                                                        )
+                                                    }
+                                                    className="cursor-pointer border border-primary-orange text-primary-orange py-1 px-2 hover:bg-primary-orange hover:text-white transition duration-300 rounded-md"
+                                                >
+                                                    Descargar Archivo
+                                                </button>
+                                            </div>
+
+                                            <div className="col-span-2 flex justify-end gap-2">
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        setVerFactura(false)
+                                                    }
+                                                    className="border border-primary-orange text-primary-orange py-1 px-2 hover:bg-primary-orange hover:text-white transition duration-300 rounded-md"
+                                                >
+                                                    Cerrar
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>

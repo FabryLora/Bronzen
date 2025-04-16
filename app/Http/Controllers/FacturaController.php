@@ -16,6 +16,13 @@ class FacturaController extends Controller
         return FacturaResource::collection(Factura::all());
     }
 
+    public function FacturaByUser($id)
+    {
+        $factura = Factura::where('user_id', $id)->get();
+        return FacturaResource::collection($factura);
+    }
+
+
     public function FacturaByPedido($id)
     {
         $factura = Factura::where('pedido_id', $id)->first();
@@ -32,6 +39,7 @@ class FacturaController extends Controller
             'num_factura' => 'required|string',
             'importe' => 'required|string',
             'factura' => 'nullable|file',
+            'user_id' => 'nullable|exists:users,id',
         ]);
 
         if ($request->hasFile('factura')) {

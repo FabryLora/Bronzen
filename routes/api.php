@@ -7,6 +7,7 @@ use App\Http\Controllers\CatalogoController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\CliengoController;
 use App\Http\Controllers\ContactInfoController;
+use App\Http\Controllers\DescargarArchivo;
 use App\Http\Controllers\ExcelUploadController;
 use App\Http\Controllers\FacturaController;
 use App\Http\Controllers\ImportController;
@@ -66,11 +67,14 @@ Route::get('/featured-products', [ProductoController::class, 'FeaturedProductos'
 Route::get('/pedidos-usuarios/{id}', action: [PedidoController::class, 'showByUserId']);
 Route::get('/busqueda/{id}', [ProductoController::class, 'ProductoPorName']);
 Route::get('/facturas/{id}', [FacturaController::class, 'FacturaByPedido']);
+Route::get('/facturas-user/{id}', [FacturaController::class, 'FacturaByUser']);
 
 
 
 //download
 Route::get('/catalogo/download/{id}', [CatalogoController::class, 'downloadFile']);
+Route::get('/descargar-archivo/{id}', [DescargarArchivo::class, 'descargarArchivo']);
+
 
 //cliengo
 Route::get('/cliengo-config', [CliengoController::class, 'getCliengoConfig']);

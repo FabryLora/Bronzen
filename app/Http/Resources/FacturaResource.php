@@ -16,12 +16,11 @@ class FacturaResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'pedidoId' => $this->pedidos->id,
+            'pedidoId' => $this->pedido ? $this->pedido->id : null,
             'num_factura' => $this->num_factura,
             'importe' => $this->importe,
             'factura' => $this->factura ? url("storage/" . $this->factura) : null,
-            'created_at' => $this->created_at,
-
+            'created_at' => date('Y-m-d', strtotime($this->created_at)),
         ];
     }
 }

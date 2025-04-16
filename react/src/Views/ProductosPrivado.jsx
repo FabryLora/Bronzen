@@ -34,8 +34,6 @@ export default function ProductosPrivado() {
         }
     }, [subProductos]);
 
-    console.log(categoria);
-
     // Handle search button click
     const handleSearch = () => {
         // Reset to first page when searching

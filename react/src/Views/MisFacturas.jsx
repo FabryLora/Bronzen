@@ -2,22 +2,23 @@ import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { PulseLoader } from "react-spinners";
 import axiosClient from "../axios";
+import MiFacturaRow from "../Components/MiFacturaRow";
 import MiPedidoRow from "../components/MiPedidoRow";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function MisFacturas() {
-    const { currentUser, fetchSubProductos } = useStateContext();
+    const { currentUser } = useStateContext();
 
-    const [pedidos, setPedidos] = useState([]);
+    const [facturas, setFacturas] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    /*  useEffect(() => {
+    useEffect(() => {
         window.scrollTo(0, 0);
         setLoading(true);
         axiosClient
-            .get(`/pedidos-usuarios/${currentUser?.id}`)
+            .get(`/facturas-user/${currentUser?.id}`)
             .then(({ data }) => {
-                setPedidos(data.data);
+                setFacturas(data.data);
             })
             .catch((err) => {
                 console.log(err);
@@ -25,8 +26,7 @@ export default function MisFacturas() {
             .finally(() => {
                 setLoading(false);
             });
-        fetchSubProductos();
-    }, []); */
+    }, []);
 
     return (
         <div className="w-[1200px] mx-auto py-20 min-h-[500px]">
@@ -35,11 +35,11 @@ export default function MisFacturas() {
                 <thead className="text-white rounded-t-lg">
                     <tr className="bg-[#5A646E] font-bold">
                         <td className="h-[50px]"></td>
-                        <td className="text-center">Fecha</td>
-                        <td className="text-center">N° de pedido</td>
-                        <td className="text-center">N° de factura</td>
+                        <td className="">Fecha</td>
+                        <td className="">N° de pedido</td>
+                        <td className="">N° de factura</td>
 
-                        <td className="text-center">Importe</td>
+                        <td className="">Importe</td>
                         <td></td>
                     </tr>
                 </thead>
@@ -57,14 +57,9 @@ export default function MisFacturas() {
                             <td></td>
                         </tr>
                     ) : (
-                        <td>a</td>
-                        /* pedidos?.map((pedido, index) => (
-                            <MiPedidoRow
-                                key={index}
-                                pedido={pedido}
-                                productosPed={pedido?.productos}
-                            />
-                        )) */
+                        facturas?.map((factura, index) => (
+                            <MiFacturaRow key={index} facturaObject={factura} />
+                        ))
                     )}
                 </tbody>
             </table>

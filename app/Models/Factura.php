@@ -8,8 +8,13 @@ class Factura extends Model
 {
     protected $guarded = [];
 
-    public function pedidos()
+    public function pedido()
     {
-        return $this->belongsTo(Pedido::class);
+        return $this->belongsTo(Pedido::class, 'pedido_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
