@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Toaster } from "react-hot-toast";
 import { Navigate, Outlet } from "react-router-dom";
 import wpIcon from "../assets/icons/wp-icon.png";
 import axiosClient from "../axios";
@@ -31,6 +32,7 @@ export default function PrivadaLayout() {
 
     return (
         <>
+            <Toaster />
             <NavBar />
             <Outlet />
             <a

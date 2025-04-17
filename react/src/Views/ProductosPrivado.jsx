@@ -4,6 +4,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 /* import soloCart from "../assets/iconos/solo-cart.svg"; */
 /* import ProductCard from "../components/ProductCard";
 import ProductRow from "../components/ProductRow"; */
+import { toast } from "react-hot-toast";
 import ProductoPrivadoRow from "../Components/ProductoPrivadoRow";
 import ProductoPrivadoRowMobile from "../Components/ProductoPrivadoRowMobile";
 import { useStateContext } from "../context/ContextProvider";

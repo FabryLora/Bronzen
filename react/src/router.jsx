@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
+import Administradores from "./Views/Administradores";
 import Administrator from "./Views/Administrator";
 import AdminLogin from "./Views/AdminLogin";
 import BusquedaLayout from "./Views/BusquedaLayout";
@@ -12,6 +13,7 @@ import DefaultLayout from "./Views/DefaultLayout";
 import ExcelUploader from "./Views/ExcelUploader";
 import Home from "./Views/Home";
 import Informacion from "./Views/Informacion";
+import Metadatos from "./Views/Metadatos";
 import MisFacturas from "./Views/MisFacturas";
 import Mispedidos from "./Views/MisPedidos";
 import Novedades from "./Views/Novedades";
@@ -90,6 +92,14 @@ const router = createBrowserRouter([
             {
                 path: "/dashboard/mis-pedidos",
                 element: <PedidosAdmin />,
+            },
+            {
+                path: "/dashboard/administradores",
+                element: <Administradores />,
+            },
+            {
+                path: "/dashboard/metadatos",
+                element: <Metadatos />,
             },
         ],
     },

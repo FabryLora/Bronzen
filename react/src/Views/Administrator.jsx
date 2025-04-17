@@ -26,8 +26,14 @@ import bronzenLogo from "../assets/logos/bronzen-logo.png";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function Administrator() {
-    const { adminToken, setAdminToken, currentAdmin, setCurrentAdmin } =
-        useStateContext();
+    const {
+        adminToken,
+        setAdminToken,
+        currentAdmin,
+        setCurrentAdmin,
+        fetchAllAdmins,
+        fetchMetadatos,
+    } = useStateContext();
 
     useEffect(() => {
         adminAxiosClient
@@ -38,6 +44,8 @@ export default function Administrator() {
             .catch((error) => {
                 console.error("Error during fetching admin data:", error);
             });
+        fetchAllAdmins();
+        fetchMetadatos();
     }, []);
 
     const [sidebar, setSidebar] = useState(true);
@@ -65,14 +73,6 @@ export default function Administrator() {
             icon: faHouse,
             href: "#",
             subHref: [{ title: "Contenido", href: "/dashboard/contenido" }],
-        },
-        {
-            id: "Novedades",
-            open: false,
-            title: "Novedades",
-            icon: faNewspaper,
-            href: "/dashboard/novedades",
-            subHref: [],
         },
 
         {
@@ -124,16 +124,8 @@ export default function Administrator() {
             subHref: [
                 { title: "Clientes", href: "/dashboard/clientes" },
                 {
-                    title: "Pedidos/Presupuestos",
-                    href: "/dashboard/pedidos-privada",
-                },
-                {
                     title: "Mis Pedidos",
                     href: "/dashboard/mis-pedidos",
-                },
-                {
-                    title: "Mis Facturas",
-                    href: "/dashboard/mis-facturas",
                 },
                 {
                     title: "Informacion y descuento",
@@ -156,14 +148,6 @@ export default function Administrator() {
             title: "Metadatos",
             icon: faGear,
             href: "/dashboard/metadatos",
-            subHref: [],
-        },
-        {
-            id: "excel",
-            open: false,
-            title: "excel",
-            icon: faGear,
-            href: "/dashboard/excel",
             subHref: [],
         },
     ]);

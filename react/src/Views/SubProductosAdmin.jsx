@@ -28,11 +28,37 @@ export default function SubProductosAdmin() {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState("");
     const [searchTermCode, setSearchTermCode] = useState("");
+    const [archivo, setArchivo] = useState();
+    const [precioView, setPrecioView] = useState(false);
     const itemsPerPage = 10;
 
     useEffect(() => {
         fetchSubProductos();
     }, []);
+
+    const handleSubirArchivo = async () => {
+        const formData = new FormData();
+        formData.append("excel", archivo);
+
+        const respuesta = adminAxiosClient.post("/upload-excel", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+
+        toast.promise(respuesta, {
+            loading: "Subiendo archivo...",
+            success: "Archivo subido correctamente",
+            error: "Error al subir el archivo",
+        });
+
+        try {
+            await respuesta;
+            setPrecioView(false);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     const submit = async (e) => {
         e.preventDefault();
@@ -141,6 +167,67 @@ export default function SubProductosAdmin() {
     return (
         <div className="flex flex-col w-full p-6">
             <Toaster />
+            <AnimatePresence>
+                {precioView && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed top-0 left-0 w-full h-full bg-black/50 flex items-center justify-center z-50 text-left"
+                    >
+                        <form
+                            onSubmit={handleSubirArchivo}
+                            method="POST"
+                            className="text-black"
+                        >
+                            <div className="bg-white p-4 w-[500px] rounded-md">
+                                <h2 className="text-2xl font-semibold mb-4">
+                                    Actualziar precio con Excel
+                                </h2>
+                                <div className="flex flex-col gap-4">
+                                    <label htmlFor="imagenn">Archivo</label>
+                                    <div className="flex flex-row">
+                                        <input
+                                            type="file"
+                                            name="imagen"
+                                            id="imagenn"
+                                            onChange={(e) =>
+                                                setArchivo(e.target.files[0])
+                                            }
+                                            className="hidden"
+                                        />
+                                        <label
+                                            className="cursor-pointer border border-primary-orange text-primary-orange py-1 px-2 hover:bg-primary-orange hover:text-white transition duration-300 rounded-md"
+                                            htmlFor="imagenn"
+                                        >
+                                            Elegir Archivo
+                                        </label>
+                                        <p className="self-center px-2">
+                                            {archivo?.name}
+                                        </p>
+                                    </div>
+
+                                    <div className="flex justify-end gap-4">
+                                        <button
+                                            type="button"
+                                            onClick={() => setPrecioView(false)}
+                                            className="border border-primary-orange text-primary-orange py-1 px-2 hover:bg-primary-orange hover:text-white transition duration-300 rounded-md"
+                                        >
+                                            Cancelar
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            className="border border-primary-orange text-primary-orange py-1 px-2 hover:bg-primary-orange hover:text-white transition duration-300 rounded-md"
+                                        >
+                                            Guardar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </motion.div>
+                )}
+            </AnimatePresence>
             <AnimatePresence>
                 {createView && (
                     <motion.div
@@ -403,6 +490,12 @@ export default function SubProductosAdmin() {
                         className="bg-primary-orange hover:bg-orange-400 w-[400px] text-white font-bold py-1 px-4 rounded"
                     >
                         Crear producto
+                    </button>
+                    <button
+                        onClick={() => setPrecioView(true)}
+                        className="bg-primary-orange hover:bg-orange-400 w-[400px] text-white font-bold py-1 px-4 rounded"
+                    >
+                        Actualizar precios
                     </button>
                 </div>
 

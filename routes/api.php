@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\UserAuthController;
 use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BannerInicioController;
 use App\Http\Controllers\CatalogoController;
 use App\Http\Controllers\CategoriaController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\FacturaController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\InformacionController;
 use App\Http\Controllers\LogosController;
+use App\Http\Controllers\MetadatosController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\PedidoProductoController;
 use App\Http\Controllers\ProductoController;
@@ -38,6 +40,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 });
 
+Route::apiResource('/metadatos', MetadatosController::class);
 Route::apiResource('/pedidos', PedidoController::class);
 Route::apiResource('/pedido-productos', PedidoProductoController::class);
 
@@ -101,6 +104,12 @@ Route::prefix('admin')->group(function () {
         Route::apiResource('/clientes', UserAuthController::class);
         Route::put('/informacion/{id}', [InformacionController::class, 'update']);
         Route::post('/guardar-factura', [FacturaController::class, 'store']);
+
+        Route::get('/me-admin', [AdminController::class, 'me']);
+
+        Route::put('/admin/{id}', [AdminController::class, 'update']);
+        Route::delete('/admin/{id}', [AdminController::class, 'destroy']);
+        Route::get('/alladmins', [AdminController::class, 'index']);
 
 
 

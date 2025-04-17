@@ -1,6 +1,7 @@
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 import { Link, useLocation } from "react-router-dom";
 import cartButton from "../assets/icons/cartButton.svg";
 import hoverCartButton from "../assets/icons/hoverCartButton.svg";
@@ -188,12 +189,15 @@ input[type="number"] {
                     <button
                         onMouseEnter={() => setHoverCart(true)}
                         onMouseLeave={() => setHoverCart(false)}
-                        onClick={() =>
+                        onClick={() => {
                             addToCart(productoObject, {
                                 cantidad,
                                 precio_descuento: precioConDescuento,
-                            })
-                        }
+                            });
+                            toast.success("Producto agregado al carrito", {
+                                position: "top-right",
+                            });
+                        }}
                     >
                         {!hoverCart ? (
                             <img

@@ -2,64 +2,78 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Admin;
+use App\Http\Requests\LoginAdminRequest;
 use Illuminate\Http\Request;
+
+use App\Http\Requests\SignupAdminRequest;
+use App\Http\Resources\AdminResource;
+use App\Models\Admin;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+    public function index(Request $request)
     {
-        //
+        return AdminResource::collection(Admin::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+
+    public function show(Request $request, $id)
     {
-        //
+        return response()->json(Admin::find($id));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+
+
+    public function update(Request $request, $id)
     {
-        //
+        // Buscar el administrador por ID
+        $admin = Admin::find($id);
+
+        if (!$admin) {
+            return response()->json(['error' => 'Admin not found'], 404);
+        }
+
+        // Validar los datos de la solicitud
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'password' => 'nullable|string|min:8|confirmed', // Si se proporciona, se valida como mínimo 8 caracteres
+        ]);
+
+        // Actualizar los campos que han sido validados
+        if (isset($validated['name'])) {
+            $admin->name = $validated['name'];
+        }
+
+        if (isset($validated['password'])) {
+            $admin->password = bcrypt($validated['password']);
+        }
+
+        // Guardar los cambios
+        $admin->save();
+
+        // Retornar la respuesta con el administrador actualizado
+        return response()->json([
+            'message' => 'Admin updated successfully',
+            'user' => $admin
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Admin $admin)
+    public function destroy($id)
     {
-        //
-    }
+        // Verifica si el admin está autenticado usando el guard 'admin'
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Admin $admin)
-    {
-        //
-    }
+        // Verifica si el admin a eliminar existe
+        $adminToDelete = Admin::find($id);
+        if (!$adminToDelete) {
+            return response()->json(['error' => 'Admin not found'], 404);
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Admin $admin)
-    {
-        //
-    }
+        // Elimina el admin
+        $adminToDelete->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Admin $admin)
-    {
-        //
+        return response()->json(['message' => 'Admin deleted successfully'], 200);
     }
 }
