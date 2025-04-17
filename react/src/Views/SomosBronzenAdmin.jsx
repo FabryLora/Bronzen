@@ -99,6 +99,9 @@ export default function SomosBronzenAdmin() {
                         >
                             Imagen:
                         </label>
+                        <span className="text-base font-normal">
+                            Resolucion recomendada: 500x355px
+                        </span>
                         <div className="mt-2 flex justify-between rounded-lg border border-gray-300 shadow-lg  ">
                             <div className=" w-2/3 h-[200px] bg-[rgba(0,0,0,0.2)]">
                                 <img

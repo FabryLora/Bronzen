@@ -14,6 +14,7 @@ use App\Http\Controllers\FacturaController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\InformacionController;
 use App\Http\Controllers\LogosController;
+use App\Http\Controllers\MassMailController;
 use App\Http\Controllers\MetadatosController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\PedidoProductoController;
@@ -24,6 +25,7 @@ use App\Http\Controllers\SendPedidoController;
 use App\Http\Controllers\SomosBronzenInicioController;
 use App\Http\Controllers\SubCategoriaController;
 use App\Http\Controllers\SubProductoController;
+use App\Http\Controllers\SubscriberController;
 use App\Models\Provincia;
 use Illuminate\Support\Facades\Route;
 
@@ -33,16 +35,24 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [UserAuthController::class, 'logout']);
     Route::get('/me', [UserAuthController::class, 'me']);
-    Route::post('/sendcontact', [SendContactInfoController::class, 'sendReactEmail']);
+
     Route::post('/sendpedido', [SendPedidoController::class, 'sendReactEmail']);
 
     //Pedidos
 
 });
 
+
+
+Route::post('/sendcontact', [SendContactInfoController::class, 'sendReactEmail']);
+
+
+Route::post('/sendmassmail', [MassMailController::class, 'sendMassReactEmail']);
+
 Route::apiResource('/metadatos', MetadatosController::class);
 Route::apiResource('/pedidos', PedidoController::class);
 Route::apiResource('/pedido-productos', PedidoProductoController::class);
+Route::apiResource('/subscriber', SubscriberController::class);
 
 Route::post('/signup', [UserAuthController::class, 'signup']);
 Route::post('/login', [UserAuthController::class, 'login']);

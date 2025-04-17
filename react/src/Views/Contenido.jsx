@@ -89,7 +89,10 @@ export default function Contenido() {
                                     htmlFor="logoprincipal"
                                     className="block font-medium text-gray-900 text-xl"
                                 >
-                                    Logo Principal
+                                    Logo Principal <br />
+                                    <span className="text-base font-normal">
+                                        Resolucion recomendada: 206x37px
+                                    </span>
                                 </label>
                                 <div className="mt-2 flex justify-between rounded-lg border shadow-lg">
                                     <div className=" w-1/2 h-[200px] bg-[rgba(0,0,0,0.2)]">
@@ -135,7 +138,10 @@ export default function Contenido() {
                                     htmlFor="secundario"
                                     className="block font-medium text-gray-900 text-xl"
                                 >
-                                    Logo Secundario
+                                    Logo Secundario <br />
+                                    <span className="text-base font-normal">
+                                        Resolucion recomendada: 206x37px
+                                    </span>
                                 </label>
                                 <div className="mt-2 flex justify-between rounded-lg border shadow-lg ">
                                     <div className="h-[200px] w-1/2 bg-[rgba(0,0,0,0.2)]">
@@ -153,6 +159,7 @@ export default function Contenido() {
                                                     className="relative cursor-pointer rounded-md  font-semibold bg-primary-red  text-black py-1 px-2"
                                                 >
                                                     <span>Cambiar Imagen</span>
+
                                                     <input
                                                         id="secundario"
                                                         name="secundario"
@@ -240,6 +247,10 @@ export default function Contenido() {
                                     className="block font-semibold text-gray-900"
                                 >
                                     Imagen:
+                                    <br />
+                                    <span className="text-base font-normal">
+                                        Resolucion recomendada: 1654x216 px
+                                    </span>
                                 </label>
                                 <div className="mt-2 flex justify-between rounded-lg border shadow-lg  ">
                                     <div className=" w-2/3 h-[200px] bg-[rgba(0,0,0,0.2)]">

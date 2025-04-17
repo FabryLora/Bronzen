@@ -108,8 +108,12 @@ export default function CatalogoAdmin() {
                                 htmlFor="logoprincipal"
                                 className="block text-lg font-medium"
                             >
-                                Imagen:
+                                Imagen:{" "}
+                                <span className="text-base font-normal">
+                                    Resolucion recomendada: 500x355px
+                                </span>
                             </label>
+
                             <div className="mt-2 flex justify-between rounded-lg border border-gray-300 shadow-lg  ">
                                 <div className=" w-1/2 h-[200px] bg-[rgba(0,0,0,0.2)]">
                                     <img

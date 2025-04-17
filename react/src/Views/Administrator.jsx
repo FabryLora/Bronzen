@@ -14,6 +14,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
+import { toast, Toaster } from "react-hot-toast";
 import {
     Link,
     Navigate,
@@ -113,7 +114,10 @@ export default function Administrator() {
             title: "Contacto",
             icon: faEnvelope,
             href: "/dashboard/contacto",
-            subHref: [],
+            subHref: [
+                { title: "Contacto", href: "/dashboard/contacto" },
+                { title: "Newsletter", href: "/dashboard/newsletter" },
+            ],
         },
         {
             id: "zonaprivada",
@@ -164,8 +168,18 @@ export default function Administrator() {
     };
 
     const logout = () => {
-        adminAxiosClient
-            .post("/logout")
+        // Crear la promesa
+        const logoutPromise = adminAxiosClient.post("/logout");
+
+        // Aplicar toast.promise a la promesa
+        toast.promise(logoutPromise, {
+            loading: "Cerrando sesión...",
+            success: "Sesión cerrada correctamente",
+            error: "Error al cerrar sesión",
+        });
+
+        // Manejo de la promesa
+        logoutPromise
             .then((response) => {
                 setCurrentAdmin({});
                 setAdminToken(null);
@@ -186,6 +200,7 @@ export default function Administrator() {
 
     return (
         <div className="flex flex-row font-red-hat">
+            <Toaster />
             <AnimatePresence>
                 {sidebar && (
                     <motion.div

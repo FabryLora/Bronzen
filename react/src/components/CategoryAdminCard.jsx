@@ -170,6 +170,9 @@ export default function CategoryAdminCard({ category }) {
                                 </h2>
                                 <div className="flex flex-col gap-4">
                                     <label htmlFor="imagen">Imagen</label>
+                                    <span className="text-base font-normal">
+                                        Resolucion recomendada: 501x181px
+                                    </span>
                                     <div className="flex flex-row">
                                         <input
                                             type="file"

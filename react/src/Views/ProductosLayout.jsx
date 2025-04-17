@@ -44,7 +44,15 @@ export default function ProductosLayout() {
                     </div>
                 </div>
                 <div className="w-full border-b-[3px] py-2 px-5 max-sm:px-2 max-sm:mt-4 border-primary-orange">
-                    <Link className="font-bold text-primary-gray max-sm:text-sm">
+                    <Link
+                        to={`/productos/${
+                            categorias?.find(
+                                (categoria) =>
+                                    categoria?.id == Number(categoriaId)
+                            )?.id
+                        }`}
+                        className="font-bold text-primary-gray max-sm:text-sm"
+                    >
                         LINEA{" "}
                         {
                             categorias?.find(
@@ -54,7 +62,20 @@ export default function ProductosLayout() {
                         }
                     </Link>
                     {subCategoriaId && (
-                        <Link className="text-primary-gray max-sm:text-sm">
+                        <Link
+                            to={`/productos/${
+                                categorias?.find(
+                                    (categoria) =>
+                                        categoria?.id == Number(categoriaId)
+                                )?.id
+                            }/${
+                                subCategorias?.find(
+                                    (categoria) =>
+                                        categoria?.id == Number(subCategoriaId)
+                                )?.id
+                            }`}
+                            className="text-primary-gray max-sm:text-sm"
+                        >
                             {" "}
                             <span className="font-bold mr-5 max-sm:mr-2">
                                 {">"}

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Toaster, toast } from "react-hot-toast";
 import { Link, Navigate } from "react-router-dom";
 import adminAxiosClient from "../adminAxiosClient";
 import bronzenLogo from "../assets/logos/bronzen-logo.png";
@@ -9,25 +10,36 @@ export default function AdminLogin() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [login, setLogin] = useState(false);
+
     const { setAdminToken, setCurrentAdmin, adminToken } = useStateContext();
 
     const onSubmit = async (ev) => {
         ev.preventDefault();
 
-        adminAxiosClient
-            .post("/login", {
+        try {
+            // Guarda la promesa en una variable
+            const responsePromise = adminAxiosClient.post("/login", {
                 name: user,
                 password,
-            })
-            .then(({ data }) => {
-                setCurrentAdmin(data.admin);
-                setAdminToken(data.token);
-
-                // Redirect to admin dashboard or other admin page
-            })
-            .catch((error) => {
-                console.error(error);
             });
+
+            // Muestra el toast con la promesa
+            toast.promise(responsePromise, {
+                loading: "Iniciando sesión...",
+                success: "Sesión iniciada",
+                error: "Error al iniciar sesión",
+            });
+
+            // Espera a que se resuelva la promesa y guarda el resultado
+            const response = await responsePromise;
+            console.log(response.data);
+
+            // Ahora puedes acceder a response.data.admin correctamente
+            setCurrentAdmin(response.data.admin);
+            setAdminToken(response.data.token);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     if (adminToken) {
@@ -36,6 +48,7 @@ export default function AdminLogin() {
 
     return (
         <div className="flex flex-col gap-10 justify-center items-center w-screen h-screen bg-black/50 bg-opacity-50 fixed top-0 left-0 z-10">
+            <Toaster />
             <div className="flex flex-col top-10 right-10 bg-white shadow-md p-5 font-roboto-condensed w-fit h-fit z-20 rounded-lg">
                 {error && (
                     <div className="bg-red-500 text-white text-center p-2 rounded-md">

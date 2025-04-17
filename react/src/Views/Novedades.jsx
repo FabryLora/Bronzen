@@ -9,6 +9,7 @@ export default function Novedades() {
     const [loading, setLoading] = useState();
 
     useEffect(() => {
+        window.scrollTo(0, 0);
         setLoading(true);
         axiosClient
             .get("featured-products")

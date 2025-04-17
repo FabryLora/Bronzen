@@ -16,6 +16,7 @@ import Informacion from "./Views/Informacion";
 import Metadatos from "./Views/Metadatos";
 import MisFacturas from "./Views/MisFacturas";
 import Mispedidos from "./Views/MisPedidos";
+import NewsletterManager from "./Views/NewsletterManager";
 import Novedades from "./Views/Novedades";
 import Pedidos from "./Views/Pedidos";
 import PedidosAdmin from "./Views/PedidosAdmin";
@@ -100,6 +101,10 @@ const router = createBrowserRouter([
             {
                 path: "/dashboard/metadatos",
                 element: <Metadatos />,
+            },
+            {
+                path: "/dashboard/newsletter",
+                element: <NewsletterManager />,
             },
         ],
     },

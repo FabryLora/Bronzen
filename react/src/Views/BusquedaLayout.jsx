@@ -95,8 +95,8 @@ export default function BusquedaLayout() {
                                     {[
                                         ...new Set(
                                             prod?.subProductos
-                                                .filter((elem) => elem?.color)
-                                                .map((elem) => elem?.color)
+                                                ?.filter((elem) => elem?.color)
+                                                ?.map((elem) => elem?.color)
                                         ),
                                     ]?.map((elem) => (
                                         <span

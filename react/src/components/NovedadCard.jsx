@@ -11,7 +11,7 @@ export default function NovedadCard({ prod }) {
         >
             <div className="w-[247px] min-h-[271px] border-b-[3px] border-primary-orange">
                 <img
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-cover"
                     src={prod?.image}
                     alt=""
                 />

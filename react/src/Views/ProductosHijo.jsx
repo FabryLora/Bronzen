@@ -13,6 +13,10 @@ export default function ProductosHijo() {
 
     const location = useLocation();
 
+    const soloPrimeraMaysucula = (str) => {
+        return str?.charAt(0)?.toUpperCase() + str?.slice(1);
+    };
+
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
@@ -44,19 +48,56 @@ export default function ProductosHijo() {
         <div className="grid grid-cols-4 max-sm:grid-cols-1 max-sm:gap-8 justify-items-center py-8">
             {productosHijo?.map((prod) => (
                 <Link
-                    to={`${location.pathname}/${prod?.id}`}
-                    className="flex flex-col h-[342px] max-sm:h-auto max-sm:w-full max-sm:items-center"
+                    to={`/productos/${prod?.categoriaId}/${prod?.subCategoriaId}/${prod?.id}`}
+                    className="flex flex-col h-fit max-sm:h-auto max-sm:w-full max-sm:items-center gap-2"
                     key={prod?.id}
                 >
                     <img
                         src={prod?.image ? prod?.image : defaultPhoto}
-                        className="w-[269px] max-sm:w-[80%] h-[271px] max-sm:h-auto max-sm:aspect-square border-b-[2px] border-primary-orange object-contain"
+                        className="w-[269px] max-sm:w-[80%] min-h-[271px] max-sm:h-auto max-sm:aspect-square border-b-[2px] border-primary-orange object-contain"
                         alt=""
                     />
 
-                    <h2 className="text-primary-orange font-bold text-sm pt-4 w-[90%] max-sm:text-center max-sm:w-full break-words">
+                    <h2 className="text-[#5B6670] font-bold text-[16px] pt-2 w-[90%] max-sm:text-center max-sm:w-full break-words">
                         {prod?.name}
                     </h2>
+                    <div className="flex flex-row">
+                        {[
+                            ...new Set(
+                                prod?.subProductos
+                                    ?.filter((elem) => elem?.color)
+                                    ?.map((elem) => elem?.color)
+                            ),
+                        ]?.map((elem) => (
+                            <span
+                                className="text-[10px] text-[#62707b]"
+                                key={elem}
+                            >
+                                {elem} <span> / </span>
+                            </span>
+                        ))}
+                        {prod?.plano && (
+                            <span className="text-[10px] text-[#62707b]">
+                                Detalle tecnico
+                            </span>
+                        )}
+                    </div>
+                    <div className="h-[2px] w-[40px] bg-primary-orange"></div>
+                    <div className="flex flex-row text-[10px] text-[#c96] gap-1">
+                        <Link
+                            to={`/productos/${prod?.categoriaId}`}
+                            className="hover:text-[#b18458] transition duration-300"
+                        >
+                            {soloPrimeraMaysucula(prod?.categoria)}
+                        </Link>
+                        <p className="text-gray-500">{">"}</p>
+                        <Link
+                            to={`/productos/${prod?.categoriaId}/${prod?.subCategoriaId}`}
+                            className="hover:text-[#b18458] transition duration-300"
+                        >
+                            {soloPrimeraMaysucula(prod?.subCategoria)}
+                        </Link>
+                    </div>
                 </Link>
             ))}
         </div>

@@ -48,6 +48,8 @@ const StateContext = createContext({
     fetchPedidoProductos: () => {},
     metadatos: [],
     fetchMetadatos: () => {},
+    subscribers: [],
+    fetchSubscribers: () => {},
 });
 
 export const ContextProvider = ({ children }) => {
@@ -79,6 +81,7 @@ export const ContextProvider = ({ children }) => {
     const [pedidoProductos, setPedidoProductos] = useState([]);
     const [allAdmins, setAllAdmins] = useState([]);
     const [metadatos, setMetadatos] = useState([]);
+    const [subscribers, setSubscribers] = useState([]);
 
     const [cart, setCart] = useState(() => {
         const savedCart = localStorage.getItem("cart");
@@ -244,6 +247,12 @@ export const ContextProvider = ({ children }) => {
         });
     };
 
+    const fetchSubscribers = () => {
+        axiosClient.get("/subscriber").then(({ data }) => {
+            setSubscribers(data.data);
+        });
+    };
+
     useEffect(() => {
         fetchProvincias();
         fetchSubCategorias();
@@ -258,6 +267,8 @@ export const ContextProvider = ({ children }) => {
     return (
         <StateContext.Provider
             value={{
+                subscribers,
+                fetchSubscribers,
                 metadatos,
                 fetchMetadatos,
                 allAdmins,

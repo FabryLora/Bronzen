@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
-function CustomReactQuill({ value, onChange }) {
+function CustomReactQuill({ value, onChange, additionalStyles = "" }) {
     const modules = {
         toolbar: [
             [{ header: [1, 2, 3, false] }],
@@ -31,7 +31,7 @@ function CustomReactQuill({ value, onChange }) {
 
     return (
         <ReactQuill
-            className="bg-white"
+            className={`bg-white ${additionalStyles}`}
             theme="snow"
             modules={modules}
             formats={formats}

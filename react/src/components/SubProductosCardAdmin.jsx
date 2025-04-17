@@ -424,6 +424,9 @@ export default function SubProductosCardAdmin({ category }) {
                                         Imagen{" "}
                                         <span className="text-red-500">*</span>
                                     </label>
+                                    <span className="text-base font-normal">
+                                        Resolucion recomendada: 269x271px
+                                    </span>
                                     <input
                                         className="outline file:rounded-full file:bg-primary-orange file:text-white file:font-bold file:p-2 file:cursor-pointer outline-gray-300 p-2 rounded-md focus:outline focus:outline-primary-orange"
                                         type="file"

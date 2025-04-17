@@ -1,10 +1,14 @@
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope, faPhone } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import ReactDOMServer from "react-dom/server";
+import toast from "react-hot-toast";
 import { Links } from "react-router-dom";
 import contactoImage from "../assets/contacto/contacto.png";
 import background from "../assets/inicio/bg-somos-bronzen.jpg";
+import axiosClient from "../axios";
+import EmailTemplate from "../Components/EmailTemplate";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function Contacto() {
@@ -14,6 +18,50 @@ export default function Contacto() {
     const [email, setEmail] = useState();
     const [area, setArea] = useState();
     const [consulta, setConsulta] = useState();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
+    const sendEmail = async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+        formData.append("nombre", nombre);
+        formData.append("apellido", apellido);
+        formData.append("email", email);
+        formData.append("area", area);
+        formData.append("consulta", consulta);
+
+        const htmlContent = ReactDOMServer.renderToString(
+            <EmailTemplate
+                info={{
+                    nombre,
+                    apellido,
+                    email,
+                    area,
+                    consulta,
+                }}
+            />
+        );
+
+        const response = axiosClient.post("/sendcontact", {
+            html: htmlContent,
+        });
+
+        toast.promise(response, {
+            loading: "Enviando...",
+            success: "Mensaje enviado correctamente",
+            error: "Error al enviar el mensaje",
+        });
+
+        try {
+            await response;
+            console.log("Correo enviado:", response.data);
+        } catch (error) {
+            console.error("Error al enviar el correo:", error);
+        }
+    };
 
     const links = [
         {
@@ -82,6 +130,7 @@ export default function Contacto() {
                             </p>
                         </div>
                         <form
+                            onSubmit={sendEmail}
                             className="grid grid-cols-2 max-sm:grid-cols-1 gap-x-6 gap-y-5 w-full max-w-[574px] max-sm:max-w-full text-sm text-[#62707b]"
                             method="POST"
                         >
@@ -114,7 +163,7 @@ export default function Contacto() {
                                 <option value="area de interes">
                                     Area de Interés
                                 </option>
-                                <option value="venras">Ventas</option>
+                                <option value="ventas">Ventas</option>
                                 <option value="informacion">Información</option>
                                 <option value="pagos">Pagos</option>
                                 <option value="pedidos">Pedidos</option>
@@ -128,7 +177,7 @@ export default function Contacto() {
                             <div className="col-span-2 flex justify-center mt-2">
                                 <button
                                     type="submit"
-                                    className="bg-primary-orange text-white rounded-[30px] h-[30px] px-[30px] w-[100px] font-medium flex justify-center items-center"
+                                    className="bg-primary-orange text-white rounded-[30px] h-[30px] px-[30px] w-[100px] font-medium flex justify-center items-center hover:scale-95 transition duration-300"
                                 >
                                     ENVIAR
                                 </button>

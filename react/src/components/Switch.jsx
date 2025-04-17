@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import adminAxiosClient from "../adminAxiosClient";
+import axiosClient from "../axios";
 
 const Switch = ({ id, path, initialEnabled, className = "" }) => {
     // Use local state to track the switch state
@@ -27,6 +28,10 @@ const Switch = ({ id, path, initialEnabled, className = "" }) => {
             } else if (path === "/categorias") {
                 await adminAxiosClient.put(`${path}/${id}`, {
                     show_text: newState ? 1 : 0,
+                });
+            } else if (path === "/subscriber") {
+                await axiosClient.put(`${path}/${id}`, {
+                    active: newState ? 1 : 0,
                 });
             } else {
                 await adminAxiosClient.put(`${path}/${id}`, {

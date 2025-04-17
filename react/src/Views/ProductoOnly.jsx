@@ -144,7 +144,13 @@ export default function ProductoOnly() {
                         </p>
                         <div className="flex flex-col px-1 py-4 gap-10 max-sm:gap-6">
                             <div className="grid grid-cols-6 gap-x-2 gap-y-5 w-fit max-sm:flex-wrap max-sm:justify-center max-sm:gap-4">
-                                {subProductos?.map((subProd) => (
+                                {[
+                                    ...new Map(
+                                        subProductos
+                                            ?.filter((prod) => prod.color)
+                                            ?.map((item) => [item.color, item])
+                                    ).values(),
+                                ]?.map((subProd) => (
                                     <div
                                         key={subProd?.id}
                                         className="flex flex-col min-w-[124px] max-sm:min-w-[80px] gap-1 items-center justify-center"

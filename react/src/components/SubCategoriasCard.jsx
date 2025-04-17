@@ -165,6 +165,9 @@ export default function SubCategoriasCard({ category }) {
                                 </h2>
                                 <div className="flex flex-col gap-4">
                                     <label htmlFor="imagen">Imagen</label>
+                                    <span className="text-base font-normal">
+                                        Resolucion recomendada: 269x271px
+                                    </span>
                                     <div className="flex flex-row">
                                         <input
                                             type="file"
