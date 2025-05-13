@@ -130,7 +130,7 @@ export default function SubProductosCardAdmin({ category }) {
 
         const confirmDelete = async () => {
             const response = adminAxiosClient.delete(
-                `/productos/${category?.id}`
+                `/sub-productos/${category?.id}`
             );
 
             toast.promise(response, {
@@ -142,7 +142,7 @@ export default function SubProductosCardAdmin({ category }) {
             try {
                 await response;
 
-                fetchProductos(true);
+                fetchSubProductos(true);
             } catch (error) {
                 console.error("Error al eliminar:", error);
             }
