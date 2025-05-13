@@ -5,13 +5,19 @@ import { Navigate, useNavigate } from "react-router-dom";
 /* import ProductCard from "../components/ProductCard";
 import ProductRow from "../components/ProductRow"; */
 import { toast } from "react-hot-toast";
+import { PulseLoader } from "react-spinners";
 import ProductoPrivadoRow from "../Components/ProductoPrivadoRow";
 import ProductoPrivadoRowMobile from "../Components/ProductoPrivadoRowMobile";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function ProductosPrivado() {
-    const { categorias, subProductos, subCategorias, fetchSubProductos } =
-        useStateContext();
+    const {
+        categorias,
+        subProductos,
+        subCategorias,
+        fetchSubProductos,
+        subLoading,
+    } = useStateContext();
 
     const [currentPage, setCurrentPage] = useState(1);
     const [busquedaAvanzada, setBusquedaAvanzada] = useState("");
@@ -240,12 +246,18 @@ export default function ProductosPrivado() {
                     <p className="text-center"></p>
                 </div>
                 <div className="h-fit">
-                    {paginatedProducts?.map((prod) => (
-                        <ProductoPrivadoRow
-                            key={prod?.id}
-                            productoObject={prod}
-                        />
-                    ))}
+                    {subLoading ? (
+                        <div className="w-full h-[40vh] flex justify-center items-center">
+                            <PulseLoader color="#ff6600" />
+                        </div>
+                    ) : (
+                        paginatedProducts?.map((prod) => (
+                            <ProductoPrivadoRow
+                                key={prod?.id}
+                                productoObject={prod}
+                            />
+                        ))
+                    )}
                 </div>
             </div>
             <div className="flex flex-col gap-3 sm:hidden px-5">

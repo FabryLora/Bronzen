@@ -56,44 +56,41 @@ export default function ImageSlider() {
                     padding: "20px 0px",
                 }}
             >
-                {featuredProducts
-                    ?.filter((prod) => prod?.image != null)
-                    ?.slice(0, 4)
-                    ?.map((subprod, index) => (
-                        <SwiperSlide
-                            className="cursor-grab"
-                            key={index}
-                            style={{
-                                width: "100%",
-                                height: "100%",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                            }}
-                        >
-                            <div className="flex flex-col w-full h-full">
-                                <img
-                                    src={
-                                        subprod?.image != null
-                                            ? subprod?.image
-                                            : defaultPhoto
-                                    }
-                                    className="w-full h-[90%] object-contain"
-                                />
-                                <div className="h-[10%] w-full flex flex-col items-end gap-2 max-sm:items-center ">
-                                    <h2 className="text-[#5b6670] text-[17px] max-sm:text-[15px]">
-                                        {subprod?.name}
-                                    </h2>
-                                    <Link
-                                        to={`/productos/${subprod?.categoriaId}/${subprod?.subCategoriaId}/${subprod?.id}`}
-                                        className="text-primary-orange text-sm"
-                                    >
-                                        {subprod?.subProductos[0]?.code}
-                                    </Link>
-                                </div>
+                {featuredProducts?.map((subprod, index) => (
+                    <SwiperSlide
+                        className="cursor-grab"
+                        key={index}
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}
+                    >
+                        <div className="flex flex-col w-full h-full">
+                            <img
+                                src={
+                                    subprod?.image
+                                        ? subprod?.image
+                                        : defaultPhoto
+                                }
+                                className="w-full h-[90%] object-contain"
+                            />
+                            <div className="h-[10%] w-full flex flex-col items-end gap-2 max-sm:items-center ">
+                                <h2 className="text-[#5b6670] text-[17px] max-sm:text-[15px]">
+                                    {subprod?.name}
+                                </h2>
+                                <Link
+                                    to={`/productos/${subprod?.categoriaId}/${subprod?.subCategoriaId}/${subprod?.id}`}
+                                    className="text-primary-orange text-sm"
+                                >
+                                    {subprod?.subProductos[0]?.code}
+                                </Link>
                             </div>
-                        </SwiperSlide>
-                    ))}
+                        </div>
+                    </SwiperSlide>
+                ))}
 
                 {/* Flechas de navegación personalizadas con FontAwesome */}
                 <div

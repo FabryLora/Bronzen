@@ -1,13 +1,15 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
+import { PulseLoader } from "react-spinners";
 import adminAxiosClient from "../adminAxiosClient";
 import ProductosCardAdmin from "../components/ProductosCardAdmin";
 import SubProductosCardAdmin from "../Components/SubProductosCardAdmin";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function SubProductosAdmin() {
-    const { productos, subProductos, fetchSubProductos } = useStateContext();
+    const { productos, subProductos, fetchSubProductos, subLoading } =
+        useStateContext();
     const [createView, setCreateView] = useState(false);
 
     const [submitInfo, setSubmitInfo] = useState({

@@ -50,6 +50,7 @@ const StateContext = createContext({
     fetchMetadatos: () => {},
     subscribers: [],
     fetchSubscribers: () => {},
+    subLoading: false,
 });
 
 export const ContextProvider = ({ children }) => {
@@ -66,6 +67,7 @@ export const ContextProvider = ({ children }) => {
     );
 
     const [logos, setLogos] = useState({});
+    const [subLoading, setSubLoading] = useState(false);
     const [bannerInicio, setBannerInicio] = useState({});
     const [contactInfo, setContactInfo] = useState({});
     const [somosBronzenInicio, setSomosBronzenInicio] = useState({});
@@ -200,9 +202,15 @@ export const ContextProvider = ({ children }) => {
     };
 
     const fetchSubProductos = () => {
-        axiosClient.get("/sub-productos").then(({ data }) => {
-            setSubProductos(data.data);
-        });
+        setSubLoading(true);
+        axiosClient
+            .get("/sub-productos")
+            .then(({ data }) => {
+                setSubProductos(data.data);
+            })
+            .finally(() => {
+                setSubLoading(false);
+            });
     };
 
     const fetchClientes = () => {
@@ -262,11 +270,13 @@ export const ContextProvider = ({ children }) => {
         fetchSomosBronzenInicio();
         fetchCatalogo();
         fetchCategorias();
+        fetchSubProductos();
     }, []);
 
     return (
         <StateContext.Provider
             value={{
+                subLoading,
                 subscribers,
                 fetchSubscribers,
                 metadatos,

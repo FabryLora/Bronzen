@@ -14,13 +14,13 @@ class ProductoController extends Controller
      */
     public function index()
     {
-        return ProductoResource::collection(Producto::all());
+        return ProductoResource::collection(Producto::orderBy('orden', 'asc')->get());
     }
 
     public function FeaturedProductos()
     {
         // Cargar explícitamente la relación subProductos
-        $productos = Producto::where('featured', true)->with('subProductos')->get();
+        $productos = Producto::orderBy('orden', 'asc')->where('featured', true)->with('subProductos')->get();
         return ProductoResource::collection($productos);
     }
 
@@ -61,13 +61,13 @@ class ProductoController extends Controller
 
     public function ProductoporSubCategoriaId($id)
     {
-        $productos = Producto::where('sub_categoria_id', $id)->get();
+        $productos = Producto::orderBy('orden', 'asc')->where('sub_categoria_id', $id)->get();
         return ProductoResource::collection($productos);
     }
 
     public function ProductoPorName($name)
     {
-        $productos = Producto::where('name', 'like', '%' . $name . '%')->with('subProductos')->get();
+        $productos = Producto::orderBy('orden', 'asc')->where('name', 'like', '%' . $name . '%')->with('subProductos')->get();
         return ProductoResource::collection($productos);
     }
 

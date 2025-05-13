@@ -64,7 +64,9 @@ input[type="number"] {
 `}
             </style>
             <p>
-                <Link to={`${location?.pathname}/${productoObject?.id}`}>
+                <Link
+                    to={`${location?.pathname}/${productoObject?.productoId}`}
+                >
                     <div className="w-[85px] h-[85px] border rounded-lg border-gray-200">
                         <img
                             src={
@@ -86,20 +88,19 @@ input[type="number"] {
             <p className="self-center">{productoObject?.producto}</p>
             <p className="self-center text-center">
                 ${" "}
-                {Number(productoObject?.precio_de_lista)?.toLocaleString(
-                    "es-AR",
-                    {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                    }
-                )}
+                {Number(
+                    productoObject?.precio_de_lista * cantidad
+                )?.toLocaleString("es-AR", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                })}
             </p>
             <p className="text-center self-center text-[#308C05] font-bold">
-                %{productoObject?.descuento}
+                {productoObject?.descuento}%
             </p>
             <p className="text-center self-center ">
                 ${" "}
-                {precioConDescuento?.toLocaleString("es-AR", {
+                {(precioConDescuento * cantidad)?.toLocaleString("es-AR", {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                 })}

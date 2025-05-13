@@ -38,6 +38,8 @@ export default function SubCategorias() {
         );
     }
 
+    console.log(subProductos);
+
     return (
         <div className="grid grid-cols-4 max-sm:grid-cols-1 max-sm:gap-8 justify-items-center py-8">
             {subCategorias?.map((subCategoria) => (
@@ -46,28 +48,35 @@ export default function SubCategorias() {
                     className="flex flex-col h-[342px] max-sm:h-auto max-sm:w-full max-sm:items-center"
                     key={subCategoria?.id}
                 >
-                    {subProductos?.find(
-                        (subprod) =>
-                            subprod?.subCategoriaId === subCategoria?.id
-                    )?.image ? (
+                    {subCategoria?.image ? (
                         <img
-                            src={
-                                subProductos?.find(
-                                    (subprod) =>
-                                        subprod?.subCategoriaId ===
-                                        subCategoria?.id
-                                )?.image
-                            }
+                            src={subCategoria?.image || defaultPhoto}
+                            onError={(e) => {
+                                e.target.onerror = null; // Prevent looping
+                                e.target.src = defaultPhoto;
+                            }}
                             className="w-[269px] max-sm:w-[80%] h-[271px] max-sm:h-auto max-sm:aspect-square border-b-[2px] border-primary-orange object-contain"
                             alt=""
                         />
                     ) : (
                         <img
-                            src={defaultPhoto}
+                            src={
+                                subProductos?.filter(
+                                    (subprod) =>
+                                        subprod?.subCategoriaId ===
+                                            subCategoria?.id &&
+                                        subprod?.image != null
+                                )[0]?.image || defaultPhoto
+                            }
+                            onError={(e) => {
+                                e.target.onerror = null; // Prevent looping
+                                e.target.src = defaultPhoto;
+                            }}
                             className="w-[269px] max-sm:w-[80%] h-[271px] max-sm:h-auto max-sm:aspect-square border-b-[2px] border-primary-orange object-contain"
                             alt=""
                         />
                     )}
+
                     <h2 className="text-primary-orange font-bold text-sm pt-4 max-sm:text-center">
                         {subCategoria?.name?.replace("DE ALUMINIO", "")}
                     </h2>

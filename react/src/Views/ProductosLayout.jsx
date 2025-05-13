@@ -53,7 +53,7 @@ export default function ProductosLayout() {
                         }`}
                         className="font-bold text-primary-gray max-sm:text-sm"
                     >
-                        LINEA{" "}
+                        LÍNEA{" "}
                         {
                             categorias?.find(
                                 (categoria) =>

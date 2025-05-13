@@ -83,22 +83,22 @@ export default function ProductoOnly() {
     return (
         <div className="flex w-full h-fit pb-40 max-sm:pb-20">
             {/* imagen */}
-            <div className="flex flex-row max-sm:flex-col w-full">
-                <div className="relative min-w-[376px] max-sm:min-w-0 max-sm:w-full h-[378px] max-sm:h-[280px] border-b-2 border-primary-orange max-sm:mb-20">
+            <div className="flex flex-row max-sm:flex-col w-full h-fit">
+                <div className="relative min-w-[376px] max-sm:min-w-0 max-sm:w-full h-fit max-sm:h-fit  max-sm:mb-20">
                     <img
                         src={
                             currentSubProduct?.image
                                 ? currentSubProduct?.image
                                 : defaultPhoto
                         }
-                        className="w-full h-full object-contain max-w-[376px] max-sm:max-w-full"
+                        className=" h-[377px] object-contain w-[376px] max-sm:max-w-full"
                         alt=""
                         onError={(e) => {
                             e.target.onerror = null; // prevents looping
                             e.target.src = defaultPhoto;
                         }}
                     />
-                    <div className="grid grid-cols-3 max-sm:relative max-sm:bottom-0 max-sm:mt-4 max-sm:mb-8 gap-3 max-sm:flex-wrap max-sm:justify-center mt-3">
+                    <div className="border-t-2 py-3 border-primary-orange grid grid-cols-3 max-sm:relative max-sm:bottom-0 max-sm:mt-4 max-sm:mb-8 gap-3 max-sm:flex-wrap max-sm:justify-center mt-3">
                         {subProductos?.map((subProd) => (
                             <button
                                 onClick={() => {

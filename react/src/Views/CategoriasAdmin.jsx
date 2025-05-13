@@ -220,7 +220,7 @@ export default function CategoriasAdmin() {
                                 <td className="w-[400px] py-2 px-3 text-center">
                                     IMAGEN
                                 </td>
-                                <td className="text-center">MOSTRAR TEXTO</td>
+                                <td className="text-center">MOSTRAR TITULO</td>
                                 <td className="text-center">EDITAR</td>
                             </tr>
                         </thead>

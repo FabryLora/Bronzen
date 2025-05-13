@@ -14,7 +14,7 @@ class SubCategoriaController extends Controller
      */
     public function index()
     {
-        $subCategorias = SubCategoria::with('categorias')->get();
+        $subCategorias = SubCategoria::orderBy('orden', 'asc')->with('categorias')->get();
         return SubCategoriaResource::collection($subCategorias);
     }
 
@@ -41,7 +41,7 @@ class SubCategoriaController extends Controller
 
     public function SubCategoriaporCategoriaId($id)
     {
-        $subCategorias = SubCategoria::where('categoria_id', $id)->get();
+        $subCategorias = SubCategoria::orderBy('orden', 'asc')->where('categoria_id', $id)->get();
         return SubCategoriaResource::collection($subCategorias);
     }
 

@@ -456,13 +456,12 @@ export default function Pedidos() {
                             <p>Descuento Cliente {currentUser?.descuento}%</p>
                             <p>
                                 -$
-                                {subtotalConDescuentoUsuario?.toLocaleString(
-                                    "es-AR",
-                                    {
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2,
-                                    }
-                                )}
+                                {Number(
+                                    subtotalConDescuentoUsuario
+                                )?.toLocaleString("es-AR", {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2,
+                                })}
                             </p>
                         </div>
                     )}
@@ -477,13 +476,12 @@ export default function Pedidos() {
                             </p>
                             <p>
                                 -$
-                                {subtotalConDescuentoGeneral?.toLocaleString(
-                                    "es-AR",
-                                    {
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2,
-                                    }
-                                )}
+                                {Number(
+                                    subtotalConDescuentoGeneral
+                                )?.toLocaleString("es-AR", {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2,
+                                })}
                             </p>
                         </div>
                     )}
@@ -497,13 +495,12 @@ export default function Pedidos() {
                                 </p>
                                 <p>
                                     -$
-                                    {montoDescuentoRetiro?.toLocaleString(
-                                        "es-AR",
-                                        {
-                                            minimumFractionDigits: 2,
-                                            maximumFractionDigits: 2,
-                                        }
-                                    )}
+                                    {Number(
+                                        montoDescuentoRetiro
+                                    )?.toLocaleString("es-AR", {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2,
+                                    })}
                                 </p>
                             </div>
                         )}

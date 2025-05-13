@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import bronzenLogo from "../assets/logos/bronzen-logo.png";
 import axiosClient from "../axios";
 import { useStateContext } from "../context/ContextProvider";
@@ -19,11 +19,14 @@ export default function NavBar() {
         catalogo,
     } = useStateContext();
 
+    const location = useLocation();
+
     const navigate = useNavigate();
 
     const [activeIndex, setActiveIndex] = useState(null);
     const [loginView, setLoginView] = useState(false);
     const [signupView, setSignupView] = useState(false);
+    const [scroll, setScroll] = useState(false);
     const [userInfo, setUserInfo] = useState({
         name: "",
         password: "",
@@ -47,6 +50,14 @@ export default function NavBar() {
     const userRef = useRef(null);
     const userSignRef = useRef(null);
     const sidebarRef = useRef(null);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setScroll(window.scrollY > 50); // Cambia cuando baja 50px
+        };
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -323,7 +334,11 @@ export default function NavBar() {
     };
 
     return (
-        <header className="sticky top-0 bg-white h-[112px] flex justify-between items-center z-40 max-sm:h-[84px]">
+        <header
+            className={`sticky top-0 bg-white flex justify-between items-center z-40 max-sm:h-[84px] ${
+                scroll ? "h-[80px] shadow-md" : "h-[112px]"
+            } transition-all duration-300`}
+        >
             <nav className=" w-[1200px] max-sm:w-full max-sm:px-4 mx-auto flex flex-row justify-between max-sm:justify-start items-center font-bold text-sm text-[#333]">
                 <div className="relative flex flex-row  justify-between w-full sm:hidden">
                     <div className="flex flex-row gap-4 items-center ">

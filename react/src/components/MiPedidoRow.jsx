@@ -82,7 +82,13 @@ export default function MiPedidoRow({ pedido, productosPed }) {
                 </div>
             </td>
             <td className="text-center"> {pedido?.id}</td>
-            <td>{pedido?.created_at?.split("T")[0]}</td>
+            <td>
+                {pedido?.created_at
+                    ?.split("T")[0]
+                    ?.split("-")
+                    ?.reverse()
+                    ?.join("/")}
+            </td>
             <td>
                 {pedido?.mensaje ? (
                     pedido?.mensaje
@@ -335,13 +341,16 @@ export default function MiPedidoRow({ pedido, productosPed }) {
                                                     }}
                                                 >
                                                     $
-                                                    {
+                                                    {Number(
                                                         subProductos.find(
                                                             (prod) =>
                                                                 prod?.id ===
                                                                 item?.subproducto_id
                                                         )?.precio_de_lista
-                                                    }
+                                                    )?.toLocaleString("es-AR", {
+                                                        minimumFractionDigits: 2,
+                                                        maximumFractionDigits: 2,
+                                                    })}
                                                 </td>
                                                 <td
                                                     style={{
@@ -366,11 +375,12 @@ export default function MiPedidoRow({ pedido, productosPed }) {
                                                     }}
                                                 >
                                                     $
-                                                    {subProductos.find(
-                                                        (prod) =>
-                                                            prod?.id ===
-                                                            item?.subproducto_id
-                                                    )?.precio_de_lista -
+                                                    {(
+                                                        subProductos.find(
+                                                            (prod) =>
+                                                                prod?.id ===
+                                                                item?.subproducto_id
+                                                        )?.precio_de_lista -
                                                         (subProductos.find(
                                                             (prod) =>
                                                                 prod?.id ===
@@ -381,7 +391,11 @@ export default function MiPedidoRow({ pedido, productosPed }) {
                                                                     prod?.id ===
                                                                     item?.subproducto_id
                                                             )?.descuento) /
-                                                            100}
+                                                            100
+                                                    ).toLocaleString("es-AR", {
+                                                        minimumFractionDigits: 2,
+                                                        maximumFractionDigits: 2,
+                                                    })}
                                                 </td>
 
                                                 <td

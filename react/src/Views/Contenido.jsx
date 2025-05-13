@@ -81,7 +81,7 @@ export default function Contenido() {
                 <div className="w-full">
                     <div className=" border-gray-900/10 pb-12 flex flex-col gap-10">
                         <h2 className="text-3xl border-b-2 pb-2 text-primary-orange">
-                            Logos
+                            Logo
                         </h2>
                         <div className="flex flex-row justify-between gap-5">
                             <div className="w-full">
@@ -126,56 +126,6 @@ export default function Contenido() {
                                                 <p className="absolute top-10 break-words max-w-[200px]">
                                                     {" "}
                                                     {principal?.name}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="w-full">
-                                <label
-                                    htmlFor="secundario"
-                                    className="block font-medium text-gray-900 text-xl"
-                                >
-                                    Logo Secundario <br />
-                                    <span className="text-base font-normal">
-                                        Resolucion recomendada: 206x37px
-                                    </span>
-                                </label>
-                                <div className="mt-2 flex justify-between rounded-lg border shadow-lg ">
-                                    <div className="h-[200px] w-1/2 bg-[rgba(0,0,0,0.2)]">
-                                        <img
-                                            className="w-full h-full object-cover rounded-md"
-                                            src={logos?.secundario_url}
-                                            alt=""
-                                        />
-                                    </div>
-                                    <div className="flex items-center justify-center w-1/2">
-                                        <div className="text-center items-center h-fit self-center">
-                                            <div className="relative mt-4 flex flex-col items-center text-sm/6 text-gray-600">
-                                                <label
-                                                    htmlFor="secundario"
-                                                    className="relative cursor-pointer rounded-md  font-semibold bg-primary-red  text-black py-1 px-2"
-                                                >
-                                                    <span>Cambiar Imagen</span>
-
-                                                    <input
-                                                        id="secundario"
-                                                        name="secundario"
-                                                        onChange={(e) =>
-                                                            setSecundario(
-                                                                e.target
-                                                                    .files[0]
-                                                            )
-                                                        }
-                                                        type="file"
-                                                        className="sr-only"
-                                                    />
-                                                </label>
-                                                <p className="absolute top-10 break-words max-w-[200px]">
-                                                    {" "}
-                                                    {secundario?.name}{" "}
                                                 </p>
                                             </div>
                                         </div>

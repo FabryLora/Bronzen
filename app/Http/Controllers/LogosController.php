@@ -35,8 +35,8 @@ class LogosController extends Controller
         $logos = Logos::find($id);
 
         $data = $request->validate([
-            "principal" => "file|mimes:jpg,jpeg,png,gif|sometimes",
-            "secundario" => "file|mimes:jpg,jpeg,png,gif|sometimes",
+            "principal" => "file|sometimes",
+            "secundario" => "file|sometimes",
         ]);
 
         if ($request->hasFile('principal')) {

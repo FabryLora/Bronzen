@@ -2,8 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 export default function NovedadCard({ prod }) {
-    console.log(prod);
-
     return (
         <Link
             to={`/productos/${prod?.categoriaId}/${prod?.subCategoriaId}/${prod?.id}`}

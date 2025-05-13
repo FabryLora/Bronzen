@@ -52,11 +52,33 @@ export default function ProductosHijo() {
                     className="flex flex-col h-fit max-sm:h-auto max-sm:w-full max-sm:items-center gap-2"
                     key={prod?.id}
                 >
-                    <img
-                        src={prod?.image ? prod?.image : defaultPhoto}
-                        className="w-[269px] max-sm:w-[80%] min-h-[271px] max-sm:h-auto max-sm:aspect-square border-b-[2px] border-primary-orange object-contain"
-                        alt=""
-                    />
+                    {prod?.image ? (
+                        <img
+                            src={prod?.image || defaultPhoto}
+                            className="w-[269px] max-sm:w-[80%] min-h-[271px] max-sm:h-auto max-sm:aspect-square border-b-[2px] border-primary-orange object-contain"
+                            alt=""
+                        />
+                    ) : (
+                        <img
+                            src={
+                                prod?.image
+                                    ? prod?.image
+                                    : subProductos?.find(
+                                          (subProducto) =>
+                                              subProducto?.productoId ==
+                                              prod?.id
+                                      )?.image
+                                    ? subProductos?.find(
+                                          (subProducto) =>
+                                              subProducto?.productoId ==
+                                              prod?.id
+                                      )?.image
+                                    : defaultPhoto
+                            }
+                            className="w-[269px] max-sm:w-[80%] min-h-[271px] max-sm:h-auto max-sm:aspect-square border-b-[2px] border-primary-orange object-contain"
+                            alt=""
+                        />
+                    )}
 
                     <h2 className="text-[#5B6670] font-bold text-[16px] pt-2 w-[90%] max-sm:text-center max-sm:w-full break-words">
                         {prod?.name}

@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { PulseLoader } from "react-spinners";
+import cartButton from "../assets/icons/cartButton.svg";
 import defaultPhoto from "../assets/logos/bronzen-logo.png";
 import axiosClient from "../axios";
 import { useStateContext } from "../context/ContextProvider";
@@ -15,6 +16,28 @@ export default function ProductoOnlyPrivada() {
     const [currentSubProduct, setCurrentSubProduct] = useState();
     const [currentMedida, setCurrentMedida] = useState();
     const [precioConDescuento, setPrecioConDescuento] = useState();
+    const [esPantallaPequeña, setEsPantallaPequeña] = useState(false);
+
+    useEffect(() => {
+        // Crear un media query
+        const mediaQuery = window.matchMedia("(max-width: 768px)"); // Cambia 768px al ancho que necesites
+
+        // Función para manejar los cambios
+        const manejarCambio = (e) => {
+            setEsPantallaPequeña(e.matches);
+        };
+
+        // Verificar inicialmente
+        setEsPantallaPequeña(mediaQuery.matches);
+
+        // Agregar listener para cambios
+        mediaQuery.addEventListener("change", manejarCambio);
+
+        // Limpieza al desmontar
+        return () => {
+            mediaQuery.removeEventListener("change", manejarCambio);
+        };
+    }, []);
 
     useEffect(() => {
         setLoading(true);
@@ -82,7 +105,7 @@ export default function ProductoOnlyPrivada() {
     }
 
     return (
-        <div className="relative flex w-[1200px] mx-auto py-20">
+        <div className="relative flex w-[1200px] mx-auto py-20 max-sm:w-full max-sm:px-4">
             <style>
                 {`
                 input[type="number"]::-webkit-outer-spin-button,
@@ -96,7 +119,7 @@ input[type="number"] {
 }
 `}
             </style>
-            <div className="absolute left-0 top-4 flex flex-row items-center gap-1 text-sm text-[#6E7173]">
+            <div className="absolute left-0 top-4 flex flex-row items-center gap-1 text-sm text-[#6E7173] max-sm:px-4">
                 <Link to={"/privado/productos"} className="font-medium">
                     Productos
                 </Link>
@@ -104,9 +127,9 @@ input[type="number"] {
                 <Link to={"#"}>{currentSubProduct?.producto}</Link>
             </div>
             {/* imagen */}
-            <div className="flex flex-row w-full">
-                <div className="relative">
-                    <div className="min-w-[496px] h-[496px] border border-gray-300 rounded-lg flex justify-center">
+            <div className="flex flex-row w-full max-sm:flex-col max-sm:gap-10">
+                <div className="flex flex-row gap-5 max-sm:flex-col ">
+                    <div className="w-[496px] h-[496px] max-sm:w-full border border-gray-300 rounded-lg flex justify-center order-2 max-sm:order-1">
                         <img
                             src={
                                 currentSubProduct?.image
@@ -122,7 +145,7 @@ input[type="number"] {
                         />
                     </div>
 
-                    <div className="absolute -left-24 top-0 flex flex-col gap-3">
+                    <div className=" flex flex-col gap-3 order-1 max-sm:order-2 max-sm:flex-row">
                         {subProductos?.map((subProd) => (
                             <button
                                 onClick={() => {
@@ -154,39 +177,46 @@ input[type="number"] {
                 </div>
                 <div className="w-full flex flex-col gap-5 px-4">
                     <div className="flex flex-row gap-5">
-                        <h2 className="text-2xl text-[#5A5754] font-bold">
+                        <h2 className="max-sm:text-[16px] text-2xl text-[#5A5754] font-bold max-sm:self-center">
                             {currentSubProduct?.code}
                         </h2>
                         <div className="flex flex-row justify-center items-center gap-2">
-                            <h2 className="text-[22px] font-bold text-primary-gray">
+                            <h2 className="text-[22px] max-sm:text-[16px] font-bold text-primary-gray">
                                 {currentSubProduct?.categoria}
                             </h2>
                             <div className="h-full bg-[#5A5754] w-[2px] rounded-full"></div>
-                            <h2 className="text-[22px] font-bold text-primary-gray">
+                            <h2 className="text-[22px] max-sm:text-[16px] font-bold text-primary-gray">
                                 {currentSubProduct?.subCategoria}
                             </h2>
                         </div>
                     </div>
                     <div className="w-full h-[0.5px] bg-gray-300"></div>
                     <div className="w-full flex flex-col gap-4 h-full justify-between">
-                        <h1 className="text-[30px] font-medium text-[#222222] ">
+                        <h1 className="text-[30px] max-sm:text-[16px] font-medium text-[#222222] ">
                             {currentSubProduct?.producto}
                         </h1>
                         <div className="flex flex-row justify-between items-end">
-                            <div className="flex flex-col gap-2">
-                                <p className="text-[16px]">Precio</p>
-                                <p className="font-semibold">
+                            <div className="flex flex-col gap-2 h-full justify-between max-sm:justify-end">
+                                <p className="text-[16px] max-sm:hidden">
+                                    Precio
+                                </p>
+                                <p className="font-semibold max-sm:font-normal max-sm:text-[18px]">
                                     $
                                     {Number(
                                         currentSubProduct?.precio_de_lista
                                     )?.toLocaleString("es-AR")}
                                 </p>
                             </div>
-                            <div className="flex flex-col gap-2">
-                                <p className="text-[16px]">
+                            <div className="relative flex flex-col gap-2 h-full justify-between max-sm:justify-end">
+                                {esPantallaPequeña && (
+                                    <div className="absolute -top-2 right-0  text-[#308C05] font-bold">
+                                        <p>-%{currentSubProduct?.descuento}</p>
+                                    </div>
+                                )}
+                                <p className="text-[16px] max-sm:hidden">
                                     Precio con descuento
                                 </p>
-                                <p className="font-semibold">
+                                <p className="font-semibold max-sm:text-[18px]">
                                     $
                                     {Number(
                                         currentSubProduct?.precio_de_lista -
@@ -200,7 +230,9 @@ input[type="number"] {
                                 </p>
                             </div>
                             <div className="flex flex-col gap-2">
-                                <p className="text-[16px]">Cantidad</p>
+                                <p className="text-[16px] max-sm:hidden">
+                                    Cantidad
+                                </p>
                                 <div className="flex justify-center items-center">
                                     <div className="relative flex items-center border rounded-full border-gray-200 h-[38px] w-[64px] px-2">
                                         {/* Contenedor con botones */}
@@ -262,17 +294,33 @@ input[type="number"] {
                                     </div>
                                 </div>
                             </div>
-                            <button
-                                onClick={() =>
-                                    addToCart(currentSubProduct, {
-                                        cantidad,
-                                        precio_descuento: precioConDescuento,
-                                    })
-                                }
-                                className="w-[184px] h-[51px] text-white bg-primary-orange fon-bold rounded-full"
-                            >
-                                Agregar al pedido
-                            </button>
+
+                            {esPantallaPequeña ? (
+                                <button
+                                    onClick={() =>
+                                        addToCart(currentSubProduct, {
+                                            cantidad,
+                                            precio_descuento:
+                                                precioConDescuento,
+                                        })
+                                    }
+                                >
+                                    <img src={cartButton} alt="" />
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={() =>
+                                        addToCart(currentSubProduct, {
+                                            cantidad,
+                                            precio_descuento:
+                                                precioConDescuento,
+                                        })
+                                    }
+                                    className="w-[184px] h-[51px] text-white bg-primary-orange fon-bold rounded-full"
+                                >
+                                    Agregar al pedido
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>

@@ -8,6 +8,10 @@ export default function Novedades() {
     const [featuredProductos, setFeaturedProductos] = useState([]);
     const [loading, setLoading] = useState();
 
+    const date = new Date();
+    const month = date.toLocaleString("es-AR", { month: "long" });
+    const year = date.getFullYear();
+
     useEffect(() => {
         window.scrollTo(0, 0);
         setLoading(true);
@@ -30,8 +34,9 @@ export default function Novedades() {
                 <div className="flex flex-col sm:flex-row text-white">
                     <h2 className="text-3xl md:text-[45px] font-bold">
                         NOVEDADES{" "}
-                        <span className="text-xl md:text-[27px] italic font-medium">
-                            ABRIL 2025
+                        <span className="text-xl md:text-[27px] italic uppercase font-medium">
+                            {month.charAt(0).toUpperCase() + month.slice(1)}{" "}
+                            {year}
                         </span>
                     </h2>
                 </div>

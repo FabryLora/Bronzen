@@ -14,7 +14,7 @@ class SubProductoController extends Controller
      */
     public function index()
     {
-        return SubProductoResource::collection(SubProducto::all());
+        return SubProductoResource::collection(SubProducto::orderBy('orden', 'asc')->get());
     }
 
     /**
@@ -49,7 +49,7 @@ class SubProductoController extends Controller
 
     public function mostrarSubPRoductosPorProductoId($id)
     {
-        $subProductos = SubProducto::where('producto_id', $id)->get();
+        $subProductos = SubProducto::orderBy('orden', 'asc')->where('producto_id', $id)->get();
 
         return SubProductoResource::collection($subProductos);
     }

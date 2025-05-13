@@ -12,7 +12,7 @@ class CategoriaController extends Controller
 
     public function index()
     {
-        return CategoriaResource::collection(Categoria::all());
+        return CategoriaResource::collection(Categoria::orderBy('orden', 'asc')->get());
     }
 
     public function store(Request $request)

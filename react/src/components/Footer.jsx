@@ -68,11 +68,10 @@ export default function Footer() {
     ];
 
     const infoLinks = [
-        { title: "Novedades", href: "/novedades" },
         { title: "Nuestros productos", href: "/productos" },
         { title: "Catálogo", href: "/catalogo" },
         { title: "Somos bronzen", href: "/somos-bronzen" },
-        { title: "Contacto", href: "/contacto" },
+        { title: "Contactactanos", href: "/contacto" },
     ];
 
     return (
