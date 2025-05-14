@@ -54,27 +54,11 @@ export default function Pedidos() {
     useEffect(() => {
         let subtotal = 0;
 
-        // Calculate base subtotal from all products
         cart.forEach((prod) => {
-            // Determine base price by checking quantity discounts
-            let precioBase;
-            if (
-                prod?.additionalInfo?.cantidad >= prod?.min_oferta &&
-                prod?.precio_de_oferta
-            ) {
-                precioBase = prod?.precio_de_oferta;
-            } else {
-                // Use list price with product discount
-                precioBase =
-                    prod?.precio_de_lista -
-                    (prod?.descuento / 100) * prod?.precio_de_lista;
-            }
-
-            // Add to subtotal
-            subtotal += parseFloat(
-                Number(prod?.additionalInfo?.cantidad) * Number(precioBase)
-            );
+            subtotal += parseFloat(prod?.additionalInfo?.precio_descuento);
         });
+
+        console.log(cart);
 
         // Get available discounts
         const descuentoUsuario =

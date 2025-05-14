@@ -11,20 +11,35 @@ const ProductoPrivadoRowMobile = ({ product }) => {
     const { cart, addToCart, removeFromCart } = useStateContext();
     const [precioConDescuento, setPrecioConDescuento] = useState();
 
-    const location = useLocation();
+    const [oferta, setOferta] = useState(false);
 
-    useEffect(() => {
-        const precioConDescuento =
-            Number(product?.precio_de_lista) -
-            (Number(product?.precio_de_lista) * Number(product?.descuento)) /
-                100;
-        setPrecioConDescuento(precioConDescuento);
-    }, [product]);
+    const location = useLocation();
 
     const [cantidad, setCantidad] = useState(
         cart?.find((prod) => prod?.id == product?.id)?.additionalInfo
             ?.cantidad || product?.min
     );
+
+    useEffect(() => {
+        let precioConDescuento;
+        if (cantidad >= product?.min_oferta && product?.min_oferta != null) {
+            setOferta(true);
+            precioConDescuento =
+                Number(product?.precio_de_oferta) -
+                (Number(product?.precio_de_oferta) *
+                    Number(product?.descuento)) /
+                    100;
+        } else {
+            setOferta(false);
+            precioConDescuento =
+                Number(product?.precio_de_lista) -
+                (Number(product?.precio_de_lista) *
+                    Number(product?.descuento)) /
+                    100;
+        }
+
+        setPrecioConDescuento(precioConDescuento * cantidad);
+    }, [product, cantidad]);
 
     useEffect(() => {
         const existsInCart = cart.find((item) => item.id === product.id);
@@ -97,14 +112,14 @@ input[type="number"] {
                         </>
                     )}
                     {product?.descuento > 0 ? (
-                        <span className="text-lg font-bold">
+                        <span className="text-lg font-bold relative">
+                            {oferta && (
+                                <div className="text-[11px] text-[#308C05] font-bold absolute w-full -top-3 right-0">
+                                    OFERTA APLICADA
+                                </div>
+                            )}
                             $
-                            {(
-                                product?.precio_de_lista -
-                                (product?.precio_de_lista *
-                                    product?.descuento) /
-                                    100
-                            ).toLocaleString("es-AR", {
+                            {precioConDescuento.toLocaleString("es-AR", {
                                 minimumFractionDigits: 2,
                                 maximumFractionDigits: 2,
                             })}
@@ -112,7 +127,7 @@ input[type="number"] {
                     ) : (
                         <span className="text-lg font-bold">
                             $
-                            {product?.precio_de_lista?.toLocaleString("es-AR", {
+                            {precioConDescuento?.toLocaleString("es-AR", {
                                 minimumFractionDigits: 2,
                                 maximumFractionDigits: 2,
                             })}

@@ -38,11 +38,12 @@ export default function SubProductosAdmin() {
         fetchSubProductos();
     }, []);
 
-    const handleSubirArchivo = async () => {
+    const handleSubirArchivo = async (e) => {
+        e.preventDefault();
         const formData = new FormData();
-        formData.append("excel", archivo);
+        formData.append("archivo", archivo);
 
-        const respuesta = adminAxiosClient.post("/upload-excel", formData, {
+        const respuesta = adminAxiosClient.post("/importar-excel", formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },

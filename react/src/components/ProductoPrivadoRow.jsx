@@ -13,21 +13,37 @@ import { useStateContext } from "../context/ContextProvider";
 export default function ProductoPrivadoRow({ productoObject }) {
     const { cart, addToCart, removeFromCart } = useStateContext();
     const [precioConDescuento, setPrecioConDescuento] = useState();
+    const [oferta, setOferta] = useState(false);
     const location = useLocation();
-
-    useEffect(() => {
-        const precioConDescuento =
-            Number(productoObject?.precio_de_lista) -
-            (Number(productoObject?.precio_de_lista) *
-                Number(productoObject?.descuento)) /
-                100;
-        setPrecioConDescuento(precioConDescuento);
-    }, [productoObject]);
 
     const [cantidad, setCantidad] = useState(
         cart?.find((prod) => prod?.id == productoObject?.id)?.additionalInfo
             ?.cantidad || productoObject?.min
     );
+
+    useEffect(() => {
+        let precioConDescuento;
+        if (
+            cantidad >= productoObject?.min_oferta &&
+            productoObject?.min_oferta != null
+        ) {
+            setOferta(true);
+            precioConDescuento =
+                Number(productoObject?.precio_de_oferta) -
+                (Number(productoObject?.precio_de_oferta) *
+                    Number(productoObject?.descuento)) /
+                    100;
+        } else {
+            setOferta(false);
+            precioConDescuento =
+                Number(productoObject?.precio_de_lista) -
+                (Number(productoObject?.precio_de_lista) *
+                    Number(productoObject?.descuento)) /
+                    100;
+        }
+
+        setPrecioConDescuento(precioConDescuento * cantidad);
+    }, [productoObject, cantidad]);
 
     useEffect(() => {
         const existsInCart = cart.find((item) => item.id === productoObject.id);
@@ -53,15 +69,15 @@ export default function ProductoPrivadoRow({ productoObject }) {
             <style>
                 {`
                 input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
+                input[type="number"]::-webkit-inner-spin-button {
+                    -webkit-appearance: none;
+                    margin: 0;
+                }
 
-input[type="number"] {
-    -moz-appearance: textfield;
-}
-`}
+                input[type="number"] {
+                    -moz-appearance: textfield;
+                }
+                `}
             </style>
             <p>
                 <Link
@@ -98,9 +114,14 @@ input[type="number"] {
             <p className="text-center self-center text-[#308C05] font-bold">
                 {productoObject?.descuento}%
             </p>
-            <p className="text-center self-center ">
+            <p className="text-center self-center relative">
+                {oferta && (
+                    <div className="text-[11px] text-[#308C05] font-bold absolute w-full -top-4 right-0">
+                        OFERTA APLICADA
+                    </div>
+                )}
                 ${" "}
-                {(precioConDescuento * cantidad)?.toLocaleString("es-AR", {
+                {precioConDescuento?.toLocaleString("es-AR", {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                 })}
