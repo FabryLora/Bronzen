@@ -910,7 +910,7 @@ export default function NavBar() {
                         </button>
                         <AnimatePresence>
                             {loginView && (
-                                <motion.div
+                                <motion.form
                                     ref={userRef}
                                     initial={{ y: -30, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
@@ -1004,7 +1004,7 @@ export default function NavBar() {
                                             </div>
                                         </>
                                     )}
-                                </motion.div>
+                                </motion.form>
                             )}
                         </AnimatePresence>
                         <AnimatePresence>

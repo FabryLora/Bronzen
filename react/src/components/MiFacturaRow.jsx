@@ -43,7 +43,13 @@ export default function MiFacturaRow({ facturaObject }) {
             <td className="w-[80px] h-[80px] bg-[#F5F5F5] rounded-md align-middle flex justify-center items-center">
                 <img src={facturaIcon} className="" alt="" />
             </td>
-            <td>{facturaObject?.created_at}</td>
+            <td>
+                {facturaObject?.created_at
+                    ?.split("T")[0]
+                    ?.split("-")
+                    ?.reverse()
+                    ?.join("/")}
+            </td>
             <td>{facturaObject?.pedidoId}</td>
             <td>{facturaObject?.num_factura}</td>
             <td>

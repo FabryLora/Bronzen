@@ -100,7 +100,11 @@ export default function MiPedidoRow({ pedido, productosPed }) {
                 {pedido?.entregado != "1" ? (
                     <p className="text-gray-500">No entregado</p>
                 ) : (
-                    pedido?.updated_at?.split("T")[0]
+                    pedido?.updated_at
+                        ?.split("T")[0]
+                        ?.split("-")
+                        ?.reverse()
+                        ?.join("/")
                 )}
             </td>
 

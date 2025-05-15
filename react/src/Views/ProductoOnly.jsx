@@ -161,7 +161,9 @@ export default function ProductoOnly() {
                                             }}
                                             className={`w-[15px] h-[15px] rounded-full border border-primary-orange hover:bg-primary-orange transition duration-300 ${
                                                 currentSubProduct?.id ===
-                                                subProd?.id
+                                                    subProd?.id ||
+                                                currentSubProduct?.color ==
+                                                    subProd?.color
                                                     ? "bg-primary-orange border-gray"
                                                     : ""
                                             }`}
@@ -173,7 +175,7 @@ export default function ProductoOnly() {
                                 ))}
                             </div>
                             {/* Reemplaza el div actual de medidas con este código */}
-                            <div className="flex flex-row gap-10 max-sm:flex-wrap max-sm:justify-center max-sm:gap-4">
+                            <div className="flex flex-row gap-x-2 max-sm:flex-wrap max-sm:justify-center max-sm:gap-4">
                                 {/* Filtramos solo los que tienen medida y eliminamos duplicados */}
                                 {Array.from(
                                     new Set(

@@ -23,6 +23,14 @@ export default function Contacto() {
         window.scrollTo(0, 0);
     }, []);
 
+    const soloDejarNumeros = (number) => {
+        if (number) {
+            const cleanedNumber = number.replace(/\D/g, "");
+            return `https://wa.me/${cleanedNumber}`;
+        }
+        return "";
+    };
+
     const sendEmail = async (e) => {
         e.preventDefault();
 
@@ -81,7 +89,7 @@ export default function Contacto() {
         },
         {
             icon: faWhatsapp,
-            href: `https://wa.me/${contactInfo?.wp}`,
+            href: `https://wa.me/${soloDejarNumeros(contactInfo?.wp)}`,
             title: "Whatsapp",
         },
     ];

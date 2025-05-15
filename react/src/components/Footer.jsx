@@ -16,6 +16,14 @@ export default function Footer() {
         empresa: "",
     });
 
+    const soloDejarNumeros = (number) => {
+        if (number) {
+            const cleanedNumber = number.replace(/\D/g, "");
+            return `https://wa.me/${cleanedNumber}`;
+        }
+        return "";
+    };
+
     const soloPrimeraMayuscula = (str) => {
         return str?.charAt(0)?.toUpperCase() + str?.slice(1)?.toLowerCase();
     };
@@ -62,7 +70,7 @@ export default function Footer() {
         },
         {
             title: "WhatsApp",
-            href: `https://wa.me/${contactInfo?.wp}`,
+            href: `https://wa.me/${soloDejarNumeros(contactInfo?.wp)}`,
             icon: faWhatsapp,
         },
     ];

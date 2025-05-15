@@ -99,14 +99,16 @@ export default function BusquedaLayout() {
                                                 ?.filter((elem) => elem?.color)
                                                 ?.map((elem) => elem?.color)
                                         ),
-                                    ]?.map((elem) => (
-                                        <span
-                                            className="text-[10px] text-[#62707b]"
-                                            key={elem}
-                                        >
-                                            {elem} <span> / </span>
-                                        </span>
-                                    ))}
+                                    ]
+                                        ?.slice(0, 3) // Limita a máximo 3 colores
+                                        ?.map((elem) => (
+                                            <span
+                                                className="text-[10px] text-[#62707b]"
+                                                key={elem}
+                                            >
+                                                {elem} <span> / </span>
+                                            </span>
+                                        ))}
                                     {prod?.plano && (
                                         <span className="text-[10px] text-[#62707b]">
                                             Detalle tecnico
