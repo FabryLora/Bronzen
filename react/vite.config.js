@@ -29,36 +29,8 @@ export default defineConfig({
           }
         ]
       },
-      // Configuración importante: asegura que los activos estén correctamente ubicados
-      includeAssets: ['*.ico', '*.png', '*.svg'],
-      injectRegister: 'auto',
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/api\.bronzen\.osole\.com\.ar\/.*/i,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'api-cache',
-              expiration: {
-                maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24 * 7 // 1 semana
-              },
-              cacheableResponse: {
-                statuses: [0, 200]
-              }
-            }
-          }
-        ]
-      }
+      
     })
   ],
 
-  base: './',
-  build: {
-    outDir: 'dist',
-    assetsDir: 'assets',
-    // Asegura que los recursos estáticos no sean procesados por el router
-    assetsInlineLimit: 0
-  }
 })

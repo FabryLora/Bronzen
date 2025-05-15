@@ -119,7 +119,7 @@ input[type="number"] {
                                 </div>
                             )}
                             $
-                            {precioConDescuento.toLocaleString("es-AR", {
+                            {precioConDescuento?.toLocaleString("es-AR", {
                                 minimumFractionDigits: 2,
                                 maximumFractionDigits: 2,
                             })}
