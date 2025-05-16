@@ -34,6 +34,7 @@ export default function ClientesAdmin() {
         localidad: "",
         descuento_general: 0,
         descuento_adicional: 0,
+        descuento_adicional_2: 0,
         autorizado: 1,
     });
 
@@ -72,6 +73,11 @@ export default function ClientesAdmin() {
         formData.append("localidad", userInfo?.localidad);
         formData.append("descuento_general", userInfo?.descuento_general);
         formData.append("descuento_adicional", userInfo?.descuento_adicional);
+        formData.append(
+            "descuento_adicional_2",
+            userInfo?.descuento_adicional_2
+        );
+        formData.append("tipo", userInfo?.tipo);
         formData.append("autorizado", userInfo?.autorizado);
 
         const response = axiosClient.post("/signup", formData);
@@ -242,26 +248,6 @@ export default function ClientesAdmin() {
                                     </div>
 
                                     <div className="flex flex-col gap-2 ">
-                                        <label htmlFor="direccion">
-                                            Dirección
-                                        </label>
-                                        <input
-                                            value={userInfo.direccion}
-                                            onChange={(ev) =>
-                                                setUserInfo({
-                                                    ...userInfo,
-                                                    direccion: ev.target.value,
-                                                })
-                                            }
-                                            className="w-full h-[45px] pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
-                                            type="text"
-                                            name="direccion"
-                                            id="direccion"
-                                            required
-                                        />
-                                    </div>
-
-                                    <div className="flex flex-col gap-2 ">
                                         <label htmlFor="descuento_adicional">
                                             Descuento adicional
                                         </label>
@@ -282,6 +268,75 @@ export default function ClientesAdmin() {
                                             id="descuento_adicional"
                                             required
                                         />
+                                    </div>
+
+                                    <div className="flex flex-col gap-2 ">
+                                        <label htmlFor="descuento_adicional_2">
+                                            Descuento adicional 2
+                                        </label>
+                                        <input
+                                            value={
+                                                userInfo?.descuento_adicional_2
+                                            }
+                                            onChange={(ev) =>
+                                                setUserInfo({
+                                                    ...userInfo,
+                                                    descuento_adicional_2:
+                                                        ev.target.value,
+                                                })
+                                            }
+                                            className="w-full h-[45px] pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
+                                            type="text"
+                                            name="descuento_adicional_2"
+                                            id="descuento_adicional_2"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="direccion">
+                                            Dirección
+                                        </label>
+                                        <input
+                                            value={userInfo.direccion}
+                                            onChange={(ev) =>
+                                                setUserInfo({
+                                                    ...userInfo,
+                                                    direccion: ev.target.value,
+                                                })
+                                            }
+                                            className="w-full h-[45px] pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
+                                            type="text"
+                                            name="direccion"
+                                            id="direccion"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="tipo">
+                                            Tipo de usuario
+                                        </label>
+                                        <select
+                                            value={userInfo.tipo}
+                                            onChange={(ev) =>
+                                                setUserInfo({
+                                                    ...userInfo,
+                                                    tipo: ev.target.value,
+                                                })
+                                            }
+                                            className="w-full h-[45px] pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
+                                            name="tipo"
+                                            id="tipo"
+                                            required
+                                        >
+                                            <option value="cliente">
+                                                Cliente
+                                            </option>
+                                            <option value="vendedor">
+                                                Vendedor
+                                            </option>
+                                        </select>
                                     </div>
 
                                     <div className="flex flex-col gap-2">
@@ -484,6 +539,9 @@ export default function ClientesAdmin() {
                             </th>
                             <th scope="col" className=" py-3 text-center">
                                 Descuento adicional
+                            </th>
+                            <th scope="col" className=" py-3 text-center">
+                                Tipo de usuario
                             </th>
                             <th scope="col" className=" py-3 text-center">
                                 Autorizado

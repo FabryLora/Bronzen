@@ -36,6 +36,7 @@ return [
     */
 
     'guards' => [
+
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
@@ -56,6 +57,7 @@ return [
             'driver' => 'sanctum',
             'provider' => 'admins',
         ],
+
     ],
 
     /*
@@ -84,6 +86,10 @@ return [
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
+        ],
+        'vendedor' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Vendedor::class,
         ],
 
         // 'users' => [

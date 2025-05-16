@@ -6,6 +6,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import ProductRow from "../components/ProductRow"; */
 import { toast } from "react-hot-toast";
 import { PulseLoader } from "react-spinners";
+import axiosClient from "../axios";
 import ProductoPrivadoRow from "../Components/ProductoPrivadoRow";
 import ProductoPrivadoRowMobile from "../Components/ProductoPrivadoRowMobile";
 import { useStateContext } from "../context/ContextProvider";
@@ -17,8 +18,18 @@ export default function ProductosPrivado() {
         subCategorias,
         fetchSubProductos,
         subLoading,
+        currentUser,
+        setCurrentUserSelected,
+        allUsers,
+        setAllUsers,
+        currentUserSelected,
+        setCurrentIvaSelected,
+        currentIvaSelected,
+        vendedorView,
+        setVendedorView,
     } = useStateContext();
 
+    const [seacrhClientesView, setSeacrhClientesView] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [busquedaAvanzada, setBusquedaAvanzada] = useState("");
     const [categoria, setCategoria] = useState("");
@@ -29,9 +40,15 @@ export default function ProductosPrivado() {
     const [isFiltered, setIsFiltered] = useState(false);
     const itemsPerPage = 10;
     const [carrito, setCarrito] = useState(false);
+    const [searchValue, setsearchValue] = useState("");
 
     useEffect(() => {
         fetchSubProductos();
+        if (currentUser?.tipo == "vendedor") {
+            axiosClient.get("/allusers").then(({ data }) => {
+                setAllUsers(data.data);
+            });
+        }
     }, []);
 
     // Set initial filtered products when subProductos changes
@@ -104,8 +121,6 @@ export default function ProductosPrivado() {
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
-
-    const navigate = useNavigate();
 
     return (
         <div className="w-full pb-20 flex flex-col gap-20 max-sm:px-0">

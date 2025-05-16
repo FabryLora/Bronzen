@@ -15,6 +15,25 @@ class UserAuthController extends Controller
         return UserResource::collection(User::all());
     }
 
+    public function allUsers()
+    {
+        return UserResource::collection(User::select('id', 'name')->get());
+    }
+
+    public function showUser(Request $request, $id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'error' => 'User not found'
+            ], 404);
+        }
+
+        return new UserResource($user);
+    }
+
+
     public function signup(Request $request)
     {
         $data = $request->validate([
@@ -27,6 +46,8 @@ class UserAuthController extends Controller
             'localidad' => 'nullable|string|max:255',
             'descuento_general' => 'nullable|integer',
             'descuento_adicional' => 'nullable|integer',
+            'descuento_adicional_2' => 'nullable|integer',
+            'tipo' => 'nullable|string',
             'autorizado' => 'nullable|boolean'
         ]);
 
@@ -41,7 +62,10 @@ class UserAuthController extends Controller
             'localidad' => $data['localidad'],
             'descuento_general' => $data['descuento_general'],
             'descuento_adicional' => $data['descuento_adicional'],
-            'autorizado' => $data['autorizado']
+            'autorizado' => $data['autorizado'],
+            'descuento_adicional_2' => $data['descuento_adicional_2'],
+            'tipo' => $data['tipo'] ?? 'cliente',
+
         ]);
         $token = $user->createToken('main')->plainTextToken;
 
@@ -123,7 +147,9 @@ class UserAuthController extends Controller
             'lista' => 'sometimes|string|max:255',
             'autorizado' => 'sometimes|boolean',
             'descuento_general' => 'sometimes|integer',
-            'descuento_adicional' => 'sometimes|integer'
+            'descuento_adicional' => 'sometimes|integer',
+            'descuento_adicional_2' => 'sometimes|integer',
+            'tipo' => 'sometimes|string',
         ]);
 
         // Solo actualiza la contraseña si se proporciona

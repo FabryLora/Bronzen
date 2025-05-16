@@ -127,6 +127,7 @@ export default function Administrator() {
             href: "#",
             subHref: [
                 { title: "Clientes", href: "/dashboard/clientes" },
+                { title: "Vendedores", href: "/dashboard/vendedores" },
                 {
                     title: "Mis Pedidos",
                     href: "/dashboard/mis-pedidos",

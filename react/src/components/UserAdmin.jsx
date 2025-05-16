@@ -26,6 +26,8 @@ export default function UserAdmin({ user }) {
         localidad: user?.localidad,
         descuento_general: user?.descuento_general,
         descuento_adicional: user?.descuento_adicional,
+        descuento_adicional_2: user?.descuento_adicional_2,
+        tipo: user?.tipo,
         autorizado: user?.autorizado,
     });
 
@@ -47,6 +49,11 @@ export default function UserAdmin({ user }) {
         formData.append("descuento_general", userInfo?.descuento_general);
         formData.append("descuento_adicional", userInfo?.descuento_adicional);
         formData.append("autorizado", userInfo?.autorizado);
+        formData.append(
+            "descuento_adicional_2",
+            userInfo?.descuento_adicional_2
+        );
+        formData.append("tipo", userInfo?.tipo);
 
         const response = adminAxiosClient.post(
             `/clientes/${user?.id}?_method=PUT`,
@@ -96,6 +103,7 @@ export default function UserAdmin({ user }) {
             >
                 {user?.descuento_adicional}%
             </td>
+            <td>{user?.tipo?.toUpperCase()}</td>
             <td className="text-center flex justify-center items-center h-[90px]">
                 <Switch
                     id={user?.id}
@@ -244,26 +252,6 @@ export default function UserAdmin({ user }) {
                                     </div>
 
                                     <div className="flex flex-col gap-2 ">
-                                        <label htmlFor="direccion">
-                                            Dirección
-                                        </label>
-                                        <input
-                                            value={userInfo.direccion}
-                                            onChange={(ev) =>
-                                                setUserInfo({
-                                                    ...userInfo,
-                                                    direccion: ev.target.value,
-                                                })
-                                            }
-                                            className="w-full h-[45px] pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
-                                            type="text"
-                                            name="direccion"
-                                            id="direccion"
-                                            required
-                                        />
-                                    </div>
-
-                                    <div className="flex flex-col gap-2 ">
                                         <label htmlFor="descuento_adicional">
                                             Descuento adicional
                                         </label>
@@ -284,6 +272,75 @@ export default function UserAdmin({ user }) {
                                             id="descuento_adicional"
                                             required
                                         />
+                                    </div>
+
+                                    <div className="flex flex-col gap-2 ">
+                                        <label htmlFor="descuento_adicional_2">
+                                            Descuento adicional 2
+                                        </label>
+                                        <input
+                                            value={
+                                                userInfo?.descuento_adicional_2
+                                            }
+                                            onChange={(ev) =>
+                                                setUserInfo({
+                                                    ...userInfo,
+                                                    descuento_adicional_2:
+                                                        ev.target.value,
+                                                })
+                                            }
+                                            className="w-full h-[45px] pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
+                                            type="text"
+                                            name="descuento_adicional_2"
+                                            id="descuento_adicional_2"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="flex flex-col gap-2 ">
+                                        <label htmlFor="direccion">
+                                            Dirección
+                                        </label>
+                                        <input
+                                            value={userInfo.direccion}
+                                            onChange={(ev) =>
+                                                setUserInfo({
+                                                    ...userInfo,
+                                                    direccion: ev.target.value,
+                                                })
+                                            }
+                                            className="w-full h-[45px] pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
+                                            type="text"
+                                            name="direccion"
+                                            id="direccion"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="tipo">
+                                            Tipo de usuario
+                                        </label>
+                                        <select
+                                            value={userInfo.tipo}
+                                            onChange={(ev) =>
+                                                setUserInfo({
+                                                    ...userInfo,
+                                                    tipo: ev.target.value,
+                                                })
+                                            }
+                                            className="w-full h-[45px] pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
+                                            name="tipo"
+                                            id="tipo"
+                                            required
+                                        >
+                                            <option value="cliente">
+                                                Cliente
+                                            </option>
+                                            <option value="vendedor">
+                                                Vendedor
+                                            </option>
+                                        </select>
                                     </div>
 
                                     <div className="flex flex-col gap-2">

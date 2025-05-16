@@ -24,8 +24,9 @@ class UserResource extends JsonResource
             'localidad' => $this->localidad,
             'descuento_general' => $this->descuento_general,
             'descuento_adicional' => $this->descuento_adicional,
+            'descuento_adicional_2' => $this->descuento_adicional_2,
+            'tipo' => $this->tipo,
             'autorizado' => $this->autorizado,
-
         ];
     }
 }

@@ -12,8 +12,16 @@ import ProductoPrivadoRowMobile from "../Components/ProductoPrivadoRowMobile";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function Pedidos() {
-    const { cart, clearCart, currentUser, userId, productos, informacion } =
-        useStateContext();
+    const {
+        cart,
+        clearCart,
+        currentUser,
+        userId,
+        productos,
+        informacion,
+        currentUserSelected,
+        currentIvaSelected,
+    } = useStateContext();
 
     const [selected, setSelected] = useState("retiro");
     const [fileName, setFileName] = useState("Seleccionar archivo");
@@ -58,8 +66,6 @@ export default function Pedidos() {
             subtotal += parseFloat(prod?.additionalInfo?.precio_descuento);
         });
 
-        console.log(cart);
-
         // Get available discounts
         const descuentoUsuario =
             currentUser?.descuento > 0 ? currentUser?.descuento / 100 : 0;
@@ -96,7 +102,7 @@ export default function Pedidos() {
         const subtotalFinal = subtotalPostGeneral - montoDescuentoRetiro;
 
         // Calculate IVA and total
-        const iva = subtotalFinal * 0.21;
+        const iva = (subtotalFinal * Number(currentIvaSelected)) / 100;
         const total = subtotalFinal + iva;
 
         // Save all values to state
@@ -107,7 +113,7 @@ export default function Pedidos() {
         setMontoDescuentoRetiro(montoDescuentoRetiro.toFixed(2));
         setIva(iva.toFixed(2));
         setTotalFinal(total.toFixed(2));
-    }, [cart, tipo_entrega, currentUser, informacion]);
+    }, [cart, tipo_entrega, currentUser, informacion, currentIvaSelected]);
 
     useEffect(() => {
         setArchivo(archivo);
@@ -168,7 +174,6 @@ export default function Pedidos() {
                 `/pedidos/${pedidoId}`
             );
             const pedidoObject = responsePedido.data.data;
-            console.log(pedidoObject);
 
             const htmlContent = ReactDOMServer.renderToString(
                 <PedidoTemplate
@@ -490,7 +495,17 @@ export default function Pedidos() {
                         )}
 
                     <div className="flex flex-row justify-between w-full">
-                        <p>IVA 21%</p>
+                        <p>
+                            IVA{" "}
+                            {Number(currentIvaSelected)?.toLocaleString(
+                                "es-AR",
+                                {
+                                    minimumFractionDigits: 0,
+                                    maximumFractionDigits: 1,
+                                }
+                            )}
+                            %
+                        </p>
                         <p>
                             $
                             {Number(iva)?.toLocaleString("es-AR", {

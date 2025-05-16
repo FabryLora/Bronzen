@@ -28,6 +28,8 @@ class User extends Authenticatable
         'localidad',
         'descuento_general',
         'descuento_adicional',
+        'descuento_adicional_2',
+        'tipo',
         'autorizado',
     ];
 

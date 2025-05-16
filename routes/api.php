@@ -26,6 +26,7 @@ use App\Http\Controllers\SomosBronzenInicioController;
 use App\Http\Controllers\SubCategoriaController;
 use App\Http\Controllers\SubProductoController;
 use App\Http\Controllers\SubscriberController;
+use App\Http\Controllers\VendedorAuthController;
 use App\Models\Provincia;
 use Illuminate\Support\Facades\Route;
 
@@ -35,7 +36,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [UserAuthController::class, 'logout']);
     Route::get('/me', [UserAuthController::class, 'me']);
-
+    Route::get('/allusers', [UserAuthController::class, 'allUsers']);
+    Route::get('/showuser/{id}', [UserAuthController::class, 'showUser']);
     Route::post('/sendpedido', [SendPedidoController::class, 'sendReactEmail']);
 
     //Pedidos
@@ -91,6 +93,8 @@ Route::get('/descargar-archivo/{id}', [DescargarArchivo::class, 'descargarArchiv
 
 //cliengo
 Route::get('/cliengo-config', [CliengoController::class, 'getCliengoConfig']);
+
+
 
 // Rutas para admin
 Route::prefix('admin')->group(function () {

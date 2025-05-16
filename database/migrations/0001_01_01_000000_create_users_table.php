@@ -22,7 +22,9 @@ return new class extends Migration
             $table->string("localidad")->nullable();
             $table->unsignedInteger("descuento_general")->nullable();
             $table->unsignedInteger("descuento_adicional")->nullable();
+            $table->unsignedInteger("descuento_adicional_2")->nullable();
             $table->boolean('autorizado')->default(false);
+            $table->string('tipo')->default('cliente');
             $table->rememberToken();
             $table->timestamps();
         });

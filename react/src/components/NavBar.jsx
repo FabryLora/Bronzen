@@ -17,6 +17,7 @@ export default function NavBar() {
         userToken,
         provincias,
         catalogo,
+        setVendedorView,
     } = useStateContext();
 
     const location = useLocation();
@@ -122,6 +123,9 @@ export default function NavBar() {
 
             // Actualizar estado con datos del usuario
             setCurrentUser(data.user);
+            if (data.user?.tipo == "vendedor") {
+                setVendedorView(true);
+            }
             setUserToken(data.token);
 
             // Puedes hacer redirección aquí si es necesario
@@ -915,7 +919,7 @@ export default function NavBar() {
                                     initial={{ y: -30, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
                                     exit={{ y: -30, opacity: 0 }}
-                                    className={`absolute bg-white flex justify-start items-start p-5 flex-col right-0 top-20 w-[367px] h-[439px] rounded-md shadow-lg gap-7 ${
+                                    className={`absolute bg-white flex justify-start items-start p-5 flex-col right-0 top-20 w-[367px] h-fit rounded-md shadow-lg gap-7 ${
                                         userToken ? "h-fit" : ""
                                     }`}
                                 >
@@ -934,6 +938,7 @@ export default function NavBar() {
                                             <h2 className="text-2xl">
                                                 Iniciar Sesion
                                             </h2>
+
                                             <div className="flex flex-col gap-2">
                                                 <label
                                                     className="text-[16px]"
@@ -980,12 +985,27 @@ export default function NavBar() {
                                     )}
 
                                     {userToken && (
-                                        <button
-                                            onClick={logout}
-                                            className="w-[327px] h-[51px] bg-red-500 text-white rounded-full"
-                                        >
-                                            Cerrar Sesion
-                                        </button>
+                                        <div className="w-full flex flex-col gap-3">
+                                            {currentUser?.tipo ==
+                                                "vendedor" && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        setVendedorView(true)
+                                                    }
+                                                    className="w-[327px] h-[51px] bg-primary-orange text-white rounded-full"
+                                                >
+                                                    Menu de vendedor
+                                                </button>
+                                            )}
+
+                                            <button
+                                                onClick={logout}
+                                                className="w-[327px] h-[51px] bg-red-500 text-white rounded-full"
+                                            >
+                                                Cerrar Sesion
+                                            </button>
+                                        </div>
                                     )}
                                     {!userToken && (
                                         <>

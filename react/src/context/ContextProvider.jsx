@@ -1,3 +1,4 @@
+import { all } from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 import adminAxiosClient from "../adminAxiosClient";
 import axiosClient from "../axios";
@@ -51,6 +52,14 @@ const StateContext = createContext({
     subscribers: [],
     fetchSubscribers: () => {},
     subLoading: false,
+    allUsers: [],
+    setAllUsers: () => {},
+    currentUserSelected: {},
+    setCurrentUserSelected: () => {},
+    currentIvaSelected: "",
+    setCurrentIvaSelected: () => {},
+    vendedorView: true,
+    setVendedorView: () => {},
 });
 
 export const ContextProvider = ({ children }) => {
@@ -59,12 +68,17 @@ export const ContextProvider = ({ children }) => {
     const [userToken, _setUserToken] = useState(
         localStorage.getItem("TOKEN") || ""
     );
-
+    const [vendedorView, setVendedorView] = useState(
+        currentUser?.tipo == "vendedor" ? true : false
+    );
     // Admin state
     const [currentAdmin, setCurrentAdmin] = useState({});
     const [adminToken, _setAdminToken] = useState(
         localStorage.getItem("ADMIN_TOKEN") || ""
     );
+    const [allUsers, setAllUsers] = useState([]);
+    const [currentUserSelected, setCurrentUserSelected] = useState({});
+    const [currentIvaSelected, setCurrentIvaSelected] = useState("");
 
     const [logos, setLogos] = useState({});
     const [subLoading, setSubLoading] = useState(false);
@@ -276,6 +290,14 @@ export const ContextProvider = ({ children }) => {
     return (
         <StateContext.Provider
             value={{
+                vendedorView,
+                setVendedorView,
+                allUsers,
+                setAllUsers,
+                currentUserSelected,
+                setCurrentUserSelected,
+                currentIvaSelected,
+                setCurrentIvaSelected,
                 subLoading,
                 subscribers,
                 fetchSubscribers,
