@@ -38,8 +38,6 @@ export default function SubCategorias() {
         );
     }
 
-    console.log(subProductos);
-
     return (
         <div className="grid grid-cols-4 max-sm:grid-cols-1 max-sm:gap-8 justify-items-center py-8">
             {subCategorias?.map((subCategoria) => (

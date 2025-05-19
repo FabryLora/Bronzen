@@ -120,10 +120,13 @@ export default function PrivadaLayout() {
                                             </p>
                                             <div className="flex flex-col gap-2">
                                                 {allUsers
-                                                    ?.filter((u) =>
-                                                        u?.name?.includes(
-                                                            searchValue
-                                                        )
+                                                    ?.filter(
+                                                        (u) =>
+                                                            u?.name?.includes(
+                                                                searchValue
+                                                            ) &&
+                                                            u?.tipo !=
+                                                                "vendedor"
                                                     )
                                                     ?.map((user) => (
                                                         <button

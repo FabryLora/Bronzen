@@ -103,7 +103,7 @@ export default function UserAdmin({ user }) {
             >
                 {user?.descuento_adicional}%
             </td>
-            <td>{user?.tipo?.toUpperCase()}</td>
+            <td className="text-center">{user?.tipo?.toUpperCase()}</td>
             <td className="text-center flex justify-center items-center h-[90px]">
                 <Switch
                     id={user?.id}

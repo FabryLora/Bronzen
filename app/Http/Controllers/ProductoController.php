@@ -67,7 +67,15 @@ class ProductoController extends Controller
 
     public function ProductoPorName($name)
     {
-        $productos = Producto::orderBy('orden', 'asc')->where('name', 'like', '%' . $name . '%')->with('subProductos')->get();
+        $productos = Producto::orderBy('orden', 'asc')
+            ->where(function ($query) use ($name) {
+                $query->where('name', 'like', '%' . $name . '%')
+                    ->orWhereHas('subProductos', function ($subQuery) use ($name) {
+                        $subQuery->where('code', 'like', '%' . $name . '%');
+                    });
+            })
+            ->with('subProductos')
+            ->get();
         return ProductoResource::collection($productos);
     }
 

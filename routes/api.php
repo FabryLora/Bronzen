@@ -25,6 +25,7 @@ use App\Http\Controllers\SendPedidoController;
 use App\Http\Controllers\SomosBronzenInicioController;
 use App\Http\Controllers\SubCategoriaController;
 use App\Http\Controllers\SubProductoController;
+use App\Http\Controllers\SubProductoImageController;
 use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\VendedorAuthController;
 use App\Models\Provincia;
@@ -84,7 +85,7 @@ Route::get('/busqueda/{id}', [ProductoController::class, 'ProductoPorName']);
 Route::get('/facturas/{id}', [FacturaController::class, 'FacturaByPedido']);
 Route::get('/facturas-user/{id}', [FacturaController::class, 'FacturaByUser']);
 
-
+Route::post('/subproductos/queue-assign-images', [SubProductoImageController::class, 'dispatchAssignImagesJob']);
 
 //download
 Route::get('/catalogo/download/{id}', [CatalogoController::class, 'downloadFile']);
