@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import ImageSlider from "./ImageSlider";
 
 export default function NovedadesInicio() {
@@ -22,9 +23,12 @@ export default function NovedadesInicio() {
                             {year}
                         </p>
                     </div>
-                    <button className="bg-primary-orange font-bold text-white h-[52px] w-[169px] rounded-full text-sm">
+                    <Link
+                        to={"/novedades"}
+                        className="bg-primary-orange font-bold text-white h-[52px] w-[169px] rounded-full text-sm flex items-center justify-center"
+                    >
                         VER NOVEDADES
-                    </button>
+                    </Link>
                 </div>
             </div>
         </div>

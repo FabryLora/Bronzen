@@ -42,15 +42,6 @@ export default function ProductosPrivado() {
     const [carrito, setCarrito] = useState(false);
     const [searchValue, setsearchValue] = useState("");
 
-    useEffect(() => {
-        fetchSubProductos();
-        if (currentUser?.tipo == "vendedor") {
-            axiosClient.get("/allusers").then(({ data }) => {
-                setAllUsers(data.data);
-            });
-        }
-    }, []);
-
     // Set initial filtered products when subProductos changes
     useEffect(() => {
         if (subProductos && !isFiltered) {

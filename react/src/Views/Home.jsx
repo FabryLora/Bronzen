@@ -14,7 +14,14 @@ export default function Home() {
         <>
             <BannerInicio />
             <NovedadesInicio />
-            <NuestrosProductos />
+            <NuestrosProductos
+                additionalStyles={{
+                    title: "text-white",
+                    searchBorder: "border-white",
+                    input: "text-white",
+                    loupe: true,
+                }}
+            />
             <Catalogo />
             <SomosBronzen />
         </>

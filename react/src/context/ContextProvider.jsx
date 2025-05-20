@@ -77,8 +77,10 @@ export const ContextProvider = ({ children }) => {
         localStorage.getItem("ADMIN_TOKEN") || ""
     );
     const [allUsers, setAllUsers] = useState([]);
-    const [currentUserSelected, setCurrentUserSelected] = useState({});
-    const [currentIvaSelected, setCurrentIvaSelected] = useState("");
+    const [currentUserSelected, setCurrentUserSelected] = useState(
+        localStorage.getItem("currentUserSelected") || {}
+    );
+    const [currentIvaSelected, setCurrentIvaSelected] = useState("21");
 
     const [logos, setLogos] = useState({});
     const [subLoading, setSubLoading] = useState(false);

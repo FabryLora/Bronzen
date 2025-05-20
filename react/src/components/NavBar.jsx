@@ -53,24 +53,12 @@ export default function NavBar() {
     const sidebarRef = useRef(null);
 
     useEffect(() => {
-        const handleScroll = () => {
-            setScroll(window.scrollY > 50); // Cambia cuando baja 50px
-        };
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
-
-    useEffect(() => {
         function handleClickOutside(event) {
             if (userRef.current && !userRef.current.contains(event.target)) {
                 setLoginView(false);
-            }
-            if (
-                userSignRef.current &&
-                !userSignRef.current.contains(event.target)
-            ) {
                 setSignupView(false);
             }
+
             if (
                 sidebarRef.current &&
                 !sidebarRef.current.contains(event.target)
@@ -83,6 +71,14 @@ export default function NavBar() {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
+    }, []);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setScroll(window.scrollY > 50); // Cambia cuando baja 50px
+        };
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
     const login = async (ev) => {
@@ -452,6 +448,7 @@ export default function NavBar() {
                                 <div className="flex flex-col items-center justify-center gap-3 w-full">
                                     <p>¿No tenés usuario?</p>
                                     <button
+                                        type="button"
                                         onClick={() => {
                                             setloginMobileView(false);
                                             setSignupMobileView(true);
@@ -894,7 +891,7 @@ export default function NavBar() {
                         )}
                     </AnimatePresence>
 
-                    <div className="relative">
+                    <div ref={userRef} className="relative">
                         <button
                             onClick={() => {
                                 if (loginView || signupView) {
@@ -915,7 +912,6 @@ export default function NavBar() {
                         <AnimatePresence>
                             {loginView && (
                                 <motion.form
-                                    ref={userRef}
                                     initial={{ y: -30, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
                                     exit={{ y: -30, opacity: 0 }}
@@ -1013,6 +1009,7 @@ export default function NavBar() {
                                             <div className="flex flex-row justify-center gap-3 w-full">
                                                 <p>No estas registrado?</p>
                                                 <button
+                                                    type="button"
                                                     onClick={() => {
                                                         setLoginView(false);
                                                         setSignupView(true);
@@ -1030,7 +1027,6 @@ export default function NavBar() {
                         <AnimatePresence>
                             {signupView && (
                                 <motion.div
-                                    ref={userSignRef}
                                     initial={{ opacity: 0, y: -30 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: -30 }}

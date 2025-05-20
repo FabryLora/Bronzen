@@ -2,10 +2,11 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import loupe from "../assets/icons/WhiteLoupe.png";
+import loupeBlack from "../assets/icons/loupe.png";
 import { useStateContext } from "../context/ContextProvider";
 import LineaComponent from "./LineaComponent";
 
-export default function NuestrosProductos() {
+export default function NuestrosProductos({ additionalStyles }) {
     const { categorias } = useStateContext();
 
     const [orangeBorder, setOrangeBorder] = useState(false);
@@ -18,7 +19,9 @@ export default function NuestrosProductos() {
     }, []);
 
     return (
-        <div className="min-h-[1043px] max-sm:min-h-0 bg-[#5b6771]">
+        <div
+            className={`min-h-[1043px] max-sm:min-h-0 bg-[#5b6771] ${additionalStyles?.container}`}
+        >
             <div
                 className={`w-[1200px] max-sm:w-full max-sm:px-4 mx-auto flex flex-col gap-7 ${
                     location.pathname.includes("/productos")
@@ -27,18 +30,20 @@ export default function NuestrosProductos() {
                 }`}
             >
                 <div className="flex flex-row w-full">
-                    <h2 className="text-white font-bold text-5xl max-sm:text-3xl w-2/3">
+                    <h2
+                        className={` font-bold text-5xl max-sm:text-3xl w-2/3 ${additionalStyles?.title}`}
+                    >
                         NUESTROS PRODUCTOS
                     </h2>
                     <div className="w-1/3 flex justify-end max-sm:justify-center">
                         <div
-                            className={`w-[300px] max-sm:w-full flex flex-row gap-2 items-center border-white border-b-[2px]  justify-end ${
+                            className={`w-[300px] max-sm:w-full flex flex-row gap-2 items-center  border-b-[2px]  justify-end ${
                                 orangeBorder ? "border-primary-orange" : ""
-                            }`}
+                            } ${additionalStyles?.searchBorder}`}
                         >
                             <input
                                 onChange={(e) => setSearchValue(e.target.value)}
-                                className="outline-none w-full text-white"
+                                className={`outline-none w-full  ${additionalStyles?.input}`}
                                 type="text"
                                 placeholder="Busca por código o descripción"
                             />
@@ -48,7 +53,11 @@ export default function NuestrosProductos() {
                             >
                                 <img
                                     className="w-[35px] h-auto"
-                                    src={loupe}
+                                    src={
+                                        additionalStyles?.loupe
+                                            ? loupe
+                                            : loupeBlack
+                                    }
                                     alt=""
                                 />
                             </Link>

@@ -20,6 +20,9 @@ export default function PrivadaLayout() {
         setCurrentIvaSelected,
         allUsers,
         setCurrentUserSelected,
+        currentUser,
+        fetchSubProductos,
+        setAllUsers,
     } = useStateContext();
 
     const [seacrhClientesView, setSeacrhClientesView] = useState(false);
@@ -30,6 +33,21 @@ export default function PrivadaLayout() {
             setCurrentUser(data);
         });
         fetchInformacion();
+    }, []);
+
+    useEffect(() => {
+        fetchSubProductos();
+        if (currentUser?.tipo == "vendedor") {
+            axiosClient.get("/allusers").then(({ data }) => {
+                setAllUsers(data.data);
+            });
+        }
+    }, []);
+
+    useEffect(() => {
+        setCurrentUserSelected(
+            JSON.parse(localStorage.getItem("currentLocalUser"))
+        );
     }, []);
 
     if (!userToken) {
@@ -50,9 +68,14 @@ export default function PrivadaLayout() {
 
             // Esperar la respuesta
             const response = await promesa;
-            console.log(response);
 
             // Ahora puedes acceder a los datos
+
+            localStorage.setItem(
+                "currentLocalUser",
+                JSON.stringify(response.data.data)
+            );
+
             setCurrentUserSelected(response.data.data);
         } catch (error) {
             console.log(error);
@@ -82,6 +105,9 @@ export default function PrivadaLayout() {
                                 transition={{ duration: 0.3 }}
                                 className="bg-white rounded-lg p-6 w-[300px] sm:w-[500px] flex flex-col gap-4"
                             >
+                                <h2 className="text-xl font-bold">
+                                    Vista de vendedor
+                                </h2>
                                 <div className="flex flex-col gap-2 relative">
                                     <label htmlFor="cliente">
                                         Elegir cliente
