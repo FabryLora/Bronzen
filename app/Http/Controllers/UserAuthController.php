@@ -17,7 +17,7 @@ class UserAuthController extends Controller
 
     public function allUsers()
     {
-        return UserResource::collection(User::select('id', 'name')->get());
+        return UserResource::collection(User::select('id', 'name', 'tipo')->get());
     }
 
     public function showUser(Request $request, $id)

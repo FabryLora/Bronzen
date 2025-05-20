@@ -173,7 +173,14 @@ export default function Pedidos() {
             setIva(iva.toFixed(2));
             setTotalFinal(total.toFixed(2));
         }
-    }, [cart, tipo_entrega, currentUser, informacion, currentIvaSelected]);
+    }, [
+        cart,
+        tipo_entrega,
+        currentUser,
+        informacion,
+        currentIvaSelected,
+        currentUserSelected,
+    ]);
 
     useEffect(() => {
         setArchivo(archivo);

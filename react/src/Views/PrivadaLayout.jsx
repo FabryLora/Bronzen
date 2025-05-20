@@ -20,7 +20,6 @@ export default function PrivadaLayout() {
         setCurrentIvaSelected,
         allUsers,
         setCurrentUserSelected,
-        currentUser,
         fetchSubProductos,
         setAllUsers,
     } = useStateContext();
@@ -31,17 +30,16 @@ export default function PrivadaLayout() {
     useEffect(() => {
         axiosClient.get("/me").then(({ data }) => {
             setCurrentUser(data);
+            if (data?.tipo == "vendedor") {
+                axiosClient.get("/allusers").then(({ data }) => {
+                    setAllUsers(
+                        data.data.filter((user) => user?.tipo !== "vendedor")
+                    );
+                });
+            }
         });
         fetchInformacion();
-    }, []);
-
-    useEffect(() => {
         fetchSubProductos();
-        if (currentUser?.tipo == "vendedor") {
-            axiosClient.get("/allusers").then(({ data }) => {
-                setAllUsers(data.data);
-            });
-        }
     }, []);
 
     useEffect(() => {
