@@ -59,120 +59,82 @@ export default function Pedidos() {
         }
     };
 
+    console.log(currentUserSelected);
+
     useEffect(() => {
-        if (currentUser?.tipo === "vendedor") {
-            let subtotal = 0;
+        const user =
+            currentUser?.tipo === "vendedor"
+                ? currentUserSelected
+                : currentUser;
+        if (!user) return;
 
-            cart.forEach((prod) => {
-                subtotal += parseFloat(prod?.additionalInfo?.precio_descuento);
-            });
+        const isRetiroCliente = tipo_entrega === "retiro cliente";
+        const repartoDescuento =
+            isRetiroCliente && informacion?.descuento_reparto > 0
+                ? informacion.descuento_reparto / 100
+                : 0;
 
-            // Get available discounts
-            const descuentoUsuario =
-                currentUserSelected?.descuento > 0
-                    ? currentUserSelected?.descuento / 100
-                    : 0;
+        const descuentoGeneral =
+            informacion?.descuento_general > 0
+                ? informacion.descuento_general / 100
+                : 0;
+        const descuentoAdicional =
+            user?.descuento_adicional > 0 ? user.descuento_adicional / 100 : 0;
+        const descuentoAdicional2 =
+            user?.descuento_adicional_2 > 0
+                ? user.descuento_adicional_2 / 100
+                : 0;
 
-            // Combinamos el descuento general con el descuento adicional
-            const descuentoGeneral =
-                informacion?.descuento_general > 0 ||
-                currentUserSelected?.descuento_adicional > 0
-                    ? (informacion?.descuento_general || 0) +
-                      (currentUserSelected?.descuento_adicional || 0)
-                    : 0;
+        let subtotalGlobal = 0;
+        let descuentoGeneralTotal = 0;
+        let descuentoAdicionalTotal = 0;
+        let descuentoAdicional2Total = 0;
+        let descuentoRetiroTotal = 0;
 
-            // Convertimos a porcentaje solo una vez después de sumar
-            const descuentoGeneralPorcentaje =
-                descuentoGeneral > 0 ? descuentoGeneral / 100 : 0;
+        cart.forEach((prod) => {
+            let precio = parseFloat(
+                prod?.additionalInfo?.precio_descuento || 0
+            );
+            subtotalGlobal += precio;
 
-            const descuentoRetiro =
-                tipo_entrega === "retiro cliente" &&
-                informacion?.descuento_reparto > 0
-                    ? informacion?.descuento_reparto / 100
-                    : 0;
+            // Aplicar descuentos en cascada
+            const d1 = precio * descuentoGeneral;
+            const p1 = precio - d1;
 
-            // Apply customer discount (if any)
-            const montoDescuentoUsuario = subtotal * descuentoUsuario;
-            const subtotalPostUsuario = subtotal - montoDescuentoUsuario;
+            const d2 = p1 * descuentoAdicional;
+            const p2 = p1 - d2;
 
-            // Apply general discount (now includes additional discount)
-            const montoDescuentoGeneral =
-                subtotalPostUsuario * descuentoGeneralPorcentaje;
-            const subtotalPostGeneral =
-                subtotalPostUsuario - montoDescuentoGeneral;
+            const d3 = p2 * descuentoAdicional2;
+            const p3 = p2 - d3;
 
-            // Apply pickup discount - calculated on the amount AFTER general discount
-            const montoDescuentoRetiro = subtotalPostGeneral * descuentoRetiro;
-            const subtotalFinal = subtotalPostGeneral - montoDescuentoRetiro;
+            const d4 = p3 * repartoDescuento;
+            const p4 = p3 - d4;
 
-            // Calculate IVA and total
-            const iva = (subtotalFinal * Number(currentIvaSelected)) / 100;
-            const total = subtotalFinal + iva;
+            // Acumular descuentos
+            descuentoGeneralTotal += d1;
+            descuentoAdicionalTotal += d2;
+            descuentoAdicional2Total += d3;
+            descuentoRetiroTotal += d4;
+        });
 
-            // Save all values to state
-            setSubtotal(subtotal.toFixed(2));
-            setSubtotalConDescuentoUsuario(montoDescuentoUsuario.toFixed(2));
-            // Ya no guardamos el descuento adicional por separado
-            setSubtotalConDescuentoGeneral(montoDescuentoGeneral.toFixed(2));
-            setMontoDescuentoRetiro(montoDescuentoRetiro.toFixed(2));
-            setIva(iva.toFixed(2));
-            setTotalFinal(total.toFixed(2));
-        } else {
-            let subtotal = 0;
+        const subtotalFinal =
+            subtotalGlobal -
+            (descuentoGeneralTotal +
+                descuentoAdicionalTotal +
+                descuentoAdicional2Total +
+                descuentoRetiroTotal);
 
-            cart.forEach((prod) => {
-                subtotal += parseFloat(prod?.additionalInfo?.precio_descuento);
-            });
+        const iva = (subtotalFinal * Number(currentIvaSelected)) / 100;
+        const total = subtotalFinal + iva;
 
-            // Get available discounts
-            const descuentoUsuario =
-                currentUser?.descuento > 0 ? currentUser?.descuento / 100 : 0;
-
-            // Combinamos el descuento general con el descuento adicional
-            const descuentoGeneral =
-                informacion?.descuento_general > 0 ||
-                currentUser?.descuento_adicional > 0
-                    ? (informacion?.descuento_general || 0) +
-                      (currentUser?.descuento_adicional || 0)
-                    : 0;
-
-            // Convertimos a porcentaje solo una vez después de sumar
-            const descuentoGeneralPorcentaje =
-                descuentoGeneral > 0 ? descuentoGeneral / 100 : 0;
-
-            const descuentoRetiro =
-                tipo_entrega === "retiro cliente" &&
-                informacion?.descuento_reparto > 0
-                    ? informacion?.descuento_reparto / 100
-                    : 0;
-
-            // Apply customer discount (if any)
-            const montoDescuentoUsuario = subtotal * descuentoUsuario;
-            const subtotalPostUsuario = subtotal - montoDescuentoUsuario;
-
-            // Apply general discount (now includes additional discount)
-            const montoDescuentoGeneral =
-                subtotalPostUsuario * descuentoGeneralPorcentaje;
-            const subtotalPostGeneral =
-                subtotalPostUsuario - montoDescuentoGeneral;
-
-            // Apply pickup discount - calculated on the amount AFTER general discount
-            const montoDescuentoRetiro = subtotalPostGeneral * descuentoRetiro;
-            const subtotalFinal = subtotalPostGeneral - montoDescuentoRetiro;
-
-            // Calculate IVA and total
-            const iva = (subtotalFinal * Number(currentIvaSelected)) / 100;
-            const total = subtotalFinal + iva;
-
-            // Save all values to state
-            setSubtotal(subtotal.toFixed(2));
-            setSubtotalConDescuentoUsuario(montoDescuentoUsuario.toFixed(2));
-            // Ya no guardamos el descuento adicional por separado
-            setSubtotalConDescuentoGeneral(montoDescuentoGeneral.toFixed(2));
-            setMontoDescuentoRetiro(montoDescuentoRetiro.toFixed(2));
-            setIva(iva.toFixed(2));
-            setTotalFinal(total.toFixed(2));
-        }
+        setSubtotal(subtotalGlobal.toFixed(2));
+        setSubtotalConDescuentoUsuario(
+            (descuentoAdicionalTotal + descuentoAdicional2Total).toFixed(2)
+        );
+        setSubtotalConDescuentoGeneral(descuentoGeneralTotal.toFixed(2));
+        setMontoDescuentoRetiro(descuentoRetiroTotal.toFixed(2));
+        setIva(iva.toFixed(2));
+        setTotalFinal(total.toFixed(2));
     }, [
         cart,
         tipo_entrega,
@@ -368,7 +330,7 @@ export default function Pedidos() {
                         to={"/privado/productos"}
                         className="px-6 py-3 border border-primary-orange text-primary-orange font-semibold rounded-full hover:bg-primary-orange hover:text-white transition duration-300"
                     >
-                        Agregar mas productos
+                        Agregar más productos
                     </Link>
                 </div>
             </div>
@@ -546,12 +508,16 @@ export default function Pedidos() {
                     {informacion?.descuento_general > 0 && (
                         <div className="flex flex-row justify-between w-full text-[#308C05]">
                             <p>
-                                Descuento Cliente{" "}
+                                Descuento{" "}
                                 {informacion?.descuento_general +
                                     (currentUser?.tipo === "vendedor"
                                         ? currentUserSelected
                                         : currentUser
-                                    )?.descuento_adicional}
+                                    )?.descuento_adicional +
+                                    (currentUser?.tipo === "vendedor"
+                                        ? currentUserSelected
+                                        : currentUser
+                                    )?.descuento_adicional_2}
                                 %
                             </p>
                             <p>

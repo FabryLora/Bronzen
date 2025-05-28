@@ -151,7 +151,10 @@ export default function ProductosPrivado() {
                                     <option selected disabled value="">
                                         Seleccionar categoría
                                     </option>
-                                    <option className="max-sm:" value="">
+                                    <option
+                                        className="max-sm:text-black"
+                                        value=""
+                                    >
                                         Todas las categorias
                                     </option>
                                     {categorias?.map((cat) => (
@@ -221,7 +224,7 @@ export default function ProductosPrivado() {
                                 </label>
                                 <input
                                     onChange={(e) => setCodigo(e.target.value)}
-                                    placeholder="Código OEM"
+                                    placeholder="Código"
                                     id="codigo"
                                     type="text"
                                     className="h-[42px] max-sm:w-full outline outline-gray-200 focus:outline-primary-orange transition duration-300 rounded-xl pl-3"

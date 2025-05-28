@@ -83,7 +83,7 @@ export default function Footer() {
     ];
 
     return (
-        <footer className="bg-[#d7d8da] text-[#62707b] h-[544px] max-sm:h-auto">
+        <footer className="bg-[#d7d8da] text-[#62707b] h-[544px] max-sm:h-auto max-sm:text-center">
             <div className="w-[1200px] max-sm:w-full max-sm:px-4 mx-auto flex flex-col justify-between h-full">
                 <div className="flex flex-col py-5 items-center">
                     <div className="flex flex-col gap-4 justify-center items-center">
@@ -158,7 +158,7 @@ export default function Footer() {
                             <h2 className="font-semibold text-[#333333]">
                                 Información
                             </h2>
-                            <ul className="grid grid-cols-2 grid-flow-col grid-rows-4 gap-y-2 w-full text-[#62707b] text-sm ">
+                            <ul className="grid grid-cols-2 grid-flow-col grid-rows-4 gap-y-2 w-full text-[#62707b] text-sm max-sm:grid-cols-1">
                                 {infoLinks.map((link, index) => (
                                     <Link
                                         className="hover:text-[#c96] transition duration-300"
@@ -174,7 +174,7 @@ export default function Footer() {
                             <h2 className="font-semibold text-[#333333]">
                                 Contacto
                             </h2>
-                            <ul className="grid grid-cols-1 grid-rows-4 gap-y-2 w-full text-[#62707b] text-sm ">
+                            <ul className="grid grid-cols-1 grid-rows-4 gap-y-2 w-full text-[#62707b] text-sm max-sm:w-full max-sm:justify-items-center">
                                 {informacionLinks.map((link, index) => (
                                     <div
                                         key={index}

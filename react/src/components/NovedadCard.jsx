@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import defaultPhoto from "../assets/logos/bronzen-logo.png";
 
 export default function NovedadCard({ prod }) {
     return (
@@ -9,8 +10,12 @@ export default function NovedadCard({ prod }) {
         >
             <div className="w-[247px] min-h-[271px] border-b-[3px] border-primary-orange">
                 <img
-                    className="w-full h-full object-cover"
-                    src={prod?.image}
+                    className="w-full h-full object-contain"
+                    src={
+                        prod?.subProductos?.filter(
+                            (sub) => sub?.image != null
+                        )[0]?.image || defaultPhoto
+                    }
                     alt=""
                 />
             </div>

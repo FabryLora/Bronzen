@@ -11,10 +11,18 @@ import defaultPhoto from "../assets/logos/bronzen-logo.png";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function ProductoPrivadoRow({ productoObject }) {
-    const { cart, addToCart, removeFromCart } = useStateContext();
+    const {
+        cart,
+        addToCart,
+        removeFromCart,
+        currentUser,
+        currentUserSelected,
+        informacion,
+    } = useStateContext();
     const [precioConDescuento, setPrecioConDescuento] = useState();
     const [oferta, setOferta] = useState(false);
     const location = useLocation();
+    const [precioConDescuentoBefore, setPrecioConDescuentoBefore] = useState();
 
     const [cantidad, setCantidad] = useState(
         cart?.find((prod) => prod?.id == productoObject?.id)?.additionalInfo
@@ -23,25 +31,55 @@ export default function ProductoPrivadoRow({ productoObject }) {
 
     useEffect(() => {
         let precioConDescuento;
+        let precioConDescuentoReal;
+        const user =
+            !currentUser?.tipo === "vendedor"
+                ? currentUser
+                : currentUserSelected;
         if (
             cantidad >= productoObject?.min_oferta &&
             productoObject?.min_oferta != null
         ) {
-            setOferta(true);
-            precioConDescuento =
+            precioConDescuentoReal =
                 Number(productoObject?.precio_de_oferta) -
                 (Number(productoObject?.precio_de_oferta) *
                     Number(productoObject?.descuento)) /
                     100;
+            setOferta(true);
+            precioConDescuento = Number(productoObject?.precio_de_oferta);
+            let p1 =
+                precioConDescuento * (informacion?.descuento_general / 100);
+            let p2 =
+                (precioConDescuento - p1) * (user?.descuento_adicional / 100);
+            let p3 =
+                (precioConDescuento - p1 - p2) *
+                (user?.descuento_adicional_2 / 100);
+            let p4 =
+                (precioConDescuento - p1 - p2 - p3) *
+                (informacion?.descuento_reparto / 100);
+            precioConDescuento -= p1 + p2 + p3 + p4;
         } else {
             setOferta(false);
-            precioConDescuento =
+            precioConDescuentoReal =
                 Number(productoObject?.precio_de_lista) -
                 (Number(productoObject?.precio_de_lista) *
                     Number(productoObject?.descuento)) /
                     100;
-        }
+            precioConDescuento = Number(productoObject?.precio_de_lista);
 
+            let p1 =
+                precioConDescuento * (informacion?.descuento_general / 100);
+            let p2 =
+                (precioConDescuento - p1) * (user?.descuento_adicional / 100);
+            let p3 =
+                (precioConDescuento - p1 - p2) *
+                (user?.descuento_adicional_2 / 100);
+            let p4 =
+                (precioConDescuento - p1 - p2 - p3) *
+                (informacion?.descuento_reparto / 100);
+            precioConDescuento -= p1 + p2 + p3 + p4;
+        }
+        setPrecioConDescuentoBefore(precioConDescuentoReal * cantidad);
         setPrecioConDescuento(precioConDescuento * cantidad);
     }, [productoObject, cantidad]);
 
@@ -51,10 +89,10 @@ export default function ProductoPrivadoRow({ productoObject }) {
         if (existsInCart) {
             addToCart(productoObject, {
                 cantidad,
-                precio_descuento: precioConDescuento,
+                precio_descuento: precioConDescuentoBefore,
             });
         }
-    }, [cantidad, precioConDescuento]);
+    }, [cantidad, precioConDescuentoBefore]);
 
     const [hoverCart, setHoverCart] = useState(false);
 
@@ -112,7 +150,16 @@ export default function ProductoPrivadoRow({ productoObject }) {
                 })}
             </p>
             <p className="text-center self-center text-[#308C05] font-bold">
-                {productoObject?.descuento}%
+                {!currentUserSelected
+                    ? productoObject?.descuento +
+                      currentUser?.descuento_adicional +
+                      currentUser?.descuento_adicional_2 +
+                      informacion?.descuento_general
+                    : productoObject?.descuento +
+                      currentUserSelected?.descuento_adicional +
+                      currentUserSelected?.descuento_adicional_2 +
+                      informacion?.descuento_general}
+                %
             </p>
             <p className="text-center self-center relative">
                 {oferta && (

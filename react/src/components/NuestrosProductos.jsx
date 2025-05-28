@@ -29,13 +29,13 @@ export default function NuestrosProductos({ additionalStyles }) {
                         : "py-20 max-sm:py-10"
                 }`}
             >
-                <div className="flex flex-row w-full">
+                <div className="flex flex-row w-full max-sm:flex-col max-sm:items-center max-sm:text-center max-sm:gap-6">
                     <h2
                         className={` font-bold text-5xl max-sm:text-3xl w-2/3 ${additionalStyles?.title}`}
                     >
                         NUESTROS PRODUCTOS
                     </h2>
-                    <div className="w-1/3 flex justify-end max-sm:justify-center">
+                    <div className="w-1/3 flex justify-end max-sm:justify-center max-sm:w-full">
                         <div
                             className={`w-[300px] max-sm:w-full flex flex-row gap-2 items-center  border-b-[2px]  justify-end ${
                                 orangeBorder ? "border-primary-orange" : ""

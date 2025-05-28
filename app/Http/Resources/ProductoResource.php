@@ -22,9 +22,9 @@ class ProductoResource extends JsonResource
             'featured' => $this->featured,
             'image' => $this->image ? url("storage/{$this->image}") : null,
             'plano' => $this->plano ? url("storage/{$this->plano}") : null,
-            'subCategoria' => $this->subCategoria->name,
-            'categoria' => $this->subCategoria->categorias->name,
-            'categoriaId' => $this->subCategoria->categorias->id,
+            'subCategoria' => $this->subCategoria ? $this->subCategoria->name : null,
+            'categoria' => $this->subCategoria ? $this->subCategoria->categorias->name : null,
+            'categoriaId' => $this->subCategoria ? $this->subCategoria->categorias->id : null,
             'subCategoriaId' => $this->sub_categoria_id,
             'subProductos' => SubProductoResource::collection($this->whenLoaded("subProductos")),
         ];

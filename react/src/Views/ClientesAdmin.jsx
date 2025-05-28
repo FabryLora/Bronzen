@@ -32,6 +32,7 @@ export default function ClientesAdmin() {
         direccion: "",
         provincia: "",
         localidad: "",
+        telefono: "",
         descuento_general: 0,
         descuento_adicional: 0,
         descuento_adicional_2: 0,
@@ -79,6 +80,7 @@ export default function ClientesAdmin() {
         );
         formData.append("tipo", userInfo?.tipo);
         formData.append("autorizado", userInfo?.autorizado);
+        formData.append("telefono", userInfo?.telefono);
 
         const response = axiosClient.post("/signup", formData);
 
@@ -151,7 +153,7 @@ export default function ClientesAdmin() {
                                 className="w-full h-full flex flex-col gap-6"
                             >
                                 <div className="grid grid-cols-2 gap-3 w-full text-[16px]">
-                                    <div className="flex flex-col gap-2 col-span-2 ">
+                                    <div className="flex flex-col gap-2  ">
                                         <label htmlFor="name" className="">
                                             Nombre de usuario
                                         </label>
@@ -167,6 +169,25 @@ export default function ClientesAdmin() {
                                             type="text"
                                             name="name"
                                             id="name"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-2  ">
+                                        <label htmlFor="telefono" className="">
+                                            Telefono
+                                        </label>
+                                        <input
+                                            value={userInfo?.telefono}
+                                            onChange={(ev) =>
+                                                setUserInfo({
+                                                    ...userInfo,
+                                                    telefono: ev.target.value,
+                                                })
+                                            }
+                                            className="w-full h-[45px]  pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
+                                            type="text"
+                                            name="telefono"
+                                            id="telefono"
                                             required
                                         />
                                     </div>
@@ -451,7 +472,9 @@ export default function ClientesAdmin() {
                                     Descuento General
                                 </label>
                                 <input
-                                    value={descuentoGeneral}
+                                    defaultValue={
+                                        informacion?.descuento_general
+                                    }
                                     onChange={(ev) =>
                                         setDescuentoGeneral(ev.target.value)
                                     }

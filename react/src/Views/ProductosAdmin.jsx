@@ -21,6 +21,7 @@ export default function ProductosAdmin() {
     const [searchTerm, setSearchTerm] = useState("");
     const [plano, setPlano] = useState();
     const itemsPerPage = 10;
+    const [archivo, setArchivo] = useState();
 
     useEffect(() => {
         fetchProductos();
@@ -28,6 +29,31 @@ export default function ProductosAdmin() {
 
     const handleFileChange = (e) => {
         setImagen(e.target.files[0]);
+    };
+
+    const [importar, setImportar] = useState(false);
+
+    const importarExcel = async (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        if (archivo) formData.append("archivo", archivo);
+        const response = adminAxiosClient.post("/importar-excel", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+        toast.promise(response, {
+            loading: "Importando...",
+            success: "Importación exitosa",
+            error: "Error al importar",
+        });
+        try {
+            await response;
+
+            setImportar(false);
+        } catch (error) {
+            console.error("Error al importar:", error);
+        }
     };
 
     const submit = async (e) => {
@@ -112,6 +138,68 @@ export default function ProductosAdmin() {
     return (
         <div className="flex flex-col w-full p-6">
             <Toaster />
+            <AnimatePresence>
+                {importar && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed top-0 left-0 w-full h-full bg-black/50 flex items-center justify-center z-50 text-left"
+                    >
+                        <form
+                            onSubmit={importarExcel}
+                            method="POST"
+                            className="text-black"
+                        >
+                            <div className="bg-white p-4 w-[500px] rounded-md">
+                                <h2 className="text-2xl font-semibold mb-4">
+                                    Actualizar productos
+                                </h2>
+                                <div className="flex flex-col gap-4">
+                                    <label htmlFor="imagenn">
+                                        Archivo excel
+                                    </label>
+
+                                    <div className="flex flex-row">
+                                        <input
+                                            type="file"
+                                            name="imagen"
+                                            id="imagenn"
+                                            onChange={(e) => e.target.files[0]}
+                                            className="hidden"
+                                        />
+                                        <label
+                                            className="cursor-pointer border border-primary-orange text-primary-orange py-1 px-2 hover:bg-primary-orange hover:text-white transition duration-300 rounded-md"
+                                            htmlFor="imagenn"
+                                        >
+                                            Elegir archivo
+                                        </label>
+                                        <p className="self-center px-2">
+                                            {archivo?.name}
+                                        </p>
+                                    </div>
+
+                                    <div className="flex justify-end gap-4">
+                                        <button
+                                            type="button"
+                                            onClick={() => setImportar(false)}
+                                            className="border border-primary-orange text-primary-orange py-1 px-2 hover:bg-primary-orange hover:text-white transition duration-300 rounded-md"
+                                        >
+                                            Cancelar
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            className="border border-primary-orange text-primary-orange py-1 px-2 hover:bg-primary-orange hover:text-white transition duration-300 rounded-md"
+                                        >
+                                            Guardar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </motion.div>
+                )}
+            </AnimatePresence>
             <AnimatePresence>
                 {createView && (
                     <motion.div
@@ -296,6 +384,12 @@ export default function ProductosAdmin() {
                         className="bg-primary-orange hover:bg-orange-400 w-[200px] text-white font-bold py-1 px-4 rounded"
                     >
                         Crear producto
+                    </button>
+                    <button
+                        onClick={() => setImportar(true)}
+                        className="bg-primary-orange hover:bg-orange-400 w-[300px] text-white font-bold py-1 px-4 rounded"
+                    >
+                        Actualizar productos
                     </button>
                 </div>
 

@@ -48,6 +48,7 @@ class UserAuthController extends Controller
             'descuento_adicional' => 'nullable|integer',
             'descuento_adicional_2' => 'nullable|integer',
             'tipo' => 'nullable|string',
+            'telefono' => 'nullable|string',
             'autorizado' => 'nullable|boolean'
         ]);
 
@@ -65,6 +66,7 @@ class UserAuthController extends Controller
             'autorizado' => $data['autorizado'],
             'descuento_adicional_2' => $data['descuento_adicional_2'],
             'tipo' => $data['tipo'] ?? 'cliente',
+            'telefono' => $data['telefono'] ?? null,
 
         ]);
         $token = $user->createToken('main')->plainTextToken;
@@ -150,6 +152,7 @@ class UserAuthController extends Controller
             'descuento_adicional' => 'sometimes|integer',
             'descuento_adicional_2' => 'sometimes|integer',
             'tipo' => 'sometimes|string',
+            'telefono' => 'sometimes|string'
         ]);
 
         // Solo actualiza la contraseña si se proporciona

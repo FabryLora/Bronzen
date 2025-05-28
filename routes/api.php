@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Route;
 
 
 // Rutas de usuarios regulares (ya existentes)
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:sanctum')->group(callback: function () {
     Route::post('/logout', [UserAuthController::class, 'logout']);
     Route::get('/me', [UserAuthController::class, 'me']);
     Route::get('/allusers', [UserAuthController::class, 'allUsers']);
@@ -94,6 +94,8 @@ Route::get('/descargar-archivo/{id}', [DescargarArchivo::class, 'descargarArchiv
 
 //cliengo
 Route::get('/cliengo-config', [CliengoController::class, 'getCliengoConfig']);
+
+Route::get('/cargar-fotos', [SubProductoController::class, 'cargarImagenes']);
 
 
 

@@ -6,6 +6,8 @@ use App\Http\Resources\SubProductoResource;
 use App\Models\SubProducto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class SubProductoController extends Controller
 {
@@ -53,6 +55,30 @@ class SubProductoController extends Controller
 
         return SubProductoResource::collection($subProductos);
     }
+
+    public function cargarImagenes()
+    {
+        $fotos = Storage::disk('public')->files('images');
+        $contador = 0;
+
+        foreach ($fotos as $foto) {
+            $filename = pathinfo(basename($foto), PATHINFO_FILENAME);
+            $code = explode(' ', $filename)[0];
+
+            $subproducto = SubProducto::where('code', $code)->first();
+            if (!$subproducto) {
+                continue;
+            }
+
+            $subproducto->image = $foto;
+            $subproducto->save();
+            $contador++;
+        }
+
+        Log::info("Se actualizaron {$contador} subproductos con imágenes.");
+    }
+
+
 
 
     /**

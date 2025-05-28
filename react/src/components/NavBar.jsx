@@ -40,6 +40,7 @@ export default function NavBar() {
         descuento_general: 0,
         descuento_adicional: 0,
         autorizado: 0,
+        telefono: "",
     });
     const [loginMobileView, setloginMobileView] = useState(false);
     const [signupMobileView, setSignupMobileView] = useState(false);
@@ -175,6 +176,7 @@ export default function NavBar() {
         formData.append("descuento_general", userInfo?.descuento_general);
         formData.append("descuento_adicional", userInfo?.descuento_adicional);
         formData.append("autorizado", userInfo?.autorizado);
+        formData.append("telefono", userInfo?.telefono);
 
         // Crear una referencia a la promesa pero no esperar todavía
         const request = axiosClient.post("/signup", formData);
@@ -1040,7 +1042,7 @@ export default function NavBar() {
                                         className="w-full h-full flex flex-col gap-6"
                                     >
                                         <div className="grid grid-cols-2 gap-3 w-full text-[16px]">
-                                            <div className="flex flex-col gap-2 col-span-2 ">
+                                            <div className="flex flex-col gap-2 ">
                                                 <label
                                                     htmlFor="name"
                                                     className=""
@@ -1060,6 +1062,29 @@ export default function NavBar() {
                                                     type="text"
                                                     name="name"
                                                     id="name"
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="flex flex-col gap-2  ">
+                                                <label
+                                                    htmlFor="telefono"
+                                                    className=""
+                                                >
+                                                    Telefono
+                                                </label>
+                                                <input
+                                                    value={userInfo?.telefono}
+                                                    onChange={(ev) =>
+                                                        setUserInfo({
+                                                            ...userInfo,
+                                                            telefono:
+                                                                ev.target.value,
+                                                        })
+                                                    }
+                                                    className="w-full h-[45px]  pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
+                                                    type="text"
+                                                    name="telefono"
+                                                    id="telefono"
                                                     required
                                                 />
                                             </div>

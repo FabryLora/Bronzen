@@ -24,6 +24,8 @@ export default function ImageSlider() {
         });
     }, []);
 
+    console.log(featuredProducts);
+
     return (
         <div className="w-full h-full relative overflow-x-hidden">
             {/* Estilos para ocultar las flechas predeterminadas de Swiper */}
@@ -71,8 +73,12 @@ export default function ImageSlider() {
                         <div className="flex flex-col w-full h-full">
                             <img
                                 src={
-                                    subprod?.image
-                                        ? subprod?.image
+                                    subprod?.subProductos?.filter(
+                                        (sub) => sub?.image != null
+                                    )[0]?.image
+                                        ? subprod?.subProductos?.filter(
+                                              (sub) => sub?.image != null
+                                          )[0]?.image
                                         : defaultPhoto
                                 }
                                 className="w-full h-[90%] object-contain"

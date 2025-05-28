@@ -80,7 +80,7 @@ input[type="number"] {
             >
                 <img
                     src={product?.image ? product?.image : defaultPhoto}
-                    className="w-full h-full object-contain rounded-lg"
+                    className="w-full h-full min-w-[103px] min-h-[103px] object-contain rounded-lg"
                 />
             </Link>
 
