@@ -7,6 +7,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import bronzenLogo from "../assets/logos/bronzen-logo.png";
 import axiosClient from "../axios";
 import { useStateContext } from "../context/ContextProvider";
+import InstallPWA from "./InstallPWA";
 
 export default function NavBar() {
     const {
@@ -812,6 +813,7 @@ export default function NavBar() {
                                                 )}
                                             </div>
                                         ))}
+                                        <InstallPWA />
                                     </div>
                                 </div>
                             </motion.div>

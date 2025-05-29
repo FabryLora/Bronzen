@@ -29,7 +29,7 @@ const InstallPWA = () => {
             {deferredPrompt && (
                 <button
                     onClick={handleInstallClick}
-                    className="p-2 bg-blue-500 text-white rounded"
+                    className="p-2 bg-primary-orange text-white font-bold rounded-full"
                 >
                     Instalar PWA
                 </button>

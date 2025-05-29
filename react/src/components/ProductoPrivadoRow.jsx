@@ -150,17 +150,24 @@ export default function ProductoPrivadoRow({ productoObject }) {
                 })}
             </p>
             <p className="text-center self-center text-[#308C05] font-bold">
-                {!currentUserSelected
-                    ? productoObject?.descuento +
-                      currentUser?.descuento_adicional +
-                      currentUser?.descuento_adicional_2 +
-                      informacion?.descuento_general
-                    : productoObject?.descuento +
-                      currentUserSelected?.descuento_adicional +
-                      currentUserSelected?.descuento_adicional_2 +
-                      informacion?.descuento_general}
-                %
+                {(() => {
+                    const descuentos = [];
+
+                    const user = currentUserSelected || currentUser;
+
+                    if (productoObject?.descuento > 0)
+                        descuentos.push(`${productoObject.descuento}%`);
+                    if (user?.descuento_adicional > 0)
+                        descuentos.push(`${user.descuento_adicional}%`);
+                    if (user?.descuento_adicional_2 > 0)
+                        descuentos.push(`${user.descuento_adicional_2}%`);
+                    if (informacion?.descuento_general > 0)
+                        descuentos.push(`${informacion.descuento_general}%`);
+
+                    return descuentos.join(" + ");
+                })()}
             </p>
+
             <p className="text-center self-center relative">
                 {oferta && (
                     <div className="text-[11px] text-[#308C05] font-bold absolute w-full -top-4 right-0">
