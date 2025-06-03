@@ -13,6 +13,8 @@ export default function ClientesAdmin() {
         fetchClientes,
         fetchInformacion,
         informacion,
+        vendededores,
+        fetchVendedores,
     } = useStateContext();
     const [error, setError] = useState(null);
     const [succ, setSucc] = useState(false);
@@ -37,11 +39,13 @@ export default function ClientesAdmin() {
         descuento_adicional: 0,
         descuento_adicional_2: 0,
         autorizado: 1,
+        vendedor_id: "",
     });
 
     useEffect(() => {
         fetchInformacion();
         fetchClientes();
+        fetchVendedores();
     }, []);
 
     const [search, setSearch] = useState("");
@@ -81,6 +85,11 @@ export default function ClientesAdmin() {
         formData.append("tipo", userInfo?.tipo);
         formData.append("autorizado", userInfo?.autorizado);
         formData.append("telefono", userInfo?.telefono);
+        if (userInfo?.vendedor_id) {
+            formData.append("vendedor_id", userInfo?.vendedor_id);
+        } else {
+            formData.append("vendedor_id", null);
+        }
 
         const response = axiosClient.post("/signup", formData);
 
@@ -335,28 +344,31 @@ export default function ClientesAdmin() {
                                     </div>
 
                                     <div className="flex flex-col gap-2">
-                                        <label htmlFor="tipo">
-                                            Tipo de usuario
-                                        </label>
+                                        <label htmlFor="tipo">Vendedor</label>
                                         <select
-                                            value={userInfo.tipo}
+                                            value={userInfo.vendedor_id}
                                             onChange={(ev) =>
                                                 setUserInfo({
                                                     ...userInfo,
-                                                    tipo: ev.target.value,
+                                                    vendedor_id:
+                                                        ev.target.value,
                                                 })
                                             }
                                             className="w-full h-[45px] pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
                                             name="tipo"
                                             id="tipo"
-                                            required
                                         >
-                                            <option value="cliente">
-                                                Cliente
+                                            <option value="" selected>
+                                                Selecciona un vendedor
                                             </option>
-                                            <option value="vendedor">
-                                                Vendedor
-                                            </option>
+                                            {vendededores?.map((vendedor) => (
+                                                <option
+                                                    key={vendedor.id}
+                                                    value={vendedor.id}
+                                                >
+                                                    {vendedor.name}
+                                                </option>
+                                            ))}
                                         </select>
                                     </div>
 
@@ -564,7 +576,7 @@ export default function ClientesAdmin() {
                                 Descuento adicional
                             </th>
                             <th scope="col" className=" py-3 text-center">
-                                Tipo de usuario
+                                Vendedor
                             </th>
                             <th scope="col" className=" py-3 text-center">
                                 Autorizado

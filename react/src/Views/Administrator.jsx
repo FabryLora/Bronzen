@@ -126,6 +126,7 @@ export default function Administrator() {
             icon: faLock,
             href: "#",
             subHref: [
+                { title: "Vendedores", href: "/dashboard/vendedores" },
                 { title: "Clientes", href: "/dashboard/clientes" },
 
                 {

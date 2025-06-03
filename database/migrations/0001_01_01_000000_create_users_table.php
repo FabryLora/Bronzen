@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->string('email')->nullable();
             $table->string('password');
             $table->string("cuit")->nullable();
@@ -25,7 +25,8 @@ return new class extends Migration
             $table->unsignedInteger("descuento_adicional")->nullable();
             $table->unsignedInteger("descuento_adicional_2")->nullable();
             $table->boolean('autorizado')->default(false);
-            $table->string('tipo')->default('cliente');
+            $table->string('tipo')->nullable();
+            $table->foreignId('vendedor_id')->nullable()->constrained('vendedors')->onDelete('set null');
             $table->rememberToken();
             $table->timestamps();
         });

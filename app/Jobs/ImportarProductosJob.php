@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\Categoria;
 use App\Models\SubCategoria;
 use App\Models\SubProducto;
+use App\Models\User;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -13,6 +14,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
+
 
 class ImportarProductosJob implements ShouldQueue
 {
@@ -32,11 +35,9 @@ class ImportarProductosJob implements ShouldQueue
             // Redondear a 2 decimales y devolver directamente
             return round((float)$precio, 2);
         }
-
         // Si no es numérico, es probable que sea una cadena con formato (como "$ 11.188,21")
         // Elimina cualquier carácter que no sea número, punto o coma
         $precio = preg_replace('/[^0-9.,]/', '', $precio);
-
         // Determinar si usa formato europeo (11.188,21) o americano (11,188.21)
         $tieneComaPuntoDecimal = preg_match('/^\d{1,3}(.\d{3})+(,\d+)$/', $precio);
 
@@ -74,28 +75,33 @@ class ImportarProductosJob implements ShouldQueue
                 if ($index === 1) continue;
 
                 // Extraer datos de la fila
-                $codigo = isset($row[0]) ? trim($row[0]) : null;
-                $minimo = isset($row[4]) ? (int) $row[4] : null;
-                $bultocerrado = isset($row[5]) ? (int) $row[5] : null;
-                $precioLista = isset($row[6]) ? $this->convertirPrecio($row[6]) : null;
-                $precioOferta = isset($row[8]) ? $this->convertirPrecio($row[8]) : null;
-                $minimoOferta = isset($row[9]) ? (int) $row[9] : null;
+                $nombre = isset($row[0]) ? trim($row[0]) : null;
+                $cuit = isset($row[1]) ? (int) $row[1] : null;
+                $domicilio = isset($row[2]) ? (int) $row[2] : null;
+                $localidad = isset($row[3]) || null;
+                $provincia = isset($row[4]) || null;
+                $telefono = isset($row[5]) || null;
+                $descuento_uno = isset($row[6]) || null;
+                $descuento_dos = isset($row[7]) || null;
+                $email = isset($row[9]) || null;
 
 
-                $subproducto = SubProducto::where('codigo', $codigo)->first();
-
-
-                if ($subproducto) {
-                    $subproducto->update(
-                        [
-                            'min' => $minimo,
-                            'bulto_cerrado' => $bultocerrado,
-                            'precio_de_lista' => $precioLista,
-                            'precio_de_oferta' => $precioOferta,
-                            'min_oferta' => $minimoOferta,
-                        ]
-                    );
-                }
+                User::updateOrCreate(
+                    ['cuit' => $cuit],
+                    [
+                        'name' => $nombre,
+                        'direccion' => $domicilio,
+                        'localidad' => $localidad,
+                        'provincia' => $provincia,
+                        'telefono' => $telefono,
+                        'descuento_adicional' => $descuento_uno,
+                        'descuento_adicional_2' => $descuento_dos,
+                        'email' => $email,
+                        'tipo' => 'cliente',
+                        'autorizado' => true,
+                        'password' => Hash::make($cuit),
+                    ]
+                );
             }
 
             // Loguear estadísticas finales

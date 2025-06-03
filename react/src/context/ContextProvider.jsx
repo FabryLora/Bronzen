@@ -1,4 +1,3 @@
-import { all } from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 import adminAxiosClient from "../adminAxiosClient";
 import axiosClient from "../axios";
@@ -60,6 +59,8 @@ const StateContext = createContext({
     setCurrentIvaSelected: () => {},
     vendedorView: true,
     setVendedorView: () => {},
+    vendedores: [],
+    fetchVendedores: () => {},
 });
 
 export const ContextProvider = ({ children }) => {
@@ -81,6 +82,8 @@ export const ContextProvider = ({ children }) => {
         localStorage.getItem("currentUserSelected") || {}
     );
     const [currentIvaSelected, setCurrentIvaSelected] = useState("21");
+
+    const [vendedores, setVendedores] = useState([]);
 
     const [logos, setLogos] = useState({});
     const [subLoading, setSubLoading] = useState(false);
@@ -167,6 +170,12 @@ export const ContextProvider = ({ children }) => {
             localStorage.removeItem("ADMIN_TOKEN");
         }
         _setAdminToken(token);
+    };
+
+    const fetchVendedores = () => {
+        axiosClient.get("/vendedores").then(({ data }) => {
+            setVendedores(data.data);
+        });
     };
 
     const fetchLogos = () => {
@@ -292,6 +301,8 @@ export const ContextProvider = ({ children }) => {
     return (
         <StateContext.Provider
             value={{
+                vendedores,
+                fetchVendedores,
                 vendedorView,
                 setVendedorView,
                 allUsers,

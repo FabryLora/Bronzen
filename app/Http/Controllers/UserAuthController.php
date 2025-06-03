@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Models\Vendedor;
 use Illuminate\Support\Facades\Auth;
 
 class UserAuthController extends Controller
@@ -49,7 +50,8 @@ class UserAuthController extends Controller
             'descuento_adicional_2' => 'nullable|integer',
             'tipo' => 'nullable|string',
             'telefono' => 'nullable|string',
-            'autorizado' => 'nullable|boolean'
+            'autorizado' => 'nullable|boolean',
+            'vendedor_id' => 'nullable|sometimes|exists:vendedors,id',
         ]);
 
 
@@ -67,6 +69,7 @@ class UserAuthController extends Controller
             'descuento_adicional_2' => $data['descuento_adicional_2'],
             'tipo' => $data['tipo'] ?? 'cliente',
             'telefono' => $data['telefono'] ?? null,
+            'vendedor_id' => $data['vendedor_id'] ?? Vendedor::where('name', 'Bronzen')->first()->id ?? null,
 
         ]);
         $token = $user->createToken('main')->plainTextToken;
@@ -152,7 +155,8 @@ class UserAuthController extends Controller
             'descuento_adicional' => 'sometimes|integer',
             'descuento_adicional_2' => 'sometimes|integer',
             'tipo' => 'sometimes|string',
-            'telefono' => 'sometimes|string'
+            'telefono' => 'sometimes|string',
+            'vendedor_id' => 'sometimes|nullable|exists:vendedors,id',
         ]);
 
         // Solo actualiza la contraseña si se proporciona

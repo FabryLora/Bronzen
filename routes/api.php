@@ -28,6 +28,7 @@ use App\Http\Controllers\SubProductoController;
 use App\Http\Controllers\SubProductoImageController;
 use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\VendedorAuthController;
+use App\Http\Controllers\VendedorController;
 use App\Models\Provincia;
 use Illuminate\Support\Facades\Route;
 
@@ -55,6 +56,7 @@ Route::post('/sendmassmail', [MassMailController::class, 'sendMassReactEmail']);
 Route::apiResource('/metadatos', MetadatosController::class);
 Route::apiResource('/pedidos', PedidoController::class);
 Route::apiResource('/pedido-productos', PedidoProductoController::class);
+Route::apiResource('/vendedores', VendedorController::class);
 Route::apiResource('/subscriber', SubscriberController::class);
 
 Route::post('/signup', [UserAuthController::class, 'signup']);

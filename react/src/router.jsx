@@ -36,6 +36,7 @@ import SubCategorias from "./Views/SubCategorias";
 import SubCategoriasAdmin from "./Views/SubCategoriasAdmin";
 import SubirProductos from "./Views/SubirProductos";
 import SubProductosAdmin from "./Views/SubProductosAdmin";
+import VendedoresAdmin from "./Views/VendedoresAdmin";
 
 const router = createBrowserRouter([
     {
@@ -81,6 +82,10 @@ const router = createBrowserRouter([
             {
                 path: "/dashboard/sub-productos",
                 element: <SubProductosAdmin />,
+            },
+            {
+                path: "/dashboard/vendedores",
+                element: <VendedoresAdmin />,
             },
             {
                 path: "/dashboard/clientes",

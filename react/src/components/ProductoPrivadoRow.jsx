@@ -154,7 +154,7 @@ export default function ProductoPrivadoRow({ productoObject }) {
                     const descuentos = [];
 
                     const user = currentUserSelected || currentUser;
-
+                    
                     if (productoObject?.descuento > 0)
                         descuentos.push(`${productoObject.descuento}%`);
                     if (user?.descuento_adicional > 0)

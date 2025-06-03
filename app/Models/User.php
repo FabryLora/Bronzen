@@ -64,4 +64,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Factura::class);
     }
+
+    public function vendedor()
+    {
+        return $this->belongsTo(Vendedor::class);
+    }
 }
