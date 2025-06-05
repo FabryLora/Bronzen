@@ -1,7 +1,7 @@
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import adminAxiosClient from "../adminAxiosClient";
 import axiosClient from "../axios";
@@ -9,7 +9,7 @@ import Switch from "../components/Switch";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function UserAdmin({ user }) {
-    const { fetchClientes, provincias } = useStateContext();
+    const { fetchClientes, provincias, vendedores } = useStateContext();
     const [error, setError] = useState(null);
     const [succ, setSucc] = useState(false);
     const [submiting, setSubmiting] = useState(false);
@@ -24,10 +24,11 @@ export default function UserAdmin({ user }) {
         direccion: user?.direccion,
         provincia: user?.provincia,
         localidad: user?.localidad,
-        descuento_general: user?.descuento_general,
-        descuento_adicional: user?.descuento_adicional,
-        descuento_adicional_2: user?.descuento_adicional_2,
+        descuento_general: Number(user?.descuento_general),
+        descuento_adicional: user?.descuento_adicional || 0,
+        descuento_adicional_2: user?.descuento_adicional_2 || 0,
         tipo: user?.tipo,
+        vendedor_id: user?.vendedor_id,
         autorizado: user?.autorizado,
         telefono: user?.telefono,
     });
@@ -47,7 +48,10 @@ export default function UserAdmin({ user }) {
         formData.append("direccion", userInfo?.direccion);
         formData.append("provincia", userInfo?.provincia);
         formData.append("localidad", userInfo?.localidad);
-        formData.append("descuento_general", userInfo?.descuento_general);
+        formData.append(
+            "descuento_general",
+            Number(userInfo?.descuento_general)
+        );
         formData.append("descuento_adicional", userInfo?.descuento_adicional);
         formData.append("autorizado", userInfo?.autorizado);
         formData.append(
@@ -56,6 +60,8 @@ export default function UserAdmin({ user }) {
         );
         formData.append("tipo", userInfo?.tipo);
         formData.append("telefono", userInfo?.telefono);
+        if (userInfo?.vendedor_id)
+            formData.append("vendedor_id", userInfo?.vendedor_id);
 
         const response = adminAxiosClient.post(
             `/clientes/${user?.id}?_method=PUT`,
@@ -96,16 +102,10 @@ export default function UserAdmin({ user }) {
 
             <td>{user?.provincia}</td>
             <td>{user?.localidad}</td>
-            <td
-                className={`text-center ${
-                    user?.descuento_adicional > 0
-                        ? "text-green-500"
-                        : "text-gray-500"
-                }`}
-            >
-                {user?.descuento_adicional}%
+
+            <td className="text-center">
+                {user?.vendedor?.name?.toUpperCase()}
             </td>
-            <td className="text-center">{user?.tipo?.toUpperCase()}</td>
             <td className="text-center flex justify-center items-center h-[90px]">
                 <Switch
                     id={user?.id}
@@ -194,7 +194,6 @@ export default function UserAdmin({ user }) {
                                             type="text"
                                             name="telefono"
                                             id="telefono"
-                                            required
                                         />
                                     </div>
                                     <div className="flex flex-col gap-2">
@@ -268,7 +267,6 @@ export default function UserAdmin({ user }) {
                                             type="text"
                                             name="dni"
                                             id="dni"
-                                            required
                                         />
                                     </div>
 
@@ -339,28 +337,31 @@ export default function UserAdmin({ user }) {
                                     </div>
 
                                     <div className="flex flex-col gap-2">
-                                        <label htmlFor="tipo">
-                                            Tipo de usuario
-                                        </label>
+                                        <label htmlFor="tipo">Vendedor</label>
                                         <select
-                                            value={userInfo.tipo}
+                                            value={userInfo.vendedor_id}
                                             onChange={(ev) =>
                                                 setUserInfo({
                                                     ...userInfo,
-                                                    tipo: ev.target.value,
+                                                    vendedor_id:
+                                                        ev.target.value,
                                                 })
                                             }
                                             className="w-full h-[45px] pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
                                             name="tipo"
                                             id="tipo"
-                                            required
                                         >
-                                            <option value="cliente">
-                                                Cliente
+                                            <option disabled selected value="">
+                                                Selecciona un vendedor
                                             </option>
-                                            <option value="vendedor">
-                                                Vendedor
-                                            </option>
+                                            {vendedores.map((vendedor) => (
+                                                <option
+                                                    key={vendedor.id}
+                                                    value={vendedor.id}
+                                                >
+                                                    {vendedor.name}
+                                                </option>
+                                            ))}
                                         </select>
                                     </div>
 

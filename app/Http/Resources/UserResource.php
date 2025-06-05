@@ -27,6 +27,9 @@ class UserResource extends JsonResource
             'descuento_adicional_2' => $this->descuento_adicional_2,
             'tipo' => $this->tipo,
             'autorizado' => $this->autorizado,
+            'vendedor' => new UserResource($this->whenLoaded('vendedor')),
+            'vendedor_id' => $this->vendedor_id,
+            'clientes' => UserResource::collection($this->whenLoaded('clientes')),
         ];
     }
 }

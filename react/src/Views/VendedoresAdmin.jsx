@@ -1,33 +1,50 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
+import adminAxiosClient from "../adminAxiosClient";
 import axiosClient from "../axios";
+import UserAdmin from "../components/UserAdmin";
 import VendedorRow from "../Components/VendedorRow";
 import { useStateContext } from "../context/ContextProvider";
 
 export default function VendedoresAdmin() {
-    const { vendededores, fetchVendedores, clientes, fetchClientes } =
-        useStateContext();
+    const {
+        provincias,
+        fetchClientes,
+        fetchInformacion,
+        vendedores,
+        fetchVendedores,
+    } = useStateContext();
+
     const [createView, setcreateView] = useState(false);
 
     const [loading, setLoading] = useState();
     const [userInfo, setUserInfo] = useState({
         name: "",
+        password: "",
+        password_confirmation: "",
+        email: "",
+        cuit: "",
+        direccion: "",
+        provincia: "",
+        localidad: "",
+        telefono: "",
+        autorizado: 1,
+        tipo: "vendedor",
     });
 
     useEffect(() => {
-        fetchVendedores();
+        fetchInformacion();
         fetchClientes();
+        fetchVendedores();
     }, []);
-
-    console.log(vendededores);
 
     const [search, setSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
 
-    const filteredUsers = vendededores?.filter((user) =>
-        user?.name?.toLowerCase()?.includes(search?.toLowerCase())
+    const filteredUsers = vendedores?.filter((user) =>
+        user.name.toLowerCase().includes(search.toLowerCase())
     );
 
     const totalPages = Math?.ceil(filteredUsers?.length / itemsPerPage);
@@ -40,8 +57,21 @@ export default function VendedoresAdmin() {
         ev.preventDefault();
         const formData = new FormData();
         formData.append("name", userInfo?.name);
+        formData.append("password", userInfo?.password);
+        formData.append(
+            "password_confirmation",
+            userInfo?.password_confirmation
+        );
+        formData.append("email", userInfo?.email);
+        formData.append("cuit", userInfo?.cuit);
+        formData.append("direccion", userInfo?.direccion);
+        formData.append("provincia", userInfo?.provincia);
+        formData.append("localidad", userInfo?.localidad);
+        formData.append("tipo", userInfo?.tipo);
+        formData.append("autorizado", userInfo?.autorizado);
+        formData.append("telefono", userInfo?.telefono);
 
-        const response = axiosClient.post("/vendedores", formData);
+        const response = axiosClient.post("/signup", formData);
 
         toast.promise(response, {
             loading: "Cargando...",
@@ -90,7 +120,7 @@ export default function VendedoresAdmin() {
                                 onSubmit={onSubmitSignup}
                                 className="w-full h-full flex flex-col gap-6"
                             >
-                                <div className="grid grid-cols-1 gap-3 w-full text-[16px]">
+                                <div className="grid grid-cols-2 gap-3 w-full text-[16px]">
                                     <div className="flex flex-col gap-2  ">
                                         <label htmlFor="name" className="">
                                             Nombre de usuario
@@ -110,6 +140,193 @@ export default function VendedoresAdmin() {
                                             required
                                         />
                                     </div>
+                                    <div className="flex flex-col gap-2  ">
+                                        <label htmlFor="telefono" className="">
+                                            Telefono
+                                        </label>
+                                        <input
+                                            value={userInfo?.telefono}
+                                            onChange={(ev) =>
+                                                setUserInfo({
+                                                    ...userInfo,
+                                                    telefono: ev.target.value,
+                                                })
+                                            }
+                                            className="w-full h-[45px]  pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
+                                            type="text"
+                                            name="telefono"
+                                            id="telefono"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="password">
+                                            Contraseña
+                                        </label>
+                                        <input
+                                            value={userInfo.password}
+                                            onChange={(ev) =>
+                                                setUserInfo({
+                                                    ...userInfo,
+                                                    password: ev.target.value,
+                                                })
+                                            }
+                                            className="w-full h-[45px]  pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
+                                            type="password"
+                                            name="password"
+                                            id="password"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="password_confirmation">
+                                            Confirmar contraseña
+                                        </label>
+                                        <input
+                                            value={
+                                                userInfo.password_confirmation
+                                            }
+                                            onChange={(ev) =>
+                                                setUserInfo({
+                                                    ...userInfo,
+                                                    password_confirmation:
+                                                        ev.target.value,
+                                                })
+                                            }
+                                            className="w-full h-[45px]  pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
+                                            type="password"
+                                            name="password_confirmation"
+                                            id="password_confirmation"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="email">Email</label>
+                                        <input
+                                            value={userInfo.email}
+                                            onChange={(ev) =>
+                                                setUserInfo({
+                                                    ...userInfo,
+                                                    email: ev.target.value,
+                                                })
+                                            }
+                                            className="w-full h-[45px]  pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
+                                            type="email"
+                                            name="email"
+                                            id="email"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="dni">Cuit</label>
+                                        <input
+                                            value={userInfo?.cuit}
+                                            onChange={(ev) =>
+                                                setUserInfo({
+                                                    ...userInfo,
+                                                    cuit: ev.target.value,
+                                                })
+                                            }
+                                            className="w-full h-[45px]  pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
+                                            type="text"
+                                            name="dni"
+                                            id="dni"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="flex flex-col gap-2 col-span-2">
+                                        <label htmlFor="direccion">
+                                            Dirección
+                                        </label>
+                                        <input
+                                            value={userInfo.direccion}
+                                            onChange={(ev) =>
+                                                setUserInfo({
+                                                    ...userInfo,
+                                                    direccion: ev.target.value,
+                                                })
+                                            }
+                                            className="w-full h-[45px] pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
+                                            type="text"
+                                            name="direccion"
+                                            id="direccion"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="provincia">
+                                            Provincia
+                                        </label>
+                                        <select
+                                            required
+                                            value={userInfo.provincia}
+                                            onChange={(ev) =>
+                                                setUserInfo({
+                                                    ...userInfo,
+                                                    provincia: ev.target.value,
+                                                    localidad: "",
+                                                })
+                                            }
+                                            className="w-full h-[45px]  pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
+                                            name="provincia"
+                                            id="provincia"
+                                        >
+                                            <option disabled selected value="">
+                                                Selecciona una provincia
+                                            </option>
+
+                                            {provincias.map((pr) => (
+                                                <option
+                                                    key={pr.id}
+                                                    value={pr.name}
+                                                >
+                                                    {pr.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="localidad">
+                                            Localidad
+                                        </label>
+                                        <select
+                                            required
+                                            value={userInfo.localidad}
+                                            onChange={(ev) =>
+                                                setUserInfo({
+                                                    ...userInfo,
+                                                    localidad: ev.target.value,
+                                                })
+                                            }
+                                            className="w-full h-[45px]  pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
+                                            name="localidad"
+                                            id="localidad"
+                                        >
+                                            <option disabled selected value="">
+                                                Selecciona una localidad
+                                            </option>
+
+                                            {provincias
+                                                .find(
+                                                    (pr) =>
+                                                        pr.name ===
+                                                        userInfo?.provincia
+                                                )
+                                                ?.localidades.map(
+                                                    (loc, index) => (
+                                                        <option
+                                                            key={index}
+                                                            value={loc.name}
+                                                        >
+                                                            {loc.name}
+                                                        </option>
+                                                    )
+                                                )}
+                                        </select>
+                                    </div>
                                 </div>
                                 <div className="col-span-2 h-[0.5px] bg-gray-200 "></div>
                                 <div className="col-span-2 flex flex-row gap-4">
@@ -121,7 +338,7 @@ export default function VendedoresAdmin() {
                                         Cancelar
                                     </button>
                                     <button className=" text-white bg-primary-orange rounded-full w-full h-[43px] font-bold">
-                                        Registrar Vendedor
+                                        Registrar vendedor
                                     </button>
                                 </div>
                             </form>
@@ -137,7 +354,7 @@ export default function VendedoresAdmin() {
                 <div className="flex flex-row gap-5 w-full h-fit py-2">
                     <input
                         type="text"
-                        placeholder="Buscar cliente por nombre..."
+                        placeholder="Buscar vendedor por nombre..."
                         value={search}
                         onChange={(e) => {
                             setSearch(e.target.value);
@@ -149,7 +366,7 @@ export default function VendedoresAdmin() {
                         onClick={() => setcreateView(true)}
                         className="text-white bg-primary-orange font-bold py-1 px-2 rounded-md w-[300px]"
                     >
-                        Registrar Vendedor
+                        Registrar vendedor
                     </button>
                 </div>
 
@@ -157,7 +374,23 @@ export default function VendedoresAdmin() {
                     <thead className="text-sm  text-black bg-gray-300 uppercase">
                         <tr className="">
                             <th scope="col" className="pl-4 py-3">
-                                Nombre
+                                Usuario
+                            </th>
+                            <th scope="col" className=" py-3">
+                                Email
+                            </th>
+
+                            <th scope="col" className=" py-3">
+                                Provincia
+                            </th>
+                            <th scope="col" className=" py-3">
+                                Localidad
+                            </th>
+                            <th scope="col" className=" py-3 text-center">
+                                Autorizado
+                            </th>
+                            <th scope="col" className=" py-3 text-center">
+                                Acciones
                             </th>
                         </tr>
                     </thead>
@@ -189,7 +422,7 @@ export default function VendedoresAdmin() {
                         className="px-3 py-1 mx-1 border rounded disabled:opacity-50"
                         onClick={() =>
                             setCurrentPage((prev) =>
-                                Math?.min(prev + 1, totalPages)
+                                Math.min(prev + 1, totalPages)
                             )
                         }
                         disabled={currentPage === totalPages}

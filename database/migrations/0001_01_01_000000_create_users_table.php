@@ -25,8 +25,10 @@ return new class extends Migration
             $table->unsignedInteger("descuento_adicional")->nullable();
             $table->unsignedInteger("descuento_adicional_2")->nullable();
             $table->boolean('autorizado')->default(false);
-            $table->string('tipo')->nullable();
-            $table->foreignId('vendedor_id')->nullable()->constrained('vendedors')->onDelete('set null');
+            $table->string('tipo')->default('cliente');
+            $table->unsignedBigInteger('vendedor_id')->nullable();
+            $table->foreign('vendedor_id')->references('id')->on('users')->nullOnDelete();
+
             $table->rememberToken();
             $table->timestamps();
         });

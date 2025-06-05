@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Http\Resources\VendedorResource;
+use App\Models\User;
 use App\Models\Vendedor;
 use Illuminate\Http\Request;
 
@@ -13,8 +15,10 @@ class VendedorController extends Controller
      */
     public function index()
     {
-        return VendedorResource::collection(
-            Vendedor::all()
+        return UserResource::collection(
+            User::where('tipo', 'vendedor')->with('clientes')
+                ->orderBy('name', 'asc')
+                ->get()
         );
     }
     /**

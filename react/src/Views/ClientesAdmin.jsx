@@ -13,12 +13,10 @@ export default function ClientesAdmin() {
         fetchClientes,
         fetchInformacion,
         informacion,
-        vendededores,
+        vendedores,
         fetchVendedores,
     } = useStateContext();
-    const [error, setError] = useState(null);
-    const [succ, setSucc] = useState(false);
-    const [submiting, setSubmiting] = useState(false);
+
     const [createView, setcreateView] = useState(false);
     const [descuentoView, setDescuentoView] = useState(false);
     const [descuentoGeneral, setDescuentoGeneral] = useState(
@@ -40,6 +38,7 @@ export default function ClientesAdmin() {
         descuento_adicional_2: 0,
         autorizado: 1,
         vendedor_id: "",
+        tipo: "cliente",
     });
 
     useEffect(() => {
@@ -47,6 +46,8 @@ export default function ClientesAdmin() {
         fetchClientes();
         fetchVendedores();
     }, []);
+
+    console.log(clientes);
 
     const [search, setSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
@@ -361,7 +362,7 @@ export default function ClientesAdmin() {
                                             <option value="" selected>
                                                 Selecciona un vendedor
                                             </option>
-                                            {vendededores?.map((vendedor) => (
+                                            {vendedores?.map((vendedor) => (
                                                 <option
                                                     key={vendedor.id}
                                                     value={vendedor.id}
@@ -572,9 +573,7 @@ export default function ClientesAdmin() {
                             <th scope="col" className=" py-3">
                                 Localidad
                             </th>
-                            <th scope="col" className=" py-3 text-center">
-                                Descuento adicional
-                            </th>
+
                             <th scope="col" className=" py-3 text-center">
                                 Vendedor
                             </th>

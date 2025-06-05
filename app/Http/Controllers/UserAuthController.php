@@ -13,7 +13,7 @@ class UserAuthController extends Controller
 
     public function index()
     {
-        return UserResource::collection(User::all());
+        return UserResource::collection(User::with('vendedor')->where('tipo', 'cliente')->orderBy('name', 'asc')->get());
     }
 
     public function allUsers()
@@ -41,17 +41,17 @@ class UserAuthController extends Controller
             'name' => "required|string|max:255",
             'email' => "required|string|email|max:255|unique:users,email",
             "password" => "required|confirmed|string|min:8",
-            'cuit' => 'required|string|max:20',
-            'direccion' => 'nullable|string|max:255',
-            'provincia' => 'nullable|string|max:255',
-            'localidad' => 'nullable|string|max:255',
-            'descuento_general' => 'nullable|integer',
-            'descuento_adicional' => 'nullable|integer',
-            'descuento_adicional_2' => 'nullable|integer',
-            'tipo' => 'nullable|string',
-            'telefono' => 'nullable|string',
-            'autorizado' => 'nullable|boolean',
-            'vendedor_id' => 'nullable|sometimes|exists:vendedors,id',
+            'cuit' => 'nullable|sometimes|string|max:20',
+            'direccion' => 'nullable|sometimes|string|max:255',
+            'provincia' => 'nullable|sometimes|string|max:255',
+            'localidad' => 'nullable|sometimes|string|max:255',
+            'descuento_general' => 'nullable|sometimes|integer',
+            'descuento_adicional' => 'nullable|sometimes|integer',
+            'descuento_adicional_2' => 'nullable|sometimes|integer',
+            'tipo' => 'nullable|sometimes|string',
+            'telefono' => 'nullable|sometimes|string',
+            'autorizado' => 'nullable|sometimes|boolean',
+            'vendedor_id' => 'nullable|sometimes|exists:users,vendedor_id',
         ]);
 
 
@@ -63,10 +63,10 @@ class UserAuthController extends Controller
             'direccion' => $data['direccion'],
             'provincia' => $data['provincia'],
             'localidad' => $data['localidad'],
-            'descuento_general' => $data['descuento_general'],
-            'descuento_adicional' => $data['descuento_adicional'],
+            'descuento_general' => $data['descuento_general'] ?? null,
+            'descuento_adicional' => $data['descuento_adicional'] ?? null,
             'autorizado' => $data['autorizado'],
-            'descuento_adicional_2' => $data['descuento_adicional_2'],
+            'descuento_adicional_2' => $data['descuento_adicional_2'] ?? null,
             'tipo' => $data['tipo'] ?? 'cliente',
             'telefono' => $data['telefono'] ?? null,
             'vendedor_id' => $data['vendedor_id'] ?? Vendedor::where('name', 'Bronzen')->first()->id ?? null,
@@ -156,7 +156,7 @@ class UserAuthController extends Controller
             'descuento_adicional_2' => 'sometimes|integer',
             'tipo' => 'sometimes|string',
             'telefono' => 'sometimes|string',
-            'vendedor_id' => 'sometimes|nullable|exists:vendedors,id',
+            'vendedor_id' => 'sometimes|nullable|exists:users,vendedor_id',
         ]);
 
         // Solo actualiza la contraseña si se proporciona

@@ -22,6 +22,7 @@ export default function PrivadaLayout() {
         setCurrentUserSelected,
         fetchSubProductos,
         setAllUsers,
+        currentUser,
     } = useStateContext();
 
     const [seacrhClientesView, setSeacrhClientesView] = useState(false);
@@ -41,6 +42,8 @@ export default function PrivadaLayout() {
         fetchInformacion();
         fetchSubProductos();
     }, []);
+
+    console.log(currentUser);
 
     useEffect(() => {
         setCurrentUserSelected(

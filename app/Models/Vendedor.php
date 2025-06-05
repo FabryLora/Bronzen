@@ -7,9 +7,4 @@ use Illuminate\Database\Eloquent\Model;
 class Vendedor extends Model
 {
     protected $guarded = [];
-
-    public function users()
-    {
-        return $this->hasMany(User::class);
-    }
 }

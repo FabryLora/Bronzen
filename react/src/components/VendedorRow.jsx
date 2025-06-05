@@ -5,11 +5,11 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 import adminAxiosClient from "../adminAxiosClient";
 import axiosClient from "../axios";
+import Switch from "../components/Switch";
 import { useStateContext } from "../context/ContextProvider";
-import Switch from "./Switch";
 
 export default function VendedorRow({ user }) {
-    const { fetchVendedores, provincias } = useStateContext();
+    const { fetchClientes, provincias } = useStateContext();
     const [error, setError] = useState(null);
     const [succ, setSucc] = useState(false);
     const [submiting, setSubmiting] = useState(false);
@@ -17,17 +17,44 @@ export default function VendedorRow({ user }) {
 
     const [userInfo, setUserInfo] = useState({
         name: user?.name,
-        vendedor_id: user?.vendedor_id,
+        password: "",
+        password_confirmation: "",
+        email: user?.email,
+        cuit: user?.cuit,
+        direccion: user?.direccion,
+        provincia: user?.provincia,
+        localidad: user?.localidad,
+        descuento_general: user?.descuento_general,
+        descuento_adicional: user?.descuento_adicional,
+        descuento_adicional_2: user?.descuento_adicional_2,
+        tipo: user?.tipo,
+        autorizado: user?.autorizado,
+        telefono: user?.telefono,
     });
 
     const onSubmitSignup = async (ev) => {
         ev.preventDefault();
         const formData = new FormData();
         formData.append("name", userInfo?.name);
-        formData.append("vendedor_id", userInfo?.vendedor_id);
+        if (userInfo?.password) formData.append("password", userInfo?.password);
+        if (userInfo?.password_confirmation)
+            formData.append(
+                "password_confirmation",
+                userInfo?.password_confirmation
+            );
+        formData.append("email", userInfo?.email);
+        formData.append("cuit", userInfo?.cuit);
+        formData.append("direccion", userInfo?.direccion);
+        formData.append("provincia", userInfo?.provincia);
+        formData.append("localidad", userInfo?.localidad);
+
+        formData.append("autorizado", userInfo?.autorizado);
+
+        formData.append("tipo", userInfo?.tipo);
+        formData.append("telefono", userInfo?.telefono);
 
         const response = adminAxiosClient.post(
-            `/vendedores/${user?.id}?_method=PUT`,
+            `/clientes/${user?.id}?_method=PUT`,
             formData
         );
 
@@ -40,7 +67,7 @@ export default function VendedorRow({ user }) {
         try {
             await response;
             setUpdateView(false);
-            fetchVendedores();
+            fetchClientes();
         } catch (error) {
             console.log(error);
         }
@@ -48,9 +75,9 @@ export default function VendedorRow({ user }) {
 
     const deleteUser = () => {
         adminAxiosClient
-            .delete(`/vendedores/${user?.id}`)
+            .delete(`/clientes/${user?.id}`)
             .then(() => {
-                fetchVendedores();
+                fetchClientes();
                 toast.success("Usuario eliminado correctamente");
             })
             .catch(() => {
@@ -61,10 +88,18 @@ export default function VendedorRow({ user }) {
     return (
         <tr className={`border text-black odd:bg-gray-100 even:bg-white`}>
             <td className="h-[90px] pl-4 font-bold text-base">{user?.name}</td>
-            <td>{user?.name}</td>
+            <td>{user?.email}</td>
 
-            <td>{user?.vendedor_id}</td>
+            <td>{user?.provincia}</td>
+            <td>{user?.localidad}</td>
 
+            <td className="text-center flex justify-center items-center h-[90px]">
+                <Switch
+                    id={user?.id}
+                    path={"/clientes"}
+                    initialEnabled={user?.autorizado === 1 ? true : false}
+                />
+            </td>
             <td>
                 <div className="flex flex-row gap-3 justify-center">
                     <button
@@ -130,26 +165,188 @@ export default function VendedorRow({ user }) {
                                             required
                                         />
                                     </div>
-
                                     <div className="flex flex-col gap-2  ">
-                                        <label htmlFor="name" className="">
-                                            Vendedor ID
+                                        <label htmlFor="telefono" className="">
+                                            Telefono
                                         </label>
                                         <input
-                                            value={userInfo?.vendedor_id}
+                                            value={userInfo?.telefono}
                                             onChange={(ev) =>
                                                 setUserInfo({
                                                     ...userInfo,
-                                                    vendedor_id:
-                                                        ev.target.value,
+                                                    telefono: ev.target.value,
                                                 })
                                             }
                                             className="w-full h-[45px]  pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
                                             type="text"
-                                            name="name"
-                                            id="name"
+                                            name="telefono"
+                                            id="telefono"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="password">
+                                            Contraseña
+                                        </label>
+                                        <input
+                                            value={userInfo.password}
+                                            onChange={(ev) =>
+                                                setUserInfo({
+                                                    ...userInfo,
+                                                    password: ev.target.value,
+                                                })
+                                            }
+                                            className="w-full h-[45px]  pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
+                                            type="password"
+                                            name="password"
+                                            id="password"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="password_confirmation">
+                                            Confirmar contraseña
+                                        </label>
+                                        <input
+                                            value={
+                                                userInfo.password_confirmation
+                                            }
+                                            onChange={(ev) =>
+                                                setUserInfo({
+                                                    ...userInfo,
+                                                    password_confirmation:
+                                                        ev.target.value,
+                                                })
+                                            }
+                                            className="w-full h-[45px]  pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
+                                            type="password"
+                                            name="password_confirmation"
+                                            id="password_confirmation"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="email">Email</label>
+                                        <input
+                                            value={userInfo.email}
+                                            onChange={(ev) =>
+                                                setUserInfo({
+                                                    ...userInfo,
+                                                    email: ev.target.value,
+                                                })
+                                            }
+                                            className="w-full h-[45px]  pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
+                                            type="email"
+                                            name="email"
+                                            id="email"
                                             required
                                         />
+                                    </div>
+
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="dni">Cuit</label>
+                                        <input
+                                            value={userInfo?.cuit}
+                                            onChange={(ev) =>
+                                                setUserInfo({
+                                                    ...userInfo,
+                                                    cuit: ev.target.value,
+                                                })
+                                            }
+                                            className="w-full h-[45px]  pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
+                                            type="text"
+                                            name="dni"
+                                            id="dni"
+                                        />
+                                    </div>
+
+                                    <div className="flex flex-col gap-2 col-span-2">
+                                        <label htmlFor="direccion">
+                                            Dirección
+                                        </label>
+                                        <input
+                                            value={userInfo.direccion}
+                                            onChange={(ev) =>
+                                                setUserInfo({
+                                                    ...userInfo,
+                                                    direccion: ev.target.value,
+                                                })
+                                            }
+                                            className="w-full h-[45px] pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
+                                            type="text"
+                                            name="direccion"
+                                            id="direccion"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="provincia">
+                                            Provincia
+                                        </label>
+                                        <select
+                                            required
+                                            value={userInfo.provincia}
+                                            onChange={(ev) =>
+                                                setUserInfo({
+                                                    ...userInfo,
+                                                    provincia: ev.target.value,
+                                                    localidad: "",
+                                                })
+                                            }
+                                            className="w-full h-[45px]  pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
+                                            name="provincia"
+                                            id="provincia"
+                                        >
+                                            <option disabled selected value="">
+                                                Selecciona una provincia
+                                            </option>
+
+                                            {provincias.map((pr) => (
+                                                <option
+                                                    key={pr.id}
+                                                    value={pr.name}
+                                                >
+                                                    {pr.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="localidad">
+                                            Localidad
+                                        </label>
+                                        <select
+                                            required
+                                            value={userInfo.localidad}
+                                            onChange={(ev) =>
+                                                setUserInfo({
+                                                    ...userInfo,
+                                                    localidad: ev.target.value,
+                                                })
+                                            }
+                                            className="w-full h-[45px]  pl-3 rounded-full outline-1 outline-[#DDDDE0] focus:outline-primary-orange transition duration-300"
+                                            name="localidad"
+                                            id="localidad"
+                                        >
+                                            <option disabled selected value="">
+                                                Selecciona una localidad
+                                            </option>
+
+                                            {provincias
+                                                .find(
+                                                    (pr) =>
+                                                        pr.name ===
+                                                        userInfo?.provincia
+                                                )
+                                                ?.localidades.map(
+                                                    (loc, index) => (
+                                                        <option
+                                                            key={index}
+                                                            value={loc.name}
+                                                        >
+                                                            {loc.name}
+                                                        </option>
+                                                    )
+                                                )}
+                                        </select>
                                     </div>
                                 </div>
                                 <div className="col-span-2 h-[0.5px] bg-gray-200 "></div>
@@ -162,7 +359,7 @@ export default function VendedorRow({ user }) {
                                         Cancelar
                                     </button>
                                     <button className=" text-white bg-primary-orange rounded-full w-full h-[43px] font-bold">
-                                        Actualizar Vendedor
+                                        Actualizar vendedor
                                     </button>
                                 </div>
                             </form>

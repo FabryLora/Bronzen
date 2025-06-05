@@ -18,20 +18,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'cuit',
-        'direccion',
-        'provincia',
-        'localidad',
-        'descuento_general',
-        'descuento_adicional',
-        'descuento_adicional_2',
-        'tipo',
-        'autorizado',
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -67,6 +54,12 @@ class User extends Authenticatable
 
     public function vendedor()
     {
-        return $this->belongsTo(Vendedor::class);
+        return $this->belongsTo(User::class, 'vendedor_id');
+    }
+
+    // Vendedor tiene muchos clientes
+    public function clientes()
+    {
+        return $this->hasMany(User::class, 'vendedor_id');
     }
 }

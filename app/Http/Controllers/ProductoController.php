@@ -129,6 +129,7 @@ class ProductoController extends Controller
         $producto->update($data);
     }
 
+
     /**
      * Remove the specified resource from storage.
      */
